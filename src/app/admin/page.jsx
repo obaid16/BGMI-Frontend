@@ -6,15 +6,23 @@ import AdminStatCard from '@/components/admin/AdminStatCard';
 import RegistrationModal from '@/components/admin/RegistrationModal';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
-import { getTeams, getMatches, getMedia, updateTeamStatus } from '@/services/api';
+import { getTeams, getAdminDashboardStats, updateTeamStatus } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { Users, ShieldCheck, Clock, Swords, Trophy, Video, ArrowRight, Check, X } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const { showToast } = useToast();
   const [teams, setTeams] = useState([]);
-  const [matches, setMatches] = useState([]);
-  const [media, setMedia] = useState([]);
+  const [stats, setStats] = useState({
+    totalTeams: 0,
+    approvedTeams: 0,
+    pendingRegistrations: 0,
+    totalPlayers: 0,
+    upcomingMatches: 0,
+    liveMatches: 0,
+    completedMatches: 0,
+    pendingProofs: 0,
+  });
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,11 +30,9 @@ export default function AdminDashboardPage() {
     async function loadStats() {
       setLoading(true);
       const tData = await getTeams();
-      const mData = await getMatches();
-      const medData = await getMedia();
+      const sData = await getAdminDashboardStats();
       setTeams(tData);
-      setMatches(mData);
-      setMedia(medData);
+      setStats(sData);
       setLoading(false);
     }
     loadStats();
@@ -37,6 +43,9 @@ export default function AdminDashboardPage() {
     showToast('Team Registration Approved!', 'success');
     setSelectedTeam(null);
     setTeams((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Approved', verified: true } : t)));
+    // Refresh stats
+    const sData = await getAdminDashboardStats();
+    setStats(sData);
   };
 
   const handleReject = async (id) => {
@@ -44,28 +53,23 @@ export default function AdminDashboardPage() {
     showToast('Team Registration Rejected', 'error');
     setSelectedTeam(null);
     setTeams((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Rejected' } : t)));
+    // Refresh stats
+    const sData = await getAdminDashboardStats();
+    setStats(sData);
   };
-
-  const totalRegistered = teams.length;
-  const approvedTeams = teams.filter((t) => t.status === 'Approved').length;
-  const pendingTeams = teams.filter((t) => t.status === 'Pending').length;
-  const totalPlayers = teams.reduce((acc, t) => acc + (t.players?.length || 4), 0);
-  const upcomingMatches = matches.filter((m) => m.status === 'Upcoming').length;
-  const completedMatches = matches.filter((m) => m.status === 'Completed').length;
-  const pendingProofs = media.filter((m) => !m.verified).length;
 
   return (
     <div className="space-y-8">
       
       {/* DASHBOARD STATS GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <AdminStatCard title="Registered Squads" value={totalRegistered} subtext="Total Applications" icon={Users} color="gold" />
-        <AdminStatCard title="Approved Squads" value={approvedTeams} subtext="Verified Squads" icon={ShieldCheck} color="green" />
-        <AdminStatCard title="Pending Approvals" value={pendingTeams} subtext="Requires Review" icon={Clock} color="amber" />
-        <AdminStatCard title="Total Players" value={totalPlayers} subtext="Roster Ranks" icon={Users} color="cyan" />
-        <AdminStatCard title="Upcoming Matches" value={upcomingMatches} subtext="Scheduled Lobbies" icon={Swords} color="cyan" />
-        <AdminStatCard title="Completed Matches" value={completedMatches} subtext="Results Published" icon={Trophy} color="gold" />
-        <AdminStatCard title="Pending Proofs" value={pendingProofs} subtext="POV Reviews" icon={Video} color="red" />
+        <AdminStatCard title="Registered Squads" value={stats.totalTeams} subtext="Total Applications" icon={Users} color="gold" />
+        <AdminStatCard title="Approved Squads" value={stats.approvedTeams} subtext="Verified Squads" icon={ShieldCheck} color="green" />
+        <AdminStatCard title="Pending Approvals" value={stats.pendingRegistrations} subtext="Requires Review" icon={Clock} color="amber" />
+        <AdminStatCard title="Total Players" value={stats.totalPlayers} subtext="Roster Ranks" icon={Users} color="cyan" />
+        <AdminStatCard title="Upcoming Matches" value={stats.upcomingMatches} subtext="Scheduled Lobbies" icon={Swords} color="cyan" />
+        <AdminStatCard title="Completed Matches" value={stats.completedMatches} subtext="Results Published" icon={Trophy} color="gold" />
+        <AdminStatCard title="Pending Proofs" value={stats.pendingProofs} subtext="POV Reviews" icon={Video} color="red" />
       </div>
 
       {/* QUICK SHORTCUTS & RECENT REGISTRATIONS QUEUE */}

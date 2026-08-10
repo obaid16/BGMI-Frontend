@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 /**
  * Reusable helper to make HTTP requests to the backend with auto-attached JWT headers
@@ -305,4 +305,26 @@ export async function getAdminAuditLogs() {
     console.error('getAdminAuditLogs failed:', err);
     return [];
   }
+}
+
+export async function deleteAnnouncement(id) {
+  const res = await fetchAPI(`/announcements/${id}`, {
+    method: 'DELETE',
+  });
+  return res.success;
+}
+
+export async function createRule(ruleData) {
+  const res = await fetchAPI('/rules', {
+    method: 'POST',
+    body: JSON.stringify(ruleData),
+  });
+  return res.data;
+}
+
+export async function deleteRule(id) {
+  const res = await fetchAPI(`/rules/${id}`, {
+    method: 'DELETE',
+  });
+  return res.success;
 }

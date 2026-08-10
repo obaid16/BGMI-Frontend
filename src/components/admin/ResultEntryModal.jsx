@@ -6,12 +6,25 @@ import Button from '../common/Button';
 import { Trophy, Save, Send, Calculator } from 'lucide-react';
 
 export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matches = [], teams = [] }) {
-  const [selectedMatchId, setSelectedMatchId] = useState(matches[0]?.id || 'match-07');
-  const [selectedTeamId, setSelectedTeamId] = useState(teams[0]?.id || 'team-1');
+  const [selectedMatchId, setSelectedMatchId] = useState('match-07');
+  const [selectedTeamId, setSelectedTeamId] = useState('team-1');
   const [placementRank, setPlacementRank] = useState(1);
   const [kills, setKills] = useState(12);
   const [bonus, setBonus] = useState(1);
   const [penalty, setPenalty] = useState(0);
+
+  // Sync state once data loads
+  React.useEffect(() => {
+    if (matches.length > 0 && (selectedMatchId === 'match-07' || !matches.some(m => m.id === selectedMatchId))) {
+      setSelectedMatchId(matches[0].id);
+    }
+  }, [matches, selectedMatchId]);
+
+  React.useEffect(() => {
+    if (teams.length > 0 && (selectedTeamId === 'team-1' || !teams.some(t => t.id === selectedTeamId))) {
+      setSelectedTeamId(teams[0].id);
+    }
+  }, [teams, selectedTeamId]);
 
   // Live points calculation preview
   const getPlacementPoints = (rank) => {
@@ -52,12 +65,15 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
       },
       leaderboard: [
         {
-          rank: placementRank,
+          rank: parseInt(placementRank, 10),
           team: selectedTeam?.name || 'IIT Bombay Titans',
+          teamId: selectedTeam?.id,
           placementPts,
           kills: killPts,
           killPts,
           total: totalPoints,
+          bonus: bonusPts,
+          penalty: penaltyPts,
         },
       ],
       publish,

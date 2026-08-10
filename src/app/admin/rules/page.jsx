@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
-import { getRules } from '@/services/api';
+import { getRules, createRule, deleteRule } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { BookOpen, Plus, Trash2 } from 'lucide-react';
 
@@ -24,24 +24,35 @@ export default function AdminRulesPage() {
     loadData();
   }, []);
 
-  const handleAddRule = (e) => {
+  const handleAddRule = async (e) => {
     e.preventDefault();
-    const newRule = {
-      id: `rule-${Date.now()}`,
+    const rulePayload = {
       title: `${rules.length + 1}. ${title}`,
       category,
       content,
+      order: rules.length + 1,
+      published: true
     };
-    setRules([...rules, newRule]);
-    showToast('Rule Added to Official Rulebook', 'success');
+    const created = await createRule(rulePayload);
+    if (created) {
+      setRules([...rules, created]);
+      showToast('Rule Added to Official Rulebook', 'success');
+    } else {
+      showToast('Failed to add rule to backend', 'error');
+    }
     setIsModalOpen(false);
     setTitle('');
     setContent('');
   };
 
-  const handleDeleteRule = (id) => {
-    setRules((prev) => prev.filter((r) => r.id !== id));
-    showToast('Rule Removed', 'info');
+  const handleDeleteRule = async (id) => {
+    const success = await deleteRule(id);
+    if (success) {
+      setRules((prev) => prev.filter((r) => r.id !== id));
+      showToast('Rule Removed', 'info');
+    } else {
+      showToast('Failed to remove rule from backend', 'error');
+    }
   };
 
   return (

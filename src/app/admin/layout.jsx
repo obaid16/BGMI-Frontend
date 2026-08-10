@@ -1,15 +1,59 @@
 'use client';
 
-import React, { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminTopbar from '@/components/admin/AdminTopbar';
 import { Menu, X } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const isLoginPage = pathname === '/admin/login';
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(!isLoginPage);
+
+  useEffect(() => {
+    if (isLoginPage) {
+      setCheckingAuth(false);
+      return;
+    }
+
+    const token = localStorage.getItem('bgmi_esports_admin_token');
+    const userStr = localStorage.getItem('bgmi_esports_admin_user');
+
+    if (!token || !userStr) {
+      localStorage.removeItem('bgmi_esports_admin_token');
+      localStorage.removeItem('bgmi_esports_admin_user');
+      router.push('/admin/login');
+    } else {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.exp * 1000 < Date.now()) {
+          // Token expired
+          localStorage.removeItem('bgmi_esports_admin_token');
+          localStorage.removeItem('bgmi_esports_admin_user');
+          router.push('/admin/login');
+        }
+      } catch (e) {
+        localStorage.removeItem('bgmi_esports_admin_token');
+        localStorage.removeItem('bgmi_esports_admin_user');
+        router.push('/admin/login');
+      } finally {
+        setCheckingAuth(false);
+      }
+    }
+  }, [isLoginPage, router]);
+
+  // Loading indicator while verifying credentials
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-bgmi-dark flex flex-col items-center justify-center space-y-4">
+        <div className="w-10 h-10 border-4 border-bgmi-gold border-t-transparent rounded-full animate-spin" />
+        <p className="font-mono text-xs uppercase tracking-widest text-slate-400">Verifying Admin Access...</p>
+      </div>
+    );
+  }
 
   // Admin Login page gets a clean standalone layout
   if (isLoginPage) {

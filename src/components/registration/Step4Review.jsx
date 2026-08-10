@@ -4,7 +4,7 @@ import React from 'react';
 import { Shield, Users, FileCheck, Edit3, Send } from 'lucide-react';
 import Button from '../common/Button';
 
-export default function Step4Review({ formData, onSubmit, onPrev, goToStep }) {
+export default function Step4Review({ formData, onSubmit, onPrev, goToStep, submitting }) {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <div className="border-b border-bgmi-border/60 pb-4 mb-6">
@@ -22,7 +22,8 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep }) {
           </h4>
           <button
             onClick={() => goToStep(1)}
-            className="text-xs text-bgmi-cyan hover:underline flex items-center gap-1 font-semibold"
+            disabled={submitting}
+            className="text-xs text-bgmi-cyan hover:underline flex items-center gap-1 font-semibold disabled:opacity-50"
           >
             <Edit3 className="w-3 h-3" /> Edit Section
           </button>
@@ -60,7 +61,8 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep }) {
           </h4>
           <button
             onClick={() => goToStep(2)}
-            className="text-xs text-bgmi-cyan hover:underline flex items-center gap-1 font-semibold"
+            disabled={submitting}
+            className="text-xs text-bgmi-cyan hover:underline flex items-center gap-1 font-semibold disabled:opacity-50"
           >
             <Edit3 className="w-3 h-3" /> Edit Section
           </button>
@@ -105,7 +107,8 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep }) {
           </h4>
           <button
             onClick={() => goToStep(3)}
-            className="text-xs text-bgmi-cyan hover:underline flex items-center gap-1 font-semibold"
+            disabled={submitting}
+            className="text-xs text-bgmi-cyan hover:underline flex items-center gap-1 font-semibold disabled:opacity-50"
           >
             <Edit3 className="w-3 h-3" /> Edit Section
           </button>
@@ -116,11 +119,11 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep }) {
       </div>
 
       <div className="pt-6 border-t border-bgmi-border/60 flex items-center justify-between">
-        <Button type="button" variant="secondary" size="md" onClick={onPrev}>
+        <Button type="button" variant="secondary" size="md" onClick={onPrev} disabled={submitting}>
           ← Back
         </Button>
-        <Button type="button" variant="primary" size="lg" icon={Send} onClick={onSubmit}>
-          SUBMIT REGISTRATION
+        <Button type="button" variant="primary" size="lg" icon={Send} onClick={onSubmit} disabled={submitting}>
+          {submitting ? 'Submitting Registration...' : 'SUBMIT REGISTRATION'}
         </Button>
       </div>
     </div>

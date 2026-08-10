@@ -1,24 +1,3 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/matches/[id]/page": "app/matches/[id]/page.js",
-  "/matches/page": "app/matches/page.js",
-  "/media/page": "app/media/page.js",
-  "/page": "app/page.js",
-  "/register/page": "app/register/page.js",
-  "/results/page": "app/results/page.js",
-  "/results/[id]/page": "app/results/[id]/page.js",
-  "/rules/page": "app/rules/page.js",
-  "/standings/page": "app/standings/page.js",
-  "/teams/[id]/page": "app/teams/[id]/page.js",
-  "/teams/page": "app/teams/page.js",
-  "/admin/announcements/page": "app/admin/announcements/page.js",
-  "/admin/login/page": "app/admin/login/page.js",
-  "/admin/matches/page": "app/admin/matches/page.js",
-  "/admin/media/page": "app/admin/media/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/admin/players/page": "app/admin/players/page.js",
-  "/admin/registrations/page": "app/admin/registrations/page.js",
-  "/admin/results/page": "app/admin/results/page.js",
-  "/admin/rules/page": "app/admin/rules/page.js",
-  "/admin/teams/page": "app/admin/teams/page.js"
+  "/page": "app/page.js"
 }

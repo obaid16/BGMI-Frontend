@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const { showToast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const [submittedRegId, setSubmittedRegId] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     teamName: '',
@@ -44,14 +45,19 @@ export default function RegisterPage() {
 
   const handleFinalSubmit = async () => {
     try {
+      setSubmitting(true);
       const res = await registerTeam(formData);
       if (res.success) {
         setSubmittedRegId(res.registrationId);
         setCurrentStep(5);
         showToast('Team Registered Successfully!', 'success');
+      } else {
+        showToast(res.message || 'Registration failed.', 'error');
       }
     } catch (err) {
-      showToast('Registration failed. Please check fields.', 'error');
+      showToast(err.message || 'Registration failed. Please check fields.', 'error');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -123,6 +129,7 @@ export default function RegisterPage() {
             onSubmit={handleFinalSubmit}
             onPrev={() => setCurrentStep(3)}
             goToStep={(stepNum) => setCurrentStep(stepNum)}
+            submitting={submitting}
           />
         )}
 

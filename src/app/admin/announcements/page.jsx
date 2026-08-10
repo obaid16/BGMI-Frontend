@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
-import { getAnnouncements, createAnnouncement } from '@/services/api';
+import { getAnnouncements, createAnnouncement, deleteAnnouncement } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { Bell, Plus, Trash2 } from 'lucide-react';
 
@@ -36,9 +36,14 @@ export default function AdminAnnouncementsPage() {
     setContent('');
   };
 
-  const handleDelete = (id) => {
-    setAnnouncements((prev) => prev.filter((a) => a.id !== id));
-    showToast('Announcement Removed', 'info');
+  const handleDelete = async (id) => {
+    const success = await deleteAnnouncement(id);
+    if (success) {
+      setAnnouncements((prev) => prev.filter((a) => a.id !== id));
+      showToast('Announcement Removed', 'info');
+    } else {
+      showToast('Failed to remove announcement', 'error');
+    }
   };
 
   return (
