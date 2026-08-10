@@ -1,0 +1,131 @@
+export const scoringRules = {
+  placementPoints: [
+    { rank: 1, points: 15 },
+    { rank: 2, points: 12 },
+    { rank: 3, points: 10 },
+    { rank: 4, points: 8 },
+    { rank: 5, points: 6 },
+    { rank: 6, points: 4 },
+    { rank: 7, points: 2 },
+    { rank: 8, points: 1 },
+    { rank: '9-16', points: 0 },
+  ],
+  killPointMultiplier: 1, // 1 point per kill
+  bonusRules: '1 Bonus Point for WWCD + 15 Placement Points',
+  penaltyRules: '-5 Points for non-compliance with recording / disconnect delay'
+};
+
+export const mockStandings = [
+  {
+    rank: 1,
+    teamId: 'team-1',
+    teamName: 'IIT Bombay Titans',
+    college: 'IIT Bombay',
+    logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&auto=format&fit=crop&q=80',
+    matches: 8,
+    wwcd: 3,
+    placementPoints: 84,
+    kills: 58,
+    killPoints: 58,
+    penalty: 0,
+    totalPoints: 142
+  },
+  {
+    rank: 2,
+    teamId: 'team-2',
+    teamName: 'BITS Apex Esports',
+    college: 'BITS Pilani',
+    logo: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=200&auto=format&fit=crop&q=80',
+    matches: 8,
+    wwcd: 2,
+    placementPoints: 76,
+    kills: 52,
+    killPoints: 52,
+    penalty: 0,
+    totalPoints: 128
+  },
+  {
+    rank: 3,
+    teamId: 'team-3',
+    teamName: 'DTU Phoenix Esports',
+    college: 'Delhi Tech University',
+    logo: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=200&auto=format&fit=crop&q=80',
+    matches: 8,
+    wwcd: 2,
+    placementPoints: 70,
+    kills: 46,
+    killPoints: 46,
+    penalty: 0,
+    totalPoints: 116
+  },
+  {
+    rank: 4,
+    teamId: 'team-4',
+    teamName: 'RVCE Revenants',
+    college: 'RV College of Engineering',
+    logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
+    matches: 8,
+    wwcd: 1,
+    placementPoints: 56,
+    kills: 42,
+    killPoints: 42,
+    penalty: 0,
+    totalPoints: 98
+  },
+  {
+    rank: 5,
+    teamId: 'team-5',
+    teamName: 'VIT Venom Clan',
+    college: 'VIT Vellore',
+    logo: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&auto=format&fit=crop&q=80',
+    matches: 8,
+    wwcd: 0,
+    placementPoints: 44,
+    kills: 45,
+    killPoints: 45,
+    penalty: 0,
+    totalPoints: 89
+  },
+  {
+    rank: 6,
+    teamId: 'team-6',
+    teamName: 'IIIT Hyderabad Spectres',
+    college: 'IIIT Hyderabad',
+    logo: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=200&auto=format&fit=crop&q=80',
+    matches: 8,
+    wwcd: 0,
+    placementPoints: 40,
+    kills: 34,
+    killPoints: 34,
+    penalty: 0,
+    totalPoints: 74
+  },
+  {
+    rank: 7,
+    teamId: 'team-7',
+    teamName: 'SRM Shadow Roster',
+    college: 'SRM IST',
+    logo: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200&auto=format&fit=crop&q=80',
+    matches: 8,
+    wwcd: 0,
+    placementPoints: 38,
+    kills: 30,
+    killPoints: 30,
+    penalty: 0,
+    totalPoints: 68
+  },
+  {
+    rank: 8,
+    teamId: 'team-8',
+    teamName: 'MIT Cyber Knights',
+    college: 'Manipal Inst of Tech',
+    logo: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=200&auto=format&fit=crop&q=80',
+    matches: 8,
+    wwcd: 0,
+    placementPoints: 31,
+    kills: 28,
+    killPoints: 28,
+    penalty: 0,
+    totalPoints: 59
+  }
+];

@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-dark: #080a0f;
+  --bg-surface: #11141d;
+  --bg-card: #181c28;
+  --border-color: #262b3d;
+  --accent-gold: #ffb703;
+  --accent-cyan: #00f0ff;
+  --accent-red: #ff3366;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: #f1f5f9;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Custom Tactical Grid Background */
+.bg-tactical-grid {
+  background-image: 
+    linear-gradient(to right, rgba(38, 43, 61, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(38, 43, 61, 0.25) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.bg-hero-radial {
+  background: radial-gradient(circle at 50% 20%, rgba(255, 183, 3, 0.08) 0%, rgba(0, 240, 255, 0.04) 40%, rgba(8, 10, 15, 0.95) 100%);
+}
+
+/* Esports Tactical Cut Corners */
+.clip-tactical {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.clip-badge {
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+
+.clip-hero-btn {
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #262b3d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffb703;
+}
+
+/* Glassmorphism Subtle Elements */
+.glass-panel {
+  background: rgba(24, 28, 40, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(38, 43, 61, 0.8);
+}
