@@ -3,9 +3,9 @@ import { ToastProvider } from '@/context/ToastContext';
 import ConditionalLayout from '@/components/common/ConditionalLayout';
 
 export const metadata = {
-  title: 'BGMI College Esports Championship 2026 | College Tournament Management',
-  description: 'Official College BGMI Esports Tournament Management Platform. Live matches, standings, squad registration, and tournament statistics.',
-  keywords: 'BGMI, Esports, College Esports, Battlegrounds Mobile India, Tournament Platform, College Gaming',
+  title: 'NIT BGMI Esports Championship 2026 | Official Tournament Platform',
+  description: 'Official NIT BGMI Esports Tournament Management Platform. Live matches, standings, squad registration, and tournament statistics.',
+  keywords: 'NIT, BGMI, Esports, College Esports, Battlegrounds Mobile India, Tournament Platform, NIT Gaming',
 };
 
 export default function RootLayout({ children }) {

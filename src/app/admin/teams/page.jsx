@@ -15,7 +15,7 @@ export default function AdminTeamsPage() {
 
   // Form states
   const [newTeamName, setNewTeamName] = useState('');
-  const [newCollege, setNewCollege] = useState('[COLLEGE NAME]');
+  const [newCollege, setNewCollege] = useState('NIT');
 
   useEffect(() => {
     async function loadData() {

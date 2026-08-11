@@ -104,7 +104,7 @@ export default function Hero() {
         {/* CINEMATIC TITLE */}
         <div className="space-y-1 mb-6">
           <h1 ref={line1Ref} className="font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-white uppercase leading-none">
-            [COLLEGE NAME]
+            NIT
           </h1>
           <h2 ref={line2Ref} className="font-display font-black text-2xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-bgmi-gold via-amber-400 to-orange-500 uppercase leading-none mt-2">
             BGMI ESPORTS CHAMPIONSHIP{' '}

@@ -17,11 +17,11 @@ export default function Footer() {
                 <Crosshair className="w-5 h-5" />
               </div>
               <span className="font-display font-black text-xl text-white uppercase tracking-wider">
-                [COLLEGE NAME] <span className="text-bgmi-gold">BGMI</span> CHAMPIONSHIP
+                NIT <span className="text-bgmi-gold">BGMI</span> CHAMPIONSHIP
               </span>
             </div>
             <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
-              Official [COLLEGE NAME] BGMI Esports Championship 2026. An exclusive in-house esports tournament for student squads to compete, survive, and dominate.
+              Official NIT BGMI Esports Championship 2026. An exclusive in-house esports tournament for student squads to compete, survive, and dominate.
             </p>
             <div className="flex items-center gap-3 pt-2">
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-bgmi-gold bg-bgmi-gold/10 px-2.5 py-1 rounded border border-bgmi-gold/30">
@@ -51,7 +51,6 @@ export default function Footer() {
             <ul className="space-y-2 text-xs">
               <li><Link href="/register" className="hover:text-bgmi-gold transition-colors text-bgmi-gold font-semibold">Register Squad</Link></li>
               <li><Link href="/media" className="hover:text-bgmi-gold transition-colors">POV Clips & Media</Link></li>
-              <li><Link href="/admin/login" className="hover:text-bgmi-gold transition-colors">Admin Control Center</Link></li>
               <li><a href="#announcements" className="hover:text-bgmi-gold transition-colors">Announcements</a></li>
             </ul>
           </div>
@@ -75,7 +74,7 @@ export default function Footer() {
 
         {/* BOTTOM COPYRIGHT */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2026 [COLLEGE NAME] BGMI Esports Championship. All Rights Reserved.</p>
+          <p>© 2026 NIT BGMI Esports Championship. All Rights Reserved.</p>
           <div className="flex items-center gap-6">
             <span>Terms of Play</span>
             <span>Anti-Cheat Policy</span>

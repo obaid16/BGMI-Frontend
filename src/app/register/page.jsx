@@ -19,7 +19,7 @@ export default function RegisterPage() {
 
   const [formData, setFormData] = useState({
     teamName: '',
-    collegeName: '[COLLEGE NAME]',
+    collegeName: 'NIT',
     captainName: '',
     captainPhone: '',
     captainEmail: '',
@@ -63,7 +63,7 @@ export default function RegisterPage() {
   const handleReset = () => {
     setFormData({
       teamName: '',
-      collegeName: '[COLLEGE NAME]',
+      collegeName: 'NIT',
       captainName: '',
       captainPhone: '',
       captainEmail: '',

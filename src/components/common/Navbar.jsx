@@ -47,7 +47,7 @@ export default function Navbar() {
                 <span className="text-xs px-1.5 py-0.5 bg-bgmi-gold/20 text-bgmi-gold rounded border border-bgmi-gold/30">2026</span>
               </div>
               <p className="text-[10px] tracking-widest text-slate-400 font-semibold uppercase mt-0.5">
-                [COLLEGE NAME] CHAMPIONSHIP
+                NIT CHAMPIONSHIP
               </p>
             </div>
           </Link>
