@@ -27,14 +27,13 @@ export default function RegisterPage() {
       { name: '', ign: '', bgmiId: '', role: 'IGL', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
       { name: '', ign: '', bgmiId: '', role: 'Assaulter', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
       { name: '', ign: '', bgmiId: '', role: 'Entry Fragger', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
-      { name: '', ign: '', bgmiId: '', role: 'Sniper', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
+      { name: '', ign: '', bgmiId: '', role: 'Support', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
     ],
   });
 
   const steps = [
     { title: 'Team Details' },
     { title: 'Players' },
-    { title: 'Student Proof' },
     { title: 'Review' },
     { title: 'Submitted' },
   ];
@@ -49,7 +48,7 @@ export default function RegisterPage() {
       const res = await registerTeam(formData);
       if (res.success) {
         setSubmittedRegId(res.registrationId);
-        setCurrentStep(5);
+        setCurrentStep(4);
         showToast('Team Registered Successfully!', 'success');
       } else {
         showToast(res.message || 'Registration failed.', 'error');
@@ -72,7 +71,7 @@ export default function RegisterPage() {
         { name: '', ign: '', bgmiId: '', role: 'IGL', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
         { name: '', ign: '', bgmiId: '', role: 'Assaulter', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
         { name: '', ign: '', bgmiId: '', role: 'Entry Fragger', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
-        { name: '', ign: '', bgmiId: '', role: 'Sniper', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
+        { name: '', ign: '', bgmiId: '', role: 'Support', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
       ],
     });
     setSubmittedRegId('');
@@ -88,7 +87,7 @@ export default function RegisterPage() {
           <Trophy className="w-10 h-10 text-bgmi-gold" /> Official Squad Registration
         </h1>
         <p className="text-sm text-slate-400 max-w-xl mx-auto">
-          Register your college BGMI squad for Championship 2026. Complete all 4 steps to receive your official Registration ID.
+          Register your college BGMI squad for Championship 2026. Complete the steps to receive your official Registration ID.
         </p>
       </div>
 
@@ -115,25 +114,16 @@ export default function RegisterPage() {
         )}
 
         {currentStep === 3 && (
-          <Step3Documents
-            formData={formData}
-            updateFormData={updateFormData}
-            onNext={() => setCurrentStep(4)}
-            onPrev={() => setCurrentStep(2)}
-          />
-        )}
-
-        {currentStep === 4 && (
           <Step4Review
             formData={formData}
             onSubmit={handleFinalSubmit}
-            onPrev={() => setCurrentStep(3)}
+            onPrev={() => setCurrentStep(2)}
             goToStep={(stepNum) => setCurrentStep(stepNum)}
             submitting={submitting}
           />
         )}
 
-        {currentStep === 5 && (
+        {currentStep === 4 && (
           <Step5Success registrationId={submittedRegId} onReset={handleReset} />
         )}
       </div>

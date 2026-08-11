@@ -10,8 +10,8 @@ import { Shield, Lock, Mail, Crosshair, AlertCircle } from 'lucide-react';
 export default function AdminLoginPage() {
   const router = useRouter();
   const { showToast } = useToast();
-  const [email, setEmail] = useState('admin@bgmi-esports.in');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -47,15 +47,6 @@ export default function AdminLoginPage() {
           <p className="text-xs text-slate-400">Esports Administrator & Referee Portal</p>
         </div>
 
-        {/* DEMO CREDENTIALS NOTICE */}
-        <div className="p-3 bg-bgmi-dark/90 border border-bgmi-gold/30 rounded-xl text-xs space-y-1">
-          <p className="font-bold text-bgmi-gold flex items-center gap-1.5">
-            <Shield className="w-4 h-4" /> Demo Administrator Credentials
-          </p>
-          <p className="text-slate-300">Email: <span className="font-mono text-white">admin@bgmi-esports.in</span></p>
-          <p className="text-slate-300">Password: <span className="font-mono text-white">admin123</span></p>
-        </div>
-
         {errorMsg && (
           <div className="p-3 bg-bgmi-red/20 border border-bgmi-red/40 rounded-lg text-xs text-rose-300 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
@@ -71,6 +62,7 @@ export default function AdminLoginPage() {
               <input
                 type="email"
                 required
+                placeholder="obaidullahshaikh07@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 bg-bgmi-dark border border-bgmi-border rounded-xl text-white text-xs focus:outline-none focus:border-bgmi-gold font-medium"

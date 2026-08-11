@@ -21,8 +21,6 @@ export default function Navbar() {
     { name: 'Matches', href: '/matches' },
     { name: 'Standings', href: '/standings' },
     { name: 'Results', href: '/results' },
-    { name: 'Media', href: '/media' },
-    { name: 'Rules', href: '/rules' },
   ];
 
   const isActive = (href) => {
@@ -84,12 +82,6 @@ export default function Navbar() {
                 Register Team
               </Button>
             </Link>
-
-            <Link href="/admin/login">
-              <Button variant="outline" size="sm" icon={Shield}>
-                Admin Login
-              </Button>
-            </Link>
           </div>
 
           {/* MOBILE HAMBURGER TOGGLE */}
@@ -134,13 +126,7 @@ export default function Navbar() {
               );
             })}
 
-            <div className="pt-4 mt-2 border-t border-bgmi-border/60 flex flex-col gap-3">
-              <Link href="/admin/login" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="outline" size="md" className="w-full justify-start" icon={Shield}>
-                  Admin Control Center
-                </Button>
-              </Link>
-            </div>
+
           </div>
         </div>
       )}

@@ -23,14 +23,14 @@ export default function MatchCard({ match }) {
           <span className="text-xs font-bold text-slate-300">MATCH #{match.matchNumber}</span>
         </div>
         <span className="text-xs font-semibold text-bgmi-cyan bg-bgmi-cyan/10 px-2 py-0.5 rounded border border-bgmi-cyan/20">
-          {match.round}
+          {match.map}
         </span>
       </div>
 
       {/* Map & Date info */}
       <div className="space-y-2 mb-5">
         <h3 className="font-display font-bold text-lg text-white group-hover:text-bgmi-gold transition-colors">
-          {match.title || `Match #${match.matchNumber} - ${match.map}`}
+          Match #{match.matchNumber} — {match.map}
         </h3>
         
         <div className="flex items-center gap-4 text-xs font-medium text-slate-400">
@@ -60,7 +60,7 @@ export default function MatchCard({ match }) {
 
       {/* Footer link */}
       <div className="pt-3 border-t border-bgmi-border/40 flex items-center justify-between text-xs">
-        <span className="text-slate-400">{match.teamsCount || 16} Squads Registered</span>
+        <span className="text-slate-400">All Squads Competing</span>
         <Link
           href={`/matches/${match.id}`}
           className="inline-flex items-center gap-1 font-bold text-bgmi-gold group-hover:translate-x-1 transition-transform"

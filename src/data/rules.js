@@ -3,10 +3,10 @@ export const mockRules = [
     id: 'rule-1',
     category: 'Tournament Format',
     title: '1. Tournament Structure & Maps',
-    content: `The BGMI College Championship 2026 consists of 3 distinct stages:
-    - Group Stage: 24 Teams split into 3 Groups (A, B, C). Round Robin format across Erangel, Miramar, and Sanhok. Top 16 advance.
-    - Semifinals: 16 Teams play 6 matches across 2 days. Top 8 teams lock in Grand Final slots.
-    - Grand Finals: 8 Finalists + 4 Wildcard teams compete in 8 intense custom room matches on Erangel, Miramar, Sanhok, and Vikendi.`
+    content: `The BGMI College Championship 2026 consists of 4 custom room matches:
+    - Total Matches: 4 custom room matches in total.
+    - Battle Maps: Played exclusively on Erangel and Livik.
+    - Format: Point-based leaderboard based on placement and kill points.`
   },
   {
     id: 'rule-2',

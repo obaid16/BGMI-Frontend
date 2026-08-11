@@ -96,15 +96,19 @@ export default function StandingsPage() {
                 <th className="py-4 px-4 text-center">Matches</th>
                 <th className="py-4 px-4 text-center">WWCD</th>
                 <th className="py-4 px-4 text-center">Placement Pts</th>
-                <th className="py-4 px-4 text-center">Kills</th>
                 <th className="py-4 px-4 text-center">Kill Pts</th>
-                <th className="py-4 px-4 text-center">Penalty</th>
                 <th className="py-4 px-4 text-center">Total Points</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 Array.from({ length: 6 }).map((_, i) => <SkeletonTableRow key={i} />)
+              ) : standings.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-slate-400 font-semibold text-xs tracking-wider uppercase">
+                    No Standings Data Yet — Standings Will Update After Matches Are Completed
+                  </td>
+                </tr>
               ) : (
                 standings.map((standing) => (
                   <StandingRow key={standing.teamId} standing={standing} />
@@ -121,9 +125,13 @@ export default function StandingsPage() {
           Mobile Leaderboard Roster
         </h3>
         <div className="space-y-3">
-          {standings.map((standing) => (
-            <RankingCard key={standing.teamId} standing={standing} />
-          ))}
+          {standings.length === 0 ? (
+            <p className="text-slate-400 text-xs py-4 text-center">No standings data recorded yet.</p>
+          ) : (
+            standings.map((standing) => (
+              <RankingCard key={standing.teamId} standing={standing} />
+            ))
+          )}
         </div>
       </div>
 
@@ -142,7 +150,7 @@ export default function StandingsPage() {
         </div>
 
         <div className="p-4 bg-bgmi-dark rounded-xl border border-bgmi-gold/30 text-center font-display font-black text-sm sm:text-base text-bgmi-gold tracking-wide">
-          TOTAL POINTS = PLACEMENT POINTS + KILL POINTS (1 PT PER KILL) - PENALTY POINTS
+          TOTAL POINTS = PLACEMENT POINTS + KILL POINTS (1 PT PER KILL)
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3 text-center text-xs">

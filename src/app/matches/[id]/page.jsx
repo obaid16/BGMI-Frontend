@@ -57,7 +57,7 @@ export default function MatchDetailPage() {
           </div>
 
           <span className="text-xs font-bold text-bgmi-cyan bg-bgmi-cyan/10 px-3 py-1 rounded border border-bgmi-cyan/30">
-            {match.round} STAGE
+            {match.map} MAP
           </span>
         </div>
 
@@ -77,9 +77,9 @@ export default function MatchDetailPage() {
           </div>
 
           <div className="space-y-1">
-            <span className="text-xs text-slate-400 font-bold uppercase">REGISTERED SQUADS</span>
+            <span className="text-xs text-slate-400 font-bold uppercase">PARTICIPATING SQUADS</span>
             <p className="font-display font-black text-xl text-bgmi-cyan">
-              {match.teamsCount || 16} Squads
+              All Registered Squads
             </p>
           </div>
         </div>

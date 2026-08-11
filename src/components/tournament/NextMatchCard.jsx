@@ -54,7 +54,7 @@ export default function NextMatchCard({ match }) {
           </div>
 
           <h3 className="text-2xl font-black font-display text-white uppercase tracking-wide">
-            {match.round} — <span className="text-bgmi-gold">{match.map}</span>
+            MATCH #{match.matchNumber} — <span className="text-bgmi-gold">{match.map}</span>
           </h3>
 
           <div className="flex items-center justify-center lg:justify-start gap-4 text-xs font-semibold text-slate-400">
@@ -67,38 +67,14 @@ export default function NextMatchCard({ match }) {
           </div>
         </div>
 
-        {/* TEAM VS TEAM VERSUS DISPLAY */}
-        <div className="w-full lg:w-1/3 flex items-center justify-center gap-6 sm:gap-10 py-4 bg-bgmi-card/60 border border-bgmi-border/60 rounded-xl px-6">
-          {/* TEAM A */}
-          <div className="flex flex-col items-center text-center">
-            <div className="w-14 h-14 bg-bgmi-dark rounded-xl border border-bgmi-border p-2 mb-2 flex items-center justify-center shadow-lg">
-              <span className="font-black text-xl text-bgmi-gold">
-                {match.winner ? match.winner.shortName : (match.participatingTeams && match.participatingTeams[0] ? match.participatingTeams[0].shortName : 'ALPHA')}
-              </span>
-            </div>
-            <p className="text-xs font-bold text-white uppercase tracking-wider">
-              {match.winner ? match.winner.name : (match.participatingTeams && match.participatingTeams[0] ? match.participatingTeams[0].name : 'Team Alpha')}
-            </p>
-          </div>
-
-          {/* VS ICON */}
-          <div className="flex flex-col items-center">
-            <div className="w-9 h-9 rounded-full bg-bgmi-gold/20 border border-bgmi-gold flex items-center justify-center text-bgmi-gold font-black text-sm shadow-gold-glow">
-              VS
-            </div>
-          </div>
-
-          {/* TEAM B */}
-          <div className="flex flex-col items-center text-center">
-            <div className="w-14 h-14 bg-bgmi-dark rounded-xl border border-bgmi-border p-2 mb-2 flex items-center justify-center shadow-lg">
-              <span className="font-black text-xl text-bgmi-cyan">
-                {match.participatingTeams && match.participatingTeams[1] ? match.participatingTeams[1].shortName : 'TITAN'}
-              </span>
-            </div>
-            <p className="text-xs font-bold text-white uppercase tracking-wider">
-              {match.participatingTeams && match.participatingTeams[1] ? match.participatingTeams[1].name : 'Team Titans'}
-            </p>
-          </div>
+        {/* ALL TEAMS PARTICIPATING LOBBY DISPLAY */}
+        <div className="w-full lg:w-1/3 flex flex-col items-center justify-center py-4 bg-bgmi-card/60 border border-bgmi-border/60 rounded-xl px-6 text-center space-y-1">
+          <span className="text-xs font-black text-bgmi-gold uppercase tracking-wider">
+            ALL TEAMS PARTICIPATING
+          </span>
+          <p className="text-sm font-bold text-white uppercase tracking-wide">
+            Full Custom Room Lobby (All Squads)
+          </p>
         </div>
 
         {/* COUNTDOWN OR STREAM ACTION */}
@@ -123,25 +99,18 @@ export default function NextMatchCard({ match }) {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-bgmi-red font-bold text-sm">
-              <span className="w-3 h-3 rounded-full bg-bgmi-red animate-ping"></span>
-              STREAM IS LIVE ON YOUTUBE
+            <div className="flex items-center gap-2 text-bgmi-gold font-bold text-sm">
+              <span className="w-3 h-3 rounded-full bg-bgmi-gold animate-ping"></span>
+              MATCH IN PROGRESS
             </div>
           )}
 
           <div className="flex items-center gap-3">
-            <Link href={`/matches/${match.id || 'match-07'}`}>
+            <Link href={`/matches/${match.id || 'match-03'}`}>
               <Button variant="primary" size="md" icon={Swords}>
                 Match Hub
               </Button>
             </Link>
-            {match.streamUrl && (
-              <a href={match.streamUrl} target="_blank" rel="noreferrer">
-                <Button variant="outline" size="md" icon={Play}>
-                  Stream
-                </Button>
-              </a>
-            )}
           </div>
         </div>
 

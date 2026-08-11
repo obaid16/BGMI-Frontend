@@ -18,7 +18,7 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep, subm
       <div className="bg-bgmi-surface border border-bgmi-border rounded-xl p-5 clip-tactical space-y-3">
         <div className="flex items-center justify-between border-b border-bgmi-border/40 pb-2">
           <h4 className="font-display font-bold text-sm text-bgmi-gold uppercase flex items-center gap-2">
-            <Shield className="w-4 h-4" /> Team & College Overview
+            <Shield className="w-4 h-4" /> Team Overview
           </h4>
           <button
             onClick={() => goToStep(1)}
@@ -35,11 +35,7 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep, subm
             <span className="font-bold text-white text-sm">{formData.teamName}</span>
           </div>
           <div>
-            <span className="text-slate-400 block">College / Institute:</span>
-            <span className="font-bold text-white text-sm">{formData.collegeName}</span>
-          </div>
-          <div>
-            <span className="text-slate-400 block">Captain / Manager:</span>
+            <span className="text-slate-400 block">Team Captain:</span>
             <span className="font-bold text-white text-sm">{formData.captainName}</span>
           </div>
           <div>
@@ -69,54 +65,18 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep, subm
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-          {formData.players.map((p, idx) => (
-            <div key={idx} className="p-3 bg-bgmi-dark rounded-lg border border-bgmi-border/40 text-xs space-y-1.5">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded bg-bgmi-surface overflow-hidden border border-bgmi-border flex-shrink-0">
-                  {p.photo ? (
-                    <img src={p.photo} alt={p.ign} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="font-display font-black text-[9px] text-bgmi-gold flex items-center justify-center h-full">P0{idx + 1}</span>
-                  )}
-                </div>
-                <div>
-                  <span className="text-[9px] text-bgmi-gold font-bold uppercase block leading-none">
-                    {p.role} {p.isSub && '(Sub)'}
-                  </span>
-                </div>
-              </div>
-              <p className="font-bold text-white line-clamp-1">{p.ign}</p>
-              <p className="text-slate-400 text-[11px]">{p.name}</p>
-              <p className="text-[10px] text-slate-500">ID: {p.bgmiId}</p>
-              <div className="pt-1 border-t border-bgmi-border/40 overflow-hidden">
-                <span className="text-[9px] text-slate-500 uppercase block">Proof:</span>
-                <span className="text-[10px] text-bgmi-cyan truncate block font-mono" title={p.studentProof}>
-                  {p.studentProof || 'None'}
-                </span>
-              </div>
+          {formData.players.slice(0, 4).map((p, idx) => (
+            <div key={idx} className="p-3 bg-bgmi-dark rounded-lg border border-bgmi-border/40 text-xs space-y-1">
+              <span className="text-[10px] text-bgmi-gold font-bold uppercase block">
+                Player 0{idx + 1} • {p.role}
+              </span>
+              <p className="font-bold text-white text-sm">{p.name || 'Unnamed Player'}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* SECTION 3: DOCUMENTS */}
-      <div className="bg-bgmi-surface border border-bgmi-border rounded-xl p-5 clip-tactical space-y-3">
-        <div className="flex items-center justify-between border-b border-bgmi-border/40 pb-2">
-          <h4 className="font-display font-bold text-sm text-emerald-400 uppercase flex items-center gap-2">
-            <FileCheck className="w-4 h-4" /> Student Proof Status
-          </h4>
-          <button
-            onClick={() => goToStep(3)}
-            disabled={submitting}
-            className="text-xs text-bgmi-cyan hover:underline flex items-center gap-1 font-semibold disabled:opacity-50"
-          >
-            <Edit3 className="w-3 h-3" /> Edit Section
-          </button>
-        </div>
-        <p className="text-xs text-slate-400">
-          All {formData.players.length} players have attached student verification proofs. These will be reviewed by tournament referees.
-        </p>
-      </div>
+
 
       <div className="pt-6 border-t border-bgmi-border/60 flex items-center justify-between">
         <Button type="button" variant="secondary" size="md" onClick={onPrev} disabled={submitting}>

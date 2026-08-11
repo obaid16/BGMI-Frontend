@@ -47,13 +47,13 @@ export default function StandingRow({ standing }) {
 
       {/* MATCHES */}
       <td className="py-4 px-4 text-center text-xs font-semibold text-slate-300">
-        {standing.matches || 8}
+        {standing.matches !== undefined ? standing.matches : 0}
       </td>
 
       {/* WWCD */}
       <td className="py-4 px-4 text-center">
         <span className="inline-flex items-center gap-1 font-display font-bold text-xs text-bgmi-gold">
-          <Trophy className="w-3.5 h-3.5" /> {standing.wwcd || 0}
+          <span className="text-sm">🍗</span> {standing.wwcd || 0}
         </span>
       </td>
 
@@ -62,19 +62,9 @@ export default function StandingRow({ standing }) {
         {standing.placementPoints || 0}
       </td>
 
-      {/* KILLS */}
-      <td className="py-4 px-4 text-center text-xs font-semibold text-bgmi-cyan">
-        {standing.kills || 0}
-      </td>
-
       {/* KILL POINTS */}
       <td className="py-4 px-4 text-center text-xs font-semibold text-slate-300">
         {standing.killPoints || 0}
-      </td>
-
-      {/* PENALTY */}
-      <td className="py-4 px-4 text-center text-xs font-semibold text-rose-400">
-        {standing.penalty ? `-${standing.penalty}` : '0'}
       </td>
 
       {/* TOTAL POINTS */}

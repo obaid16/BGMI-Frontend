@@ -38,46 +38,51 @@ function AnimatedCounter({ target, duration = 1500, suffix = '' }) {
   );
 }
 
-const stats = [
-  {
-    icon: Users,
-    value: 24,
-    label: 'Registered Squads',
-    suffix: '',
-    color: 'text-bgmi-gold',
-    iconColor: 'text-bgmi-gold',
-    bg: 'bg-bgmi-gold/10 border-bgmi-gold/30',
-  },
-  {
-    icon: Target,
-    value: 96,
-    label: 'Verified Players',
-    suffix: '',
-    color: 'text-bgmi-cyan',
-    iconColor: 'text-bgmi-cyan',
-    bg: 'bg-bgmi-cyan/10 border-bgmi-cyan/30',
-  },
-  {
-    icon: Swords,
-    value: 12,
-    label: 'Total Matches',
-    suffix: '',
-    color: 'text-emerald-400',
-    iconColor: 'text-emerald-400',
-    bg: 'bg-emerald-500/10 border-emerald-500/30',
-  },
-  {
-    icon: Trophy,
-    value: 4,
-    label: 'Current Round',
-    suffix: '',
-    color: 'text-amber-400',
-    iconColor: 'text-amber-400',
-    bg: 'bg-amber-500/10 border-amber-500/30',
-  },
-];
+export default function TournamentStats({
+  registeredSquads = 24,
+  verifiedPlayers = 96,
+  totalMatches = 4,
+  currentRound = 4
+}) {
+  const stats = [
+    {
+      icon: Users,
+      value: registeredSquads,
+      label: 'Registered Squads',
+      suffix: '',
+      color: 'text-bgmi-gold',
+      iconColor: 'text-bgmi-gold',
+      bg: 'bg-bgmi-gold/10 border-bgmi-gold/30',
+    },
+    {
+      icon: Target,
+      value: verifiedPlayers,
+      label: 'Verified Players',
+      suffix: '',
+      color: 'text-bgmi-cyan',
+      iconColor: 'text-bgmi-cyan',
+      bg: 'bg-bgmi-cyan/10 border-bgmi-cyan/30',
+    },
+    {
+      icon: Swords,
+      value: totalMatches,
+      label: 'Total Matches',
+      suffix: '',
+      color: 'text-emerald-400',
+      iconColor: 'text-emerald-400',
+      bg: 'bg-emerald-500/10 border-emerald-500/30',
+    },
+    {
+      icon: Trophy,
+      value: currentRound,
+      label: 'Current Round',
+      suffix: '',
+      color: 'text-amber-400',
+      iconColor: 'text-amber-400',
+      bg: 'bg-amber-500/10 border-amber-500/30',
+    },
+  ];
 
-export default function TournamentStats() {
   return (
     <section className="py-2">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">

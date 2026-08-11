@@ -2,23 +2,38 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { CheckCircle2, ShieldCheck, Trophy, RotateCcw } from 'lucide-react';
+import { CheckCircle2, Mail, ShieldAlert, Trophy, RotateCcw } from 'lucide-react';
 import Button from '../common/Button';
 
 export default function Step5Success({ registrationId, onReset }) {
   return (
     <div className="text-center py-8 space-y-6 max-w-2xl mx-auto animate-in zoom-in-95 duration-300">
-      <div className="w-20 h-20 bg-bgmi-green/20 border border-bgmi-green text-bgmi-green rounded-full flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
+      <div className="w-20 h-20 bg-amber-500/20 border border-bgmi-gold text-bgmi-gold rounded-full flex items-center justify-center mx-auto shadow-gold-glow">
         <CheckCircle2 className="w-12 h-12 stroke-[2.5]" />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-bgmi-gold/40 rounded-full text-bgmi-gold text-xs font-bold uppercase tracking-wider">
+          <ShieldAlert className="w-4 h-4" /> STATUS: PENDING ADMIN REVIEW
+        </div>
+
         <h2 className="font-display font-black text-3xl sm:text-4xl text-white uppercase tracking-tight">
-          REGISTRATION <span className="text-bgmi-green">SUCCESSFUL</span>
+          REGISTRATION <span className="text-bgmi-gold">SUBMITTED</span>
         </h2>
-        <p className="text-sm text-slate-300">
-          Your college BGMI squad has been successfully submitted to the tournament review panel.
-        </p>
+
+        <div className="p-4 bg-bgmi-dark/90 border border-bgmi-border rounded-xl max-w-lg mx-auto space-y-2 text-left">
+          <div className="flex items-start gap-3">
+            <Mail className="w-5 h-5 text-bgmi-gold flex-shrink-0 mt-0.5" />
+            <div className="space-y-1 text-xs text-slate-300">
+              <p className="font-bold text-white text-sm">
+                Your squad has gone under review.
+              </p>
+              <p>
+                You will be notified via email. Once the admin team approves your squad, the team captain will receive an official approval email with tournament details and custom room lobby instructions.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* REGISTRATION ID CARD */}
@@ -28,7 +43,7 @@ export default function Step5Success({ registrationId, onReset }) {
           {registrationId || 'BGMI-2026-001'}
         </p>
         <p className="text-[11px] text-slate-400 italic">
-          "Save this Registration ID for future communication & lobby entry."
+          "Save this Registration ID for future communication & referee reference."
         </p>
       </div>
 

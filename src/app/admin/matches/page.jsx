@@ -124,9 +124,7 @@ export default function AdminMatchesPage() {
               className="w-full p-2.5 bg-bgmi-dark border border-bgmi-border rounded-lg text-white font-bold"
             >
               <option value="Erangel">Erangel</option>
-              <option value="Miramar">Miramar</option>
-              <option value="Sanhok">Sanhok</option>
-              <option value="Vikendi">Vikendi</option>
+              <option value="Livik">Livik</option>
             </select>
           </div>
 

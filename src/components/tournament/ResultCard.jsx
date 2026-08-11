@@ -20,13 +20,13 @@ export default function ResultCard({ result }) {
       {/* Winner Showcase */}
       <div className="mb-4 p-4 bg-gradient-to-r from-bgmi-gold/15 via-bgmi-card to-bgmi-surface border border-bgmi-gold/40 rounded-xl flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-bgmi-dark p-1 border border-bgmi-gold flex items-center justify-center">
-            <Trophy className="w-6 h-6 text-bgmi-gold animate-bounce" />
+          <div className="w-10 h-10 rounded-lg bg-bgmi-dark p-1 border border-bgmi-gold flex items-center justify-center text-xl">
+            🍗
           </div>
           <div>
             <p className="text-[10px] uppercase font-bold text-bgmi-gold">WWCD Champions</p>
             <h4 className="font-display font-black text-lg text-white group-hover:text-bgmi-gold transition-colors">
-              {result.winner?.teamName || 'Team Alpha'}
+              {result.winner?.teamName || 'Winner Squad'}
             </h4>
           </div>
         </div>

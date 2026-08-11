@@ -15,7 +15,7 @@ import TrophyCanvas from '@/components/tournament/TrophyCanvas';
 import Button from '@/components/common/Button';
 import { SkeletonGrid } from '@/components/common/Skeleton';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { getMatches, getStandings, getResults, getMedia, getAnnouncements, getTeamById } from '@/services/api';
+import { getMatches, getStandings, getResults, getMedia, getAnnouncements, getTeamById, getTeams } from '@/services/api';
 import { Trophy, Swords, Flame, Video, Bell, ArrowRight, Award, ShieldCheck } from 'lucide-react';
 
 export default function HomePage() {
@@ -28,6 +28,7 @@ export default function HomePage() {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [championTeam, setChampionTeam] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [teamsStats, setTeamsStats] = useState({ registeredSquads: 0, verifiedPlayers: 0 });
 
   // Scroll reveal refs for GSAP animations
   const resultsGridRef = useRef(null);
@@ -46,6 +47,11 @@ export default function HomePage() {
         const results = await getResults();
         const media = await getMedia();
         const anns = await getAnnouncements();
+        const teams = await getTeams();
+
+        const registered = teams ? teams.length : 0;
+        const verified = teams ? teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0) : 0;
+        setTeamsStats({ registeredSquads: registered, verifiedPlayers: verified });
 
         setNextMatch(matches.find((m) => m.status === 'Live' || m.status === 'Upcoming') || matches[0]);
         setTopStandings(standings.slice(0, 5));
@@ -86,7 +92,12 @@ export default function HomePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
 
         {/* 2. ANIMATED TOURNAMENT STATS COUNTERS */}
-        <TournamentStats />
+        <TournamentStats
+          registeredSquads={teamsStats.registeredSquads}
+          verifiedPlayers={teamsStats.verifiedPlayers}
+          totalMatches={4}
+          currentRound={4}
+        />
 
         {/* CHAMPION SECTION */}
         <section className="space-y-6">
@@ -217,16 +228,22 @@ export default function HomePage() {
                   <th className="py-4 px-4 text-center">Played</th>
                   <th className="py-4 px-4 text-center">WWCD</th>
                   <th className="py-4 px-4 text-center">Placement</th>
-                  <th className="py-4 px-4 text-center">Kills</th>
                   <th className="py-4 px-4 text-center">Kill Pts</th>
-                  <th className="py-4 px-4 text-center">Penalty</th>
                   <th className="py-4 px-4 text-center">Total Points</th>
                 </tr>
               </thead>
               <tbody>
-                {topStandings.map((standing) => (
-                  <StandingRow key={standing.teamId} standing={standing} />
-                ))}
+                {topStandings.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-8 text-center text-slate-400 font-semibold text-xs tracking-wider uppercase">
+                      No Standings Data Yet — Standings Will Update After Matches
+                    </td>
+                  </tr>
+                ) : (
+                  topStandings.map((standing) => (
+                    <StandingRow key={standing.teamId} standing={standing} />
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -282,20 +299,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 6. TOURNAMENT ANNOUNCEMENTS */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-bgmi-border/60 pb-4">
-            <h2 className="font-display font-black text-2xl sm:text-3xl text-white uppercase tracking-wide flex items-center gap-2">
-              <Bell className="w-6 h-6 text-bgmi-gold" /> Official Bulletins & News
-            </h2>
-          </div>
 
-          <div ref={announcementsGridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {announcements.map((ann) => (
-              <AnnouncementCard key={ann.id} announcement={ann} />
-            ))}
-          </div>
-        </section>
 
       </div>
 

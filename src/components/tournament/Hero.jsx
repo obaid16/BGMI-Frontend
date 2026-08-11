@@ -150,7 +150,7 @@ export default function Hero() {
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Verified Players</p>
           </div>
           <div className="bg-bgmi-surface/90 backdrop-blur-sm p-5 text-center">
-            <p className="text-3xl sm:text-4xl font-black font-display text-bgmi-cyan">12</p>
+            <p className="text-3xl sm:text-4xl font-black font-display text-bgmi-cyan">4</p>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Total Matches</p>
           </div>
           <div className="bg-bgmi-surface/90 backdrop-blur-sm p-5 text-center">

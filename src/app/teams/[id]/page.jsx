@@ -91,7 +91,7 @@ export default function TeamDetailPage() {
             <div className="border-l border-bgmi-border/60 px-2">
               <p className="text-[10px] text-slate-400 font-bold uppercase">WWCD</p>
               <p className="font-display font-black text-xl text-bgmi-gold flex items-center justify-center gap-1">
-                <Trophy className="w-4 h-4" /> {team.wwcd || 0}
+                <span className="text-base">🍗</span> {team.wwcd || 0}
               </p>
             </div>
             <div className="border-l border-bgmi-border/60 px-2">

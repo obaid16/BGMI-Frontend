@@ -52,7 +52,7 @@ export default function TeamCard({ team }) {
           <div>
             <p className="text-[10px] text-slate-400 font-semibold uppercase">WWCD</p>
             <p className="font-display font-bold text-sm text-bgmi-gold flex items-center justify-center gap-1">
-              <Trophy className="w-3 h-3" /> {team.wwcd || 0}
+              <span className="text-xs">🍗</span> {team.wwcd || 0}
             </p>
           </div>
           <div className="border-x border-bgmi-border/40">

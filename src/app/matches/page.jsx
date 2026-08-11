@@ -16,7 +16,8 @@ export default function MatchesPage() {
     async function fetchMatches() {
       setLoading(true);
       const data = await getMatches(filter);
-      setMatches(data);
+      const sortedData = [...data].sort((a, b) => (a.matchNumber || 0) - (b.matchNumber || 0));
+      setMatches(sortedData);
       setLoading(false);
     }
     fetchMatches();

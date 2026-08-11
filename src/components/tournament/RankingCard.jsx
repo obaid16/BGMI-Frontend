@@ -51,7 +51,7 @@ export default function RankingCard({ standing }) {
         <div className="bg-bgmi-dark/60 p-2 rounded border border-bgmi-border/30">
           <span className="text-[10px] text-slate-400 uppercase font-semibold block">WWCD</span>
           <span className="font-display font-bold text-bgmi-gold flex items-center justify-center gap-1">
-            <Trophy className="w-3 h-3" /> {standing.wwcd || 0}
+            <span className="text-xs">🍗</span> {standing.wwcd || 0}
           </span>
         </div>
         <div className="bg-bgmi-dark/60 p-2 rounded border border-bgmi-border/30">
