@@ -29,8 +29,10 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     async function loadStats() {
       setLoading(true);
-      const tData = await getTeams();
-      const sData = await getAdminDashboardStats();
+      const [tData, sData] = await Promise.all([
+        getTeams(),
+        getAdminDashboardStats()
+      ]);
       setTeams(tData);
       setStats(sData);
       setLoading(false);

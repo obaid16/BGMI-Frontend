@@ -4,16 +4,17 @@ import React, { useState, useEffect } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
-import { getMatches, createMatch, updateMatchStatus } from '@/services/api';
+import { getMatches, createMatch, updateMatchStatus, updateMatch } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Swords, Plus, Radio, CheckCircle2, Clock } from 'lucide-react';
+import { Swords, Plus, Radio, CheckCircle2, Clock, Edit2 } from 'lucide-react';
 
 export default function AdminMatchesPage() {
   const { showToast } = useToast();
   const [matches, setMatches] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingMatch, setEditingMatch] = useState(null);
 
-  // New match state
+  // New/Edit match state
   const [round, setRound] = useState('Semifinal');
   const [map, setMap] = useState('Erangel');
   const [date, setDate] = useState('2026-08-09');
@@ -27,12 +28,41 @@ export default function AdminMatchesPage() {
     loadData();
   }, []);
 
-  const handleCreate = async (e) => {
+  const handleCreateClick = () => {
+    setEditingMatch(null);
+    setRound('Semifinal');
+    setMap('Erangel');
+    setDate('2026-08-09');
+    setTime('11:00 AM');
+    setIsModalOpen(true);
+  };
+
+  const handleEditClick = (match) => {
+    setEditingMatch(match);
+    setRound(match.round);
+    setMap(match.map);
+    setDate(match.date);
+    setTime(match.time);
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const created = await createMatch({ round, map, date, time, status: 'Upcoming' });
-    setMatches([created, ...matches]);
-    showToast('Match Lobby Scheduled Successfully!', 'success');
+    if (editingMatch) {
+      const updated = await updateMatch(editingMatch.id, { round, map, date, time });
+      if (updated) {
+        setMatches((prev) => prev.map((m) => (m.id === editingMatch.id ? updated : m)));
+        showToast('Match Lobby Updated Successfully!', 'success');
+      } else {
+        showToast('Failed to update match', 'error');
+      }
+    } else {
+      const created = await createMatch({ round, map, date, time, status: 'Upcoming' });
+      setMatches([created, ...matches]);
+      showToast('Match Lobby Scheduled Successfully!', 'success');
+    }
     setIsModalOpen(false);
+    setEditingMatch(null);
   };
 
   const handleStatusToggle = async (matchId, currentStatus) => {
@@ -54,7 +84,7 @@ export default function AdminMatchesPage() {
           <p className="text-xs text-slate-400">Schedule custom matches, dispatch room credentials, and change live stream status.</p>
         </div>
 
-        <Button variant="primary" size="md" icon={Plus} onClick={() => setIsModalOpen(true)}>
+        <Button variant="primary" size="md" icon={Plus} onClick={handleCreateClick}>
           Create New Match
         </Button>
       </div>
@@ -69,7 +99,7 @@ export default function AdminMatchesPage() {
               <th className="p-4">Map</th>
               <th className="p-4">Schedule Time</th>
               <th className="p-4">Status</th>
-              <th className="p-4 text-right">Change Status</th>
+              <th className="p-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-bgmi-border/40">
@@ -84,7 +114,15 @@ export default function AdminMatchesPage() {
                     {m.status}
                   </Badge>
                 </td>
-                <td className="p-4 text-right">
+                <td className="p-4 text-right space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    icon={Edit2}
+                    onClick={() => handleEditClick(m)}
+                  >
+                    Edit
+                  </Button>
                   <Button
                     variant={m.status === 'Upcoming' ? 'danger' : m.status === 'Live' ? 'primary' : 'outline'}
                     size="sm"
@@ -99,9 +137,17 @@ export default function AdminMatchesPage() {
         </table>
       </div>
 
-      {/* CREATE MATCH MODAL */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Schedule New Match Lobby" maxWidth="max-w-md">
-        <form onSubmit={handleCreate} className="space-y-4 text-xs">
+      {/* CREATE/EDIT MATCH MODAL */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingMatch(null);
+        }}
+        title={editingMatch ? `Edit Match #${editingMatch.matchNumber}` : "Schedule New Match Lobby"}
+        maxWidth="max-w-md"
+      >
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div className="space-y-1">
             <label className="font-bold text-slate-300 uppercase">Stage / Round</label>
             <select
@@ -152,11 +198,18 @@ export default function AdminMatchesPage() {
           </div>
 
           <div className="pt-4 flex justify-end gap-3">
-            <Button variant="secondary" size="md" onClick={() => setIsModalOpen(false)}>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => {
+                setIsModalOpen(false);
+                setEditingMatch(null);
+              }}
+            >
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="md">
-              Schedule Match
+              {editingMatch ? "Update Match" : "Schedule Match"}
             </Button>
           </div>
         </form>

@@ -1,5 +1,9 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
+// Simple in-memory cache for GET requests to boost page navigation speed
+const apiCache = new Map();
+const CACHE_TTL = 15 * 1000; // 15 seconds Cache TTL
+
 /**
  * Reusable helper to make HTTP requests to the backend with auto-attached JWT headers
  * @param {string} endpoint - API path (e.g. '/teams')
@@ -7,6 +11,15 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/a
  * @returns {Promise<any>}
  */
 async function fetchAPI(endpoint, options = {}) {
+  const isGet = !options.method || options.method.toUpperCase() === 'GET';
+
+  if (isGet) {
+    const cached = apiCache.get(endpoint);
+    if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
+      return cached.data;
+    }
+  }
+
   let token = null;
   if (typeof window !== 'undefined') {
     token = localStorage.getItem('bgmi_esports_admin_token');
@@ -27,6 +40,17 @@ async function fetchAPI(endpoint, options = {}) {
   if (!response.ok) {
     throw new Error(resData.message || 'API request failed');
   }
+
+  if (isGet) {
+    apiCache.set(endpoint, {
+      data: resData,
+      timestamp: Date.now()
+    });
+  } else {
+    // Clear cache on write operations (POST, PUT, DELETE) so subsequent reads get fresh data
+    apiCache.clear();
+  }
+
   return resData;
 }
 
@@ -130,6 +154,14 @@ export async function updateMatchStatus(matchId, status) {
     body: JSON.stringify({ status }),
   });
   return { success: res.success };
+}
+
+export async function updateMatch(matchId, matchData) {
+  const res = await fetchAPI(`/matches/${matchId}`, {
+    method: 'PUT',
+    body: JSON.stringify(matchData),
+  });
+  return res.data;
 }
 
 // ==================== STANDINGS API ====================
@@ -262,6 +294,18 @@ export async function verifyPlayerStatus(playerId, verificationStatus) {
     return res.data;
   } catch (err) {
     console.error('verifyPlayerStatus failed:', err);
+    return null;
+  }
+}
+
+export async function deletePlayer(playerId) {
+  try {
+    const res = await fetchAPI(`/players/${playerId}`, {
+      method: 'DELETE',
+    });
+    return res;
+  } catch (err) {
+    console.error('deletePlayer failed:', err);
     return null;
   }
 }

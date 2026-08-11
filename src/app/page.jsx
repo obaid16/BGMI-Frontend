@@ -42,12 +42,14 @@ export default function HomePage() {
     async function loadHomeData() {
       try {
         setLoading(true);
-        const matches = await getMatches();
-        const standings = await getStandings();
-        const results = await getResults();
-        const media = await getMedia();
-        const anns = await getAnnouncements();
-        const teams = await getTeams();
+        const [matches, standings, results, media, anns, teams] = await Promise.all([
+          getMatches(),
+          getStandings(),
+          getResults(),
+          getMedia(),
+          getAnnouncements(),
+          getTeams()
+        ]);
 
         const registered = teams ? teams.length : 0;
         const verified = teams ? teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0) : 0;

@@ -17,9 +17,11 @@ export default function AdminResultsPage() {
 
   useEffect(() => {
     async function loadData() {
-      const rData = await getResults();
-      const mData = await getMatches();
-      const tData = await getTeams();
+      const [rData, mData, tData] = await Promise.all([
+        getResults(),
+        getMatches(),
+        getTeams()
+      ]);
       setResults(rData);
       setMatches(mData);
       setTeams(tData);

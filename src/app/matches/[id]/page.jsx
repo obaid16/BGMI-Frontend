@@ -21,8 +21,10 @@ export default function MatchDetailPage() {
     async function loadData() {
       if (!matchId) return;
       setLoading(true);
-      const mData = await getMatchById(matchId);
-      const rData = await getResultById(matchId);
+      const [mData, rData] = await Promise.all([
+        getMatchById(matchId),
+        getResultById(matchId)
+      ]);
       setMatch(mData);
       setResult(rData);
       setLoading(false);

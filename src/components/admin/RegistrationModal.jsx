@@ -50,11 +50,8 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
             <table className="w-full text-left text-xs border border-bgmi-border rounded-lg">
               <thead className="bg-bgmi-dark text-slate-400 uppercase font-bold text-[10px]">
                 <tr>
-                  <th className="p-2.5">Photo</th>
                   <th className="p-2.5">Player IGN / Name</th>
-                  <th className="p-2.5">BGMI ID</th>
                   <th className="p-2.5">Role</th>
-                  <th className="p-2.5">Student ID Proof</th>
                   <th className="p-2.5 text-center">Status</th>
                 </tr>
               </thead>
@@ -62,34 +59,10 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
                 {team.players?.map((p, idx) => (
                   <tr key={idx} className="hover:bg-bgmi-dark/40">
                     <td className="p-2.5">
-                      <div className="w-8 h-8 rounded bg-bgmi-dark overflow-hidden border border-bgmi-border">
-                        {p.avatar || p.photo ? (
-                          <img src={p.avatar || p.photo} alt={p.ign} className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="text-[10px] text-slate-500 flex items-center justify-center h-full">N/A</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-2.5">
                       <p className="font-bold text-white">{p.ign}</p>
                       <p className="text-slate-400 text-[10px]">{p.name}</p>
                     </td>
-                    <td className="p-2.5 font-mono text-bgmi-cyan">{p.bgmiId}</td>
                     <td className="p-2.5"><Badge variant="default" size="sm">{p.role}</Badge></td>
-                    <td className="p-2.5">
-                      {p.studentProof ? (
-                        <a
-                          href={p.studentProof}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-bgmi-gold font-bold hover:underline flex items-center gap-1 text-[11px]"
-                        >
-                          View ID Card ↗
-                        </a>
-                      ) : (
-                        <span className="text-slate-500 font-medium">Not Uploaded</span>
-                      )}
-                    </td>
                     <td className="p-2.5 text-center">
                       <Badge variant={p.verificationStatus === 'Verified' || p.verified ? 'green' : p.verificationStatus === 'Rejected' ? 'rejected' : 'pending'} size="sm">
                         {p.verificationStatus || (p.verified ? 'Verified' : 'Pending Verification')}

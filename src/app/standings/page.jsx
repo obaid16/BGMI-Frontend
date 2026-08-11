@@ -15,8 +15,10 @@ export default function StandingsPage() {
   useEffect(() => {
     async function fetchStandingsData() {
       setLoading(true);
-      const data = await getStandings();
-      const ruleData = await getScoringRules();
+      const [data, ruleData] = await Promise.all([
+        getStandings(),
+        getScoringRules()
+      ]);
       setStandings(data);
       setRules(ruleData);
       setLoading(false);

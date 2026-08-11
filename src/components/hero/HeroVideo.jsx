@@ -60,6 +60,7 @@ export default function HeroVideo({
       {!hasError && (
         <video
           ref={videoRef}
+          src={videoSrc}
           autoPlay
           muted
           loop
@@ -73,7 +74,6 @@ export default function HeroVideo({
             isLoaded ? 'opacity-35' : 'opacity-0'
           }`}
         >
-          <source src={videoSrc} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       )}
