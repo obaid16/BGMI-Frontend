@@ -11,6 +11,7 @@ export default function AdminPlayersPage() {
   const { showToast } = useToast();
   const [allPlayers, setAllPlayers] = useState([]);
   const [squadFilter, setSquadFilter] = useState('');
+  const [deletingId, setDeletingId] = useState(null);
 
   async function loadData() {
     const teams = await getTeams();
@@ -48,13 +49,21 @@ export default function AdminPlayersPage() {
   };
 
   const handleDeletePlayer = async (playerId) => {
+    if (deletingId) return;
     if (window.confirm('Are you sure you want to delete this player from the roster?')) {
-      const res = await deletePlayer(playerId);
-      if (res) {
-        setAllPlayers((prev) => prev.filter((p) => (p.id || p._id) !== playerId));
-        showToast('Player removed from roster successfully', 'success');
-      } else {
-        showToast('Failed to remove player', 'error');
+      try {
+        setDeletingId(playerId);
+        const res = await deletePlayer(playerId);
+        if (res) {
+          setAllPlayers((prev) => prev.filter((p) => (p.id || p._id) !== playerId));
+          showToast('Player removed from roster successfully', 'success');
+        } else {
+          showToast('Failed to remove player', 'error');
+        }
+      } catch (err) {
+        showToast('An error occurred while removing the player', 'error');
+      } finally {
+        setDeletingId(null);
       }
     }
   };
@@ -155,7 +164,10 @@ export default function AdminPlayersPage() {
                       )}
                       <button
                         onClick={() => handleDeletePlayer(pId)}
-                        className="inline-flex items-center justify-center p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors align-middle"
+                        disabled={deletingId === pId}
+                        className={`inline-flex items-center justify-center p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors align-middle ${
+                          deletingId === pId ? 'opacity-40 cursor-not-allowed' : ''
+                        }`}
                         title="Delete Player"
                       >
                         <Trash2 className="w-4 h-4" />

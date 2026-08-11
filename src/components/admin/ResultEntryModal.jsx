@@ -10,8 +10,6 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
   const [selectedTeamId, setSelectedTeamId] = useState('team-1');
   const [placementRank, setPlacementRank] = useState(1);
   const [kills, setKills] = useState(12);
-  const [bonus, setBonus] = useState(1);
-  const [penalty, setPenalty] = useState(0);
 
   // Sync state once data loads
   React.useEffect(() => {
@@ -42,10 +40,8 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
 
   const placementPts = getPlacementPoints(placementRank);
   const killPts = parseInt(kills, 10) || 0;
-  const bonusPts = parseInt(bonus, 10) || 0;
-  const penaltyPts = parseInt(penalty, 10) || 0;
 
-  const totalPoints = placementPts + killPts + bonusPts - penaltyPts;
+  const totalPoints = placementPts + killPts;
 
   const handleSave = (publish = false) => {
     const selectedTeam = teams.find((t) => t.id === selectedTeamId) || teams[0];
@@ -72,8 +68,8 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
           kills: killPts,
           killPts,
           total: totalPoints,
-          bonus: bonusPts,
-          penalty: penaltyPts,
+          bonus: 0,
+          penalty: 0,
         },
       ],
       publish,
@@ -121,7 +117,7 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
         </div>
 
         {/* Inputs Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-bgmi-dark/70 rounded-xl border border-bgmi-border">
+        <div className="grid grid-cols-2 gap-3 p-4 bg-bgmi-dark/70 rounded-xl border border-bgmi-border">
           <div className="space-y-1">
             <label className="font-bold text-slate-400 uppercase">Placement Rank</label>
             <input
@@ -144,28 +140,6 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
               className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-bgmi-cyan text-center font-bold"
             />
           </div>
-
-          <div className="space-y-1">
-            <label className="font-bold text-slate-400 uppercase">WWCD Bonus</label>
-            <input
-              type="number"
-              min="0"
-              value={bonus}
-              onChange={(e) => setBonus(e.target.value)}
-              className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-bgmi-gold text-center font-bold"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="font-bold text-slate-400 uppercase">Penalty Pts</label>
-            <input
-              type="number"
-              min="0"
-              value={penalty}
-              onChange={(e) => setPenalty(e.target.value)}
-              className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-rose-400 text-center font-bold"
-            />
-          </div>
         </div>
 
         {/* LIVE CALCULATION PREVIEW BOX */}
@@ -178,7 +152,7 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
           </div>
 
           <div className="flex items-center justify-between text-sm pt-2 border-t border-bgmi-border/40 font-mono">
-            <span>Placement ({placementPts}) + Kills ({killPts}) + Bonus ({bonusPts}) - Penalty ({penaltyPts})</span>
+            <span>Placement ({placementPts}) + Kills ({killPts})</span>
             <span className="font-display font-black text-2xl text-bgmi-gold">{totalPoints} PTS</span>
           </div>
         </div>

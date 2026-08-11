@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { CheckCircle2, Mail, ShieldAlert, Trophy, RotateCcw } from 'lucide-react';
+import { CheckCircle2, Mail, ShieldAlert, Trophy, RotateCcw, MessageCircle } from 'lucide-react';
 import Button from '../common/Button';
 
 export default function Step5Success({ registrationId, onReset }) {
@@ -45,6 +45,24 @@ export default function Step5Success({ registrationId, onReset }) {
         <p className="text-[11px] text-slate-400 italic">
           "Save this Registration ID for future communication & referee reference."
         </p>
+      </div>
+
+      {/* JOIN WHATSAPP ACTION CARD */}
+      <div className="p-5 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl space-y-3 max-w-md mx-auto text-center clip-tactical">
+        <h4 className="font-display font-bold text-sm text-emerald-400 uppercase tracking-wide flex items-center justify-center gap-2">
+          <MessageCircle className="w-4 h-4 text-emerald-400" /> Join Captains' WhatsApp Group
+        </h4>
+        <p className="text-xs text-slate-300">
+          All team captains and players must join the official WhatsApp Group to receive live custom lobby room IDs, passwords, schedules, and admin referee support.
+        </p>
+        <a
+          href="https://chat.whatsapp.com/E8vPQ1JZOPV4BNPF9FPLKG?s=cl&p=a&ilr=4"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs uppercase tracking-wider transition-all shadow-emerald-glow active:scale-95"
+        >
+          <span>Join WhatsApp Group</span>
+        </a>
       </div>
 
       {/* ACTION BUTTONS */}

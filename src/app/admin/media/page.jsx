@@ -39,7 +39,7 @@ export default function AdminMediaPage() {
         <h1 className="font-display font-black text-2xl text-white uppercase tracking-wide flex items-center gap-2">
           <Video className="w-6 h-6 text-bgmi-cyan" /> Uploaded Media Verification Queue
         </h1>
-        <p className="text-xs text-slate-400">Verify player POV clips, match screenshots, and victory photos before publishing to public gallery.</p>
+        <p className="text-xs text-slate-400">Verify player POV clips and match screenshots before publishing to public gallery.</p>
       </div>
 
       {/* MEDIA TABLE */}

@@ -293,7 +293,7 @@ export async function verifyPlayerStatus(playerId, verificationStatus) {
     });
     return res.data;
   } catch (err) {
-    console.error('verifyPlayerStatus failed:', err);
+    console.warn('verifyPlayerStatus failed:', err);
     return null;
   }
 }
@@ -305,7 +305,7 @@ export async function deletePlayer(playerId) {
     });
     return res;
   } catch (err) {
-    console.error('deletePlayer failed:', err);
+    console.warn('deletePlayer failed:', err);
     return null;
   }
 }
@@ -371,4 +371,16 @@ export async function deleteRule(id) {
     method: 'DELETE',
   });
   return res.success;
+}
+
+export async function deleteTeam(id) {
+  try {
+    const res = await fetchAPI(`/teams/${id}`, {
+      method: 'DELETE',
+    });
+    return res;
+  } catch (err) {
+    console.warn('deleteTeam failed:', err);
+    return null;
+  }
 }

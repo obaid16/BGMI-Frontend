@@ -44,7 +44,7 @@ export default function AdminResultsPage() {
           <h1 className="font-display font-black text-2xl text-white uppercase tracking-wide flex items-center gap-2">
             <Trophy className="w-6 h-6 text-bgmi-gold" /> Result Entry & Live Score Calculator
           </h1>
-          <p className="text-xs text-slate-400">Enter placement rank, kills, bonuses, and penalties with live points preview.</p>
+          <p className="text-xs text-slate-400">Enter placement rank and kills with live points preview.</p>
         </div>
 
         <Button variant="primary" size="md" icon={Plus} onClick={() => setIsModalOpen(true)}>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
-import { getTeams, updateTeamStatus } from '@/services/api';
+import { getTeams, updateTeamStatus, deleteTeam } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { Users, Plus, ShieldCheck, Trash2, Edit3 } from 'lucide-react';
 
@@ -12,6 +12,7 @@ export default function AdminTeamsPage() {
   const { showToast } = useToast();
   const [teams, setTeams] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   // Form states
   const [newTeamName, setNewTeamName] = useState('');
@@ -53,9 +54,24 @@ export default function AdminTeamsPage() {
     setNewCollege('');
   };
 
-  const handleDeleteTeam = (id) => {
-    setTeams((prev) => prev.filter((t) => t.id !== id));
-    showToast('Team Removed from Roster', 'info');
+  const handleDeleteTeam = async (id) => {
+    if (deletingId) return;
+    if (window.confirm('Are you sure you want to delete this squad profile entirely? This will also remove the players.')) {
+      try {
+        setDeletingId(id);
+        const res = await deleteTeam(id);
+        if (res) {
+          setTeams((prev) => prev.filter((t) => t.id !== id));
+          showToast('Team Roster Removed successfully', 'success');
+        } else {
+          showToast('Failed to remove team', 'error');
+        }
+      } catch (err) {
+        showToast('An error occurred while deleting team', 'error');
+      } finally {
+        setDeletingId(null);
+      }
+    }
   };
 
   return (
@@ -98,7 +114,10 @@ export default function AdminTeamsPage() {
               <span className="text-slate-400">{team.players?.length || 4} Squad Members</span>
               <button
                 onClick={() => handleDeleteTeam(team.id)}
-                className="text-rose-400 hover:text-rose-300 flex items-center gap-1 font-bold"
+                disabled={deletingId === team.id}
+                className={`text-rose-400 hover:text-rose-300 flex items-center gap-1 font-bold ${
+                  deletingId === team.id ? 'opacity-40 cursor-not-allowed' : ''
+                }`}
               >
                 <Trash2 className="w-3.5 h-3.5" /> Delete Squad
               </button>

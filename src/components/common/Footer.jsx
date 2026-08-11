@@ -55,19 +55,30 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* COL 4: SUPPORT & DISCORD */}
+          {/* COL 4: SUPPORT & COMMUNITY */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold font-display uppercase tracking-widest text-white">Community</h4>
-            <p className="text-xs text-slate-400">Join the official Esports Discord for lobby credentials & dispute queries.</p>
-            <a
-              href="https://discord.com"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/40 rounded-lg text-xs font-bold transition-all clip-tactical"
-            >
-              <span>Join Official Discord</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            <p className="text-xs text-slate-400">Join our Discord server and WhatsApp group for lobby credentials & alerts.</p>
+            <div className="flex flex-col gap-2">
+              <a
+                href="https://discord.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/40 rounded-lg text-xs font-bold transition-all clip-tactical"
+              >
+                <span>Join Official Discord</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="https://chat.whatsapp.com/E8vPQ1JZOPV4BNPF9FPLKG?s=cl&p=a&ilr=4"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 rounded-lg text-xs font-bold transition-all clip-tactical"
+              >
+                <span>Join WhatsApp Group</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
 
         </div>

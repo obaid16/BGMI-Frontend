@@ -24,7 +24,7 @@ export default function MediaPage() {
     fetchMedia();
   }, [filter]);
 
-  const categories = ['All', 'POV', 'Screenshots', 'Team Photos', 'Player Photos', 'Results'];
+  const categories = ['All', 'POV', 'Screenshots', 'Results'];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
@@ -35,7 +35,7 @@ export default function MediaPage() {
           <Video className="w-10 h-10 text-bgmi-cyan" /> Esports Media Gallery
         </h1>
         <p className="text-sm text-slate-400 max-w-2xl">
-          High-definition player POV recordings, team victory photos, in-game screenshot captures, and referee scorecards.
+          High-definition player POV recordings, in-game screenshot captures, and referee scorecards.
         </p>
       </div>
 
