@@ -26,7 +26,7 @@ async function fetchAPI(endpoint, options = {}) {
   }
 
   const headers = {
-    'Content-Type': 'application/json',
+    ...(!(options.body instanceof FormData) && { 'Content-Type': 'application/json' }),
     ...(token && { 'Authorization': `Bearer ${token}` }),
     ...options.headers,
   };
@@ -285,6 +285,29 @@ export async function getRules() {
 }
 
 // ==================== PLAYERS API ====================
+export async function getPlayers() {
+  try {
+    const res = await fetchAPI('/players');
+    return res.data || [];
+  } catch (err) {
+    console.warn('getPlayers failed:', err);
+    return [];
+  }
+}
+
+export async function uploadMedia(formData) {
+  try {
+    const res = await fetchAPI('/media', {
+      method: 'POST',
+      body: formData,
+    });
+    return res;
+  } catch (err) {
+    console.warn('uploadMedia failed:', err);
+    return null;
+  }
+}
+
 export async function verifyPlayerStatus(playerId, verificationStatus) {
   try {
     const res = await fetchAPI(`/players/${playerId}/verify`, {

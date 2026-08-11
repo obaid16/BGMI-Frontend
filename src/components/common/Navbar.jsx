@@ -21,6 +21,7 @@ export default function Navbar() {
     { name: 'Matches', href: '/matches' },
     { name: 'Standings', href: '/standings' },
     { name: 'Results', href: '/results' },
+    { name: 'MVP', href: '/mvp' },
   ];
 
   const isActive = (href) => {

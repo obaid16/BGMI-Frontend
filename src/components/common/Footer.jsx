@@ -41,6 +41,7 @@ export default function Footer() {
               <li><Link href="/matches" className="hover:text-bgmi-gold transition-colors">Schedule & Lobbies</Link></li>
               <li><Link href="/standings" className="hover:text-bgmi-gold transition-colors">Leaderboard Standings</Link></li>
               <li><Link href="/results" className="hover:text-bgmi-gold transition-colors">Match Results & Proofs</Link></li>
+              <li><Link href="/mvp" className="hover:text-bgmi-gold transition-colors">MVP & Top Fraggers</Link></li>
               <li><Link href="/rules" className="hover:text-bgmi-gold transition-colors">Official Rulebook</Link></li>
             </ul>
           </div>
@@ -58,17 +59,8 @@ export default function Footer() {
           {/* COL 4: SUPPORT & COMMUNITY */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold font-display uppercase tracking-widest text-white">Community</h4>
-            <p className="text-xs text-slate-400">Join our Discord server and WhatsApp group for lobby credentials & alerts.</p>
+            <p className="text-xs text-slate-400">Join our official WhatsApp group for lobby credentials, schedules, and alerts.</p>
             <div className="flex flex-col gap-2">
-              <a
-                href="https://discord.com"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/40 rounded-lg text-xs font-bold transition-all clip-tactical"
-              >
-                <span>Join Official Discord</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
               <a
                 href="https://chat.whatsapp.com/E8vPQ1JZOPV4BNPF9FPLKG?s=cl&p=a&ilr=4"
                 target="_blank"

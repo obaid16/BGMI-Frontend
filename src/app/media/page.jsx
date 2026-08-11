@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Button from '@/components/common/Button';
 import MediaCard from '@/components/tournament/MediaCard';
 import MediaLightbox from '@/components/tournament/MediaLightbox';
 import EmptyState from '@/components/common/EmptyState';
 import { SkeletonGrid } from '@/components/common/Skeleton';
 import { getMedia } from '@/services/api';
-import { Video } from 'lucide-react';
+import { Video, Camera } from 'lucide-react';
 
 export default function MediaPage() {
   const [mediaList, setMediaList] = useState([]);
@@ -30,13 +32,21 @@ export default function MediaPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
       
       {/* HEADER */}
-      <div className="border-b border-bgmi-border/60 pb-6 space-y-2">
-        <h1 className="font-display font-black text-3xl sm:text-5xl text-white uppercase tracking-wide flex items-center gap-3">
-          <Video className="w-10 h-10 text-bgmi-cyan" /> Esports Media Gallery
-        </h1>
-        <p className="text-sm text-slate-400 max-w-2xl">
-          High-definition player POV recordings, in-game screenshot captures, and referee scorecards.
-        </p>
+      <div className="border-b border-bgmi-border/60 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-2">
+          <h1 className="font-display font-black text-3xl sm:text-5xl text-white uppercase tracking-wide flex items-center gap-3">
+            <Video className="w-10 h-10 text-bgmi-cyan" /> Esports Media Gallery
+          </h1>
+          <p className="text-sm text-slate-400 max-w-2xl">
+            High-definition player POV recordings, in-game screenshot captures, and referee scorecards.
+          </p>
+        </div>
+
+        <Link href="/media/submit">
+          <Button variant="primary" size="md" icon={Camera}>
+            Submit Screenshot / POV
+          </Button>
+        </Link>
       </div>
 
       {/* CATEGORY FILTERS */}
