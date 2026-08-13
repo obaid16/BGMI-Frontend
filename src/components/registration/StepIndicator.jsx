@@ -5,8 +5,8 @@ import { Check } from 'lucide-react';
 
 export default function StepIndicator({ currentStep, steps }) {
   return (
-    <div className="w-full mb-10 overflow-x-auto pb-2">
-      <div className="flex items-center justify-between min-w-[600px] max-w-4xl mx-auto px-4">
+    <div className="w-full mb-8 overflow-x-auto pb-2">
+      <div className="flex items-center justify-between min-w-[300px] max-w-3xl mx-auto px-4">
         {steps.map((step, idx) => {
           const stepNum = idx + 1;
           const isCompleted = currentStep > stepNum;
@@ -15,24 +15,24 @@ export default function StepIndicator({ currentStep, steps }) {
           return (
             <React.Fragment key={step.title}>
               {/* Step item */}
-              <div className="flex flex-col items-center gap-2 group">
+              <div className="flex flex-col items-center gap-2 group flex-shrink-0">
                 <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-sm transition-all duration-300 clip-tactical ${
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center font-display font-black text-xs sm:text-sm transition-all duration-300 clip-tactical ${
                     isCompleted
-                      ? 'bg-bgmi-green text-slate-950 shadow-md'
+                      ? 'bg-emerald-500 text-slate-950 shadow-md font-bold'
                       : isCurrent
-                      ? 'bg-bgmi-gold text-slate-950 shadow-gold-glow border-2 border-white scale-110'
-                      : 'bg-bgmi-surface text-slate-500 border border-bgmi-border'
+                      ? 'bg-bgmi-red text-white shadow-red-glow border-2 border-rose-400 scale-105'
+                      : 'bg-bgmi-surface dark:bg-bgmi-surface light:bg-slate-100 text-slate-500 border border-bgmi-border dark:border-bgmi-border light:border-slate-300'
                   }`}
                 >
                   {isCompleted ? <Check className="w-5 h-5 stroke-[3]" /> : stepNum}
                 </div>
                 <span
-                  className={`text-xs font-bold uppercase tracking-wider ${
+                  className={`text-[10px] sm:text-xs font-black uppercase tracking-wider ${
                     isCurrent
-                      ? 'text-bgmi-gold'
+                      ? 'text-bgmi-red'
                       : isCompleted
-                      ? 'text-slate-200'
+                      ? 'text-slate-200 dark:text-slate-200 light:text-slate-800'
                       : 'text-slate-500'
                   }`}
                 >
@@ -40,13 +40,13 @@ export default function StepIndicator({ currentStep, steps }) {
                 </span>
               </div>
 
-              {/* Connecting Bar */}
+              {/* Connecting Line */}
               {idx < steps.length - 1 && (
                 <div
-                  className={`flex-1 h-0.5 mx-2 transition-colors duration-300 ${
-                    currentStep > stepNum ? 'bg-bgmi-green' : 'bg-bgmi-border'
+                  className={`flex-1 h-0.5 mx-2 sm:mx-4 transition-colors duration-300 ${
+                    currentStep > stepNum ? 'bg-emerald-500' : 'bg-bgmi-border dark:bg-bgmi-border light:bg-slate-300'
                   }`}
-                ></div>
+                />
               )}
             </React.Fragment>
           );

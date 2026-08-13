@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Badge from '@/components/common/Badge';
+import Button from '@/components/common/Button';
 import EmptyState from '@/components/common/EmptyState';
 import MediaLightbox from '@/components/tournament/MediaLightbox';
+import SubmitMediaModal from '@/components/tournament/SubmitMediaModal';
 import { getMatchById, getResultById } from '@/services/api';
-import { MapPin, Calendar, Clock, Trophy, Flame, Play, Image, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { MapPin, Calendar, Clock, Trophy, Flame, Play, Image, ArrowLeft, ShieldCheck, Upload } from 'lucide-react';
 
 export default function MatchDetailPage() {
   const params = useParams();
@@ -16,6 +18,7 @@ export default function MatchDetailPage() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -58,9 +61,19 @@ export default function MatchDetailPage() {
             <span className="font-display font-black text-xl text-white">MATCH #{match.matchNumber}</span>
           </div>
 
-          <span className="text-xs font-bold text-bgmi-cyan bg-bgmi-cyan/10 px-3 py-1 rounded border border-bgmi-cyan/30">
-            {match.map} MAP
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-bold text-bgmi-cyan bg-bgmi-cyan/10 px-3 py-1 rounded border border-bgmi-cyan/30">
+              {match.map} MAP
+            </span>
+            <Button
+              variant="primary"
+              size="sm"
+              icon={Upload}
+              onClick={() => setIsSubmitModalOpen(true)}
+            >
+              Submit Screenshot
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -201,6 +214,12 @@ export default function MatchDetailPage() {
         item={selectedMedia}
         isOpen={!!selectedMedia}
         onClose={() => setSelectedMedia(null)}
+      />
+
+      {/* SUBMIT MEDIA MODAL */}
+      <SubmitMediaModal
+        isOpen={isSubmitModalOpen}
+        onClose={() => setIsSubmitModalOpen(false)}
       />
     </div>
   );

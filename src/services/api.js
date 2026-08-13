@@ -25,8 +25,10 @@ async function fetchAPI(endpoint, options = {}) {
     token = localStorage.getItem('bgmi_esports_admin_token');
   }
 
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+
   const headers = {
-    ...(!(options.body instanceof FormData) && { 'Content-Type': 'application/json' }),
+    ...(!isFormData && { 'Content-Type': 'application/json' }),
     ...(token && { 'Authorization': `Bearer ${token}` }),
     ...options.headers,
   };
@@ -239,6 +241,15 @@ export async function getMedia(filter = 'All') {
     console.error('getMedia failed:', err);
     return [];
   }
+}
+
+export async function submitMedia(mediaData) {
+  const isFormData = typeof FormData !== 'undefined' && mediaData instanceof FormData;
+  const res = await fetchAPI('/media', {
+    method: 'POST',
+    body: isFormData ? mediaData : JSON.stringify(mediaData),
+  });
+  return res;
 }
 
 export async function updateMediaStatus(mediaId, status) {

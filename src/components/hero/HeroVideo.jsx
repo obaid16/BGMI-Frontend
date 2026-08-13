@@ -12,7 +12,6 @@ export default function HeroVideo({
   const [hasError, setHasError] = useState(false);
   const videoRef = useRef(null);
 
-  // Switch video source based on screen width
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -27,7 +26,6 @@ export default function HeroVideo({
     return () => window.removeEventListener('resize', handleResize);
   }, [desktopVideo, mobileVideo]);
 
-  // Autoplay handler for browser restrictions
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.load();
@@ -40,18 +38,17 @@ export default function HeroVideo({
           })
           .catch((error) => {
             console.warn('Autoplay prevented or failed, showing poster fallback:', error);
-            // Autoplay is blocked or failed, fallback to poster visually
           });
       }
     }
   }, [videoSrc]);
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden bg-slate-950 z-0">
-      {/* STATIC FALLBACK POSTER / PRELOADER */}
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-bgmi-dark z-0">
+      {/* STATIC FALLBACK POSTER */}
       {(!isLoaded || hasError) && (
         <div 
-          className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700 ease-in-out animate-pulse"
+          className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700 ease-in-out opacity-40"
           style={{ backgroundImage: `url(${posterImage})` }}
         />
       )}
@@ -66,10 +63,7 @@ export default function HeroVideo({
           loop
           playsInline
           onCanPlayThrough={() => setIsLoaded(true)}
-          onError={() => {
-            console.warn('Error loading video source, reverting to poster.');
-            setHasError(true);
-          }}
+          onError={() => setHasError(true)}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
             isLoaded ? 'opacity-35' : 'opacity-0'
           }`}
@@ -79,21 +73,23 @@ export default function HeroVideo({
       )}
 
       {/* OVERLAY LAYERS */}
-      {/* 1. Vignette & Dark Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950 z-10 pointer-events-none" />
+      {/* 1. Dark Vignette & Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-bgmi-dark/95 via-bgmi-dark/70 to-bgmi-dark z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-vignette z-10 pointer-events-none" />
       <div className="absolute inset-0 bg-hero-radial z-10 pointer-events-none opacity-90" />
 
-      {/* 2. Tactical grid and noise effect */}
-      <div className="absolute inset-0 bg-tactical-grid opacity-20 z-10 pointer-events-none" />
-      
-      {/* 3. Scanline styling overlay */}
+      {/* 2. Tactical Grid Overlay */}
+      <div className="absolute inset-0 bg-tactical-grid opacity-25 z-10 pointer-events-none" />
+
+      {/* 3. Subtle Broadcast Scanlines */}
       <div 
-        className="absolute inset-0 opacity-[0.03] z-10 pointer-events-none"
+        className="absolute inset-0 opacity-[0.04] z-10 pointer-events-none"
         style={{
-          backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+          backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%), linear-gradient(90deg, rgba(230, 25, 60, 0.08), rgba(0, 240, 255, 0.04), rgba(255, 183, 3, 0.04))',
           backgroundSize: '100% 4px, 6px 100%'
         }}
       />
     </div>
   );
 }
+

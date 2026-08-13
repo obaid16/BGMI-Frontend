@@ -1,5 +1,6 @@
 import '@/styles/globals.css';
 import { ToastProvider } from '@/context/ToastContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 import ConditionalLayout from '@/components/common/ConditionalLayout';
 
 export const metadata = {
@@ -11,10 +12,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-bgmi-dark text-slate-100 min-h-screen flex flex-col antialiased selection:bg-bgmi-gold selection:text-slate-950 select-none">
-        <ToastProvider>
-          <ConditionalLayout>{children}</ConditionalLayout>
-        </ToastProvider>
+      <body className="bg-bgmi-dark dark:bg-bgmi-dark light:bg-slate-50 text-slate-100 dark:text-slate-100 light:text-slate-900 min-h-screen flex flex-col antialiased selection:bg-bgmi-red selection:text-white">
+        <ThemeProvider>
+          <ToastProvider>
+            <ConditionalLayout>{children}</ConditionalLayout>
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
