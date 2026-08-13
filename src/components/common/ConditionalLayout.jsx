@@ -8,8 +8,8 @@ import Footer from './Footer';
 export default function ConditionalLayout({ children }) {
   const pathname = usePathname();
 
-  // Admin routes get their own sidebar layout — no public nav/footer
-  const isAdminRoute = pathname.startsWith('/admin') && pathname !== '/admin/login';
+  // All Admin routes (including /admin/login) get their own standalone layout — no public navbar/footer
+  const isAdminRoute = pathname.startsWith('/admin');
 
   if (isAdminRoute) {
     return <>{children}</>;
@@ -27,3 +27,4 @@ export default function ConditionalLayout({ children }) {
     </>
   );
 }
+

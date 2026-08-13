@@ -168,7 +168,7 @@ export default function HomePage() {
               Full Schedule <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-          <NextMatchCard match={nextMatch} />
+          <NextMatchCard match={nextMatch} topTeams={topStandings} />
         </section>
 
         {/* 5. TOP 3 PODIUM & LEADERBOARD SPOTLIGHT */}

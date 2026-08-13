@@ -44,8 +44,8 @@ export default function HeroVideo({
   }, [videoSrc]);
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden bg-slate-950 z-0">
-      {/* STATIC FALLBACK POSTER */}
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0a0b0e] z-0">
+      {/* 1. STATIC FALLBACK POSTER */}
       {(!isLoaded || hasError) && (
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700 ease-in-out opacity-40"
@@ -53,7 +53,7 @@ export default function HeroVideo({
         />
       )}
 
-      {/* CINEMATIC VIDEO */}
+      {/* 2. CINEMATIC VIDEO */}
       {!hasError && (
         <video
           ref={videoRef}
@@ -64,31 +64,30 @@ export default function HeroVideo({
           playsInline
           onCanPlayThrough={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-            isLoaded ? 'opacity-35' : 'opacity-0'
+          className={`absolute inset-0 w-full h-full object-cover object-[65%_center] md:object-center transition-opacity duration-1000 ease-in-out ${
+            isLoaded ? 'opacity-40 md:opacity-35' : 'opacity-0'
           }`}
         >
           Your browser does not support the video tag.
         </video>
       )}
 
-      {/* OVERLAY LAYERS — DARK CINEMATIC IN BOTH THEMES FOR BROADCAST ARENA */}
-      {/* 1. Dark Vignette & Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-slate-950 z-10 pointer-events-none" />
+      {/* 3. BROADCAST COMPOSITE OVERLAY LAYERS */}
+      {/* Dark Cinematic Color Grade Overlay */}
+      <div className="absolute inset-0 bg-[#0a0b0e]/75 mix-blend-multiply z-10 pointer-events-none" />
+
+      {/* Strong Left-to-Right Gradient Overlay for Left Content Readability */}
+      <div className="absolute inset-0 bg-hero-left-dark z-10 pointer-events-none" />
+
+      {/* Radial Vignette Overlay */}
       <div className="absolute inset-0 bg-vignette z-10 pointer-events-none opacity-90" />
-      <div className="absolute inset-0 bg-hero-radial z-10 pointer-events-none opacity-90" />
 
-      {/* 2. Tactical Grid Overlay */}
-      <div className="absolute inset-0 bg-tactical-grid opacity-30 z-10 pointer-events-none" />
+      {/* Subtle Tactical Grid Lines */}
+      <div className="absolute inset-0 bg-tactical-grid z-10 pointer-events-none opacity-20" />
 
-      {/* 3. Subtle Broadcast Scanlines */}
-      <div 
-        className="absolute inset-0 opacity-[0.05] z-10 pointer-events-none"
-        style={{
-          backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%), linear-gradient(90deg, rgba(230, 25, 60, 0.08), rgba(0, 240, 255, 0.04), rgba(255, 183, 3, 0.04))',
-          backgroundSize: '100% 4px, 6px 100%'
-        }}
-      />
+      {/* Subtle Film Grain Texture */}
+      <div className="absolute inset-0 bg-film-grain z-10 pointer-events-none opacity-30" />
     </div>
   );
 }
+

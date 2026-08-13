@@ -75,19 +75,19 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* RECENT PENDING REGISTRATIONS QUEUE */}
-        <div className="lg:col-span-2 bg-bgmi-surface/90 dark:bg-bgmi-surface/90 light:bg-white border border-bgmi-border dark:border-bgmi-border light:border-slate-200 rounded-xl p-6 clip-tactical space-y-4 shadow-xl">
-          <div className="flex items-center justify-between border-b border-bgmi-border/60 dark:border-bgmi-border/60 light:border-slate-200 pb-3">
-            <h3 className="font-display font-bold text-base text-white dark:text-white light:text-slate-900 uppercase flex items-center gap-2">
+        <div className="lg:col-span-2 bg-[#12141c] dark:bg-[#12141c] light:bg-white border border-white/10 dark:border-white/10 light:border-slate-200 rounded-lg p-6 clip-tactical space-y-4 shadow-xl">
+          <div className="flex items-center justify-between border-b border-white/10 dark:border-white/10 light:border-slate-200 pb-3">
+            <h3 className="font-broadcast font-bold text-base text-white dark:text-white light:text-slate-900 uppercase flex items-center gap-2">
               <Clock className="w-4 h-4 text-bgmi-red" /> Pending Squad Approvals Queue
             </h3>
-            <Link href="/admin/registrations" className="text-xs text-bgmi-red font-bold hover:underline flex items-center gap-1">
+            <Link href="/admin/registrations" className="text-xs font-mono text-bgmi-red font-bold hover:underline flex items-center gap-1">
               View All Registrations <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-bgmi-dark dark:bg-bgmi-dark light:bg-slate-100 text-slate-400 dark:text-slate-400 light:text-slate-700 font-display font-black uppercase text-[10px]">
+            <table className="w-full text-left text-xs font-mono">
+              <thead className="bg-[#0a0b0e] text-slate-400 font-broadcast font-bold uppercase text-[10px]">
                 <tr>
                   <th className="p-3">Squad Name</th>
                   <th className="p-3">Captain</th>
@@ -96,14 +96,14 @@ export default function AdminDashboardPage() {
                   <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-bgmi-border/40 dark:divide-bgmi-border/40 light:divide-slate-200">
+              <tbody className="divide-y divide-white/5">
                 {teams.slice(0, 5).map((team) => (
-                  <tr key={team.id || team._id} className="hover:bg-bgmi-dark/60 dark:hover:bg-bgmi-dark/60 light:hover:bg-slate-50 transition-colors">
+                  <tr key={team.id || team._id} className="hover:bg-white/5 transition-colors">
                     <td className="p-3">
-                      <p className="font-bold text-white dark:text-white light:text-slate-900 text-sm">{team.teamName || team.name}</p>
+                      <p className="font-broadcast font-bold text-white text-sm">{team.teamName || team.name}</p>
                     </td>
-                    <td className="p-3 text-slate-300 dark:text-slate-300 light:text-slate-700">{team.captainName || team.captain?.name}</td>
-                    <td className="p-3 font-mono text-bgmi-red font-bold">{team.registrationId || team.regId}</td>
+                    <td className="p-3 text-slate-300">{team.captainName || team.captain?.name}</td>
+                    <td className="p-3 text-bgmi-red font-bold">{team.registrationId || team.regId}</td>
                     <td className="p-3">
                       <Badge variant={team.status === 'Approved' ? 'green' : team.status === 'Rejected' ? 'rejected' : 'pending'} size="sm">
                         {team.status || 'Pending'}
@@ -112,7 +112,7 @@ export default function AdminDashboardPage() {
                     <td className="p-3 text-right">
                       <button
                         onClick={() => setSelectedTeam(team)}
-                        className="px-3 py-1 bg-bgmi-dark dark:bg-bgmi-dark light:bg-slate-100 hover:bg-bgmi-border dark:hover:bg-bgmi-border light:hover:bg-slate-200 text-slate-200 dark:text-slate-200 light:text-slate-800 rounded font-bold transition-colors"
+                        className="px-3 py-1 bg-slate-900 border border-white/10 hover:border-bgmi-red/60 text-slate-200 rounded font-bold transition-colors"
                       >
                         Review
                       </button>
@@ -125,23 +125,23 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* QUICK CONTROL CENTER SHORTCUTS */}
-        <div className="bg-bgmi-surface/90 dark:bg-bgmi-surface/90 light:bg-white border border-bgmi-border dark:border-bgmi-border light:border-slate-200 rounded-xl p-6 clip-tactical space-y-4 shadow-xl">
-          <h3 className="font-display font-bold text-base text-white dark:text-white light:text-slate-900 uppercase border-b border-bgmi-border/60 dark:border-bgmi-border/60 light:border-slate-200 pb-3">
+        <div className="bg-[#12141c] dark:bg-[#12141c] light:bg-white border border-white/10 dark:border-white/10 light:border-slate-200 rounded-lg p-6 clip-tactical space-y-4 shadow-xl">
+          <h3 className="font-broadcast font-bold text-base text-white dark:text-white light:text-slate-900 uppercase border-b border-white/10 dark:border-white/10 light:border-slate-200 pb-3">
             Admin Quick Actions
           </h3>
 
-          <div className="space-y-3">
+          <div className="space-y-3 font-mono">
             <Link href="/admin/results" className="block">
-              <div className="p-4 bg-gradient-to-r from-bgmi-red/20 via-bgmi-surface to-bgmi-dark dark:via-bgmi-surface light:via-slate-50 border border-bgmi-red/50 rounded-xl hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white dark:text-white light:text-slate-900 shadow-red-glow/20">
+              <div className="p-4 bg-gradient-to-r from-bgmi-red/20 via-[#12141c] to-[#0a0b0e] border border-bgmi-red/50 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white">
                 <span className="flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-bgmi-gold dark:text-bgmi-gold light:text-amber-600" /> Publish Scorecard Results
+                  <Trophy className="w-4 h-4 text-bgmi-gold" /> Publish Scorecard Results
                 </span>
                 <span>→</span>
               </div>
             </Link>
 
             <Link href="/admin/matches" className="block">
-              <div className="p-4 bg-bgmi-dark dark:bg-bgmi-dark light:bg-slate-100 border border-bgmi-border dark:border-bgmi-border light:border-slate-200 rounded-xl hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white dark:text-white light:text-slate-900">
+              <div className="p-4 bg-[#0a0b0e] border border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white">
                 <span className="flex items-center gap-2">
                   <Swords className="w-4 h-4 text-bgmi-red" /> Schedule Custom Room
                 </span>
@@ -150,9 +150,9 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link href="/admin/announcements" className="block">
-              <div className="p-4 bg-bgmi-dark dark:bg-bgmi-dark light:bg-slate-100 border border-bgmi-border dark:border-bgmi-border light:border-slate-200 rounded-xl hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white dark:text-white light:text-slate-900">
+              <div className="p-4 bg-[#0a0b0e] border border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white">
                 <span className="flex items-center gap-2">
-                  <Video className="w-4 h-4 text-slate-300 dark:text-slate-300 light:text-slate-600" /> Broadcast Bulletin
+                  <Video className="w-4 h-4 text-slate-300" /> Broadcast Bulletin
                 </span>
                 <span>→</span>
               </div>
@@ -173,3 +173,4 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+

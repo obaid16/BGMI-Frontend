@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { loginAdmin } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import Button from '@/components/common/Button';
-import { Shield, Lock, Mail, Crosshair, AlertCircle } from 'lucide-react';
+import { Crosshair, AlertCircle, Shield } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -33,62 +33,65 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-tactical-grid bg-hero-radial">
-      <div className="w-full max-w-md bg-bgmi-surface border border-bgmi-gold/40 rounded-2xl p-8 clip-tactical shadow-gold-glow space-y-6">
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12 bg-[#0a0b0e] bg-tactical-grid select-none">
+      <div className="w-full max-w-md bg-[#12141c] border border-white/15 rounded-lg p-8 clip-tactical space-y-6 shadow-2xl">
         
         {/* BRANDING HEADER */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 bg-bgmi-gold rounded-xl p-0.5 clip-tactical flex items-center justify-center text-slate-950 font-bold mx-auto shadow-gold-glow">
-            <Crosshair className="w-8 h-8" />
+          <div className="w-12 h-12 bg-slate-900 border border-white/15 rounded p-0.5 clip-tactical flex items-center justify-center text-white mx-auto">
+            <Crosshair className="w-6 h-6 text-bgmi-red" />
           </div>
-          <h1 className="font-display font-black text-2xl text-white uppercase tracking-wider">
-            TOURNAMENT <span className="text-bgmi-gold">CONTROL CENTER</span>
+          <h1 className="font-broadcast font-bold text-2xl text-white uppercase tracking-wider">
+            TOURNAMENT <span className="text-bgmi-red">CONTROL CENTER</span>
           </h1>
-          <p className="text-xs text-slate-400">Esports Administrator & Referee Portal</p>
+          <p className="text-xs font-mono text-slate-400">Esports Administrator & Referee Portal</p>
         </div>
 
         {errorMsg && (
-          <div className="p-3 bg-bgmi-red/20 border border-bgmi-red/40 rounded-lg text-xs text-rose-300 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <div className="p-3 bg-bgmi-red/10 border border-bgmi-red/30 rounded text-xs text-rose-300 flex items-center gap-2 font-mono">
+            <AlertCircle className="w-4 h-4 flex-shrink-0 text-bgmi-red" />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-xs font-bold uppercase text-slate-300">Administrator Email</label>
-            <div className="relative">
-              <input
-                type="email"
-                required
-                placeholder="obaidullahshaikh07@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-bgmi-dark border border-bgmi-border rounded-xl text-white text-xs focus:outline-none focus:border-bgmi-gold font-medium"
-              />
-            </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-mono font-bold uppercase text-slate-300">Administrator Email</label>
+            <input
+              type="email"
+              required
+              placeholder="obaidullahshaikh07@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 bg-[#0a0b0e] border border-white/10 rounded text-white text-xs font-mono focus:outline-none focus:border-bgmi-red"
+            />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-bold uppercase text-slate-300">Security Password</label>
-            <div className="relative">
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-bgmi-dark border border-bgmi-border rounded-xl text-white text-xs focus:outline-none focus:border-bgmi-gold font-medium"
-              />
-            </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-mono font-bold uppercase text-slate-300">Security Password</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 bg-[#0a0b0e] border border-white/10 rounded text-white text-xs font-mono focus:outline-none focus:border-bgmi-red"
+            />
           </div>
 
-          <Button type="submit" variant="primary" size="lg" disabled={loading} className="w-full">
+          <Button type="submit" variant="primary" size="lg" disabled={loading} className="w-full mt-2">
             {loading ? 'AUTHENTICATING...' : 'LOGIN TO CONTROL CENTER'}
           </Button>
         </form>
+
+        <div className="pt-4 border-t border-white/10 text-center">
+          <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest flex items-center justify-center gap-1.5">
+            <Shield className="w-3.5 h-3.5 text-bgmi-gold" /> OFFICIAL NIT CHAMPIONSHIP ARENA
+          </p>
+        </div>
 
       </div>
     </div>
   );
 }
+
