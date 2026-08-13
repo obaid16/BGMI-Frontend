@@ -44,7 +44,7 @@ export default function HeroVideo({
   }, [videoSrc]);
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden bg-bgmi-dark z-0">
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-slate-950 z-0">
       {/* STATIC FALLBACK POSTER */}
       {(!isLoaded || hasError) && (
         <div 
@@ -72,18 +72,18 @@ export default function HeroVideo({
         </video>
       )}
 
-      {/* OVERLAY LAYERS */}
+      {/* OVERLAY LAYERS — DARK CINEMATIC IN BOTH THEMES FOR BROADCAST ARENA */}
       {/* 1. Dark Vignette & Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-bgmi-dark/95 via-bgmi-dark/70 to-bgmi-dark z-10 pointer-events-none" />
-      <div className="absolute inset-0 bg-vignette z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-slate-950 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-vignette z-10 pointer-events-none opacity-90" />
       <div className="absolute inset-0 bg-hero-radial z-10 pointer-events-none opacity-90" />
 
       {/* 2. Tactical Grid Overlay */}
-      <div className="absolute inset-0 bg-tactical-grid opacity-25 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-tactical-grid opacity-30 z-10 pointer-events-none" />
 
       {/* 3. Subtle Broadcast Scanlines */}
       <div 
-        className="absolute inset-0 opacity-[0.04] z-10 pointer-events-none"
+        className="absolute inset-0 opacity-[0.05] z-10 pointer-events-none"
         style={{
           backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%), linear-gradient(90deg, rgba(230, 25, 60, 0.08), rgba(0, 240, 255, 0.04), rgba(255, 183, 3, 0.04))',
           backgroundSize: '100% 4px, 6px 100%'
@@ -92,4 +92,3 @@ export default function HeroVideo({
     </div>
   );
 }
-

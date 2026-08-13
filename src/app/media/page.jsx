@@ -31,15 +31,15 @@ export default function MediaPage() {
   const categories = ['All', 'POV', 'Screenshots', 'Results'];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
       {/* HEADER */}
-      <div className="border-b border-bgmi-border/60 dark:border-bgmi-border/60 light:border-slate-200 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="border-b border-slate-200 dark:border-bgmi-border/60 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="font-display font-black text-3xl sm:text-5xl text-white dark:text-white light:text-slate-900 uppercase tracking-wide flex items-center gap-3">
-            <Video className="w-9 h-9 sm:w-11 sm:h-11 text-bgmi-cyan dark:text-bgmi-cyan light:text-sky-600" /> Esports Media Gallery
+          <h1 className="font-display font-black text-3xl sm:text-5xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-3">
+            <Video className="w-9 h-9 sm:w-11 sm:h-11 text-sky-600 dark:text-bgmi-cyan" /> Esports Media Gallery
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 max-w-2xl font-medium">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl font-medium">
             Player POV recordings, squad victory photos, in-game screenshot captures, and verified match scorecards.
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function MediaPage() {
             className={`px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg border transition-all whitespace-nowrap ${
               filter === cat
                 ? 'bg-bgmi-red text-white border-rose-400 shadow-red-glow'
-                : 'bg-bgmi-surface/90 dark:bg-bgmi-surface/90 light:bg-white text-slate-400 dark:text-slate-400 light:text-slate-700 border-bgmi-border dark:border-bgmi-border light:border-slate-200 hover:text-bgmi-red'
+                : 'bg-white dark:bg-bgmi-surface/90 text-slate-700 dark:text-slate-400 border-slate-200 dark:border-bgmi-border hover:text-bgmi-red shadow-sm'
             }`}
           >
             {cat}

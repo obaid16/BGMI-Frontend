@@ -24,20 +24,20 @@ export default function TeamsPage() {
   }, [filter, searchQuery]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
       {/* PAGE HEADER */}
-      <div className="border-b border-bgmi-border/60 dark:border-bgmi-border/60 light:border-slate-200 pb-6 space-y-2">
-        <h1 className="font-display font-black text-3xl sm:text-5xl text-white dark:text-white light:text-slate-900 uppercase tracking-wide flex items-center gap-3">
+      <div className="border-b border-slate-200 dark:border-bgmi-border/60 pb-6 space-y-2">
+        <h1 className="font-display font-black text-3xl sm:text-5xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-3">
           <Users className="w-9 h-9 sm:w-11 sm:h-11 text-bgmi-red" /> Participating Squads
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 max-w-2xl">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl font-medium">
           Browse verified college BGMI rosters, squad statistics, and player profiles competing in Championship 2026.
         </p>
       </div>
 
       {/* SEARCH AND FILTER BAR */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-bgmi-surface/90 dark:bg-bgmi-surface/90 light:bg-white border border-bgmi-border dark:border-bgmi-border light:border-slate-200 rounded-xl clip-tactical">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white border border-slate-200 dark:bg-bgmi-surface/90 dark:border-bgmi-border rounded-xl clip-tactical shadow-md dark:shadow-xl">
         
         {/* Search Input */}
         <div className="relative w-full sm:w-80">
@@ -47,7 +47,7 @@ export default function TeamsPage() {
             placeholder="Search by squad or college name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-bgmi-dark dark:bg-bgmi-dark light:bg-slate-100 border border-bgmi-border dark:border-bgmi-border light:border-slate-300 rounded-lg text-white dark:text-white light:text-slate-900 text-xs focus:outline-none focus:border-bgmi-red transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white text-xs focus:outline-none focus:border-bgmi-red transition-colors font-medium"
           />
         </div>
 
@@ -60,7 +60,7 @@ export default function TeamsPage() {
               className={`px-4 py-2 text-xs font-black uppercase tracking-wider rounded-lg border transition-all whitespace-nowrap ${
                 filter === f
                   ? 'bg-bgmi-red text-white border-rose-400 shadow-red-glow'
-                  : 'bg-bgmi-dark/80 dark:bg-bgmi-dark/80 light:bg-slate-100 text-slate-400 dark:text-slate-400 light:text-slate-700 border-bgmi-border dark:border-bgmi-border light:border-slate-300 hover:text-bgmi-red'
+                  : 'bg-slate-100 dark:bg-bgmi-dark/80 text-slate-700 dark:text-slate-400 border-slate-300 dark:border-bgmi-border hover:text-bgmi-red'
               }`}
             >
               {f}

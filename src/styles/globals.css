@@ -21,14 +21,14 @@
 html.light {
   --bg-main: #f8fafc;
   --bg-surface: #ffffff;
-  --bg-card: #f1f5f9;
+  --bg-card: #ffffff;
   --border-color: #e2e8f0;
   --text-main: #0f172a;
-  --text-muted: #64748b;
+  --text-muted: #475569;
   --accent-red: #dc2626;
   --accent-gold: #d97706;
   --accent-cyan: #0284c7;
-  --grid-line: rgba(226, 232, 240, 0.8);
+  --grid-line: rgba(203, 213, 225, 0.4);
 }
 
 html, body {
@@ -54,15 +54,11 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 .bg-hero-radial {
-  background: radial-gradient(circle at 50% 30%, rgba(230, 25, 60, 0.12) 0%, rgba(255, 183, 3, 0.05) 40%, var(--bg-main) 100%);
-}
-
-html.light .bg-hero-radial {
-  background: radial-gradient(circle at 50% 30%, rgba(220, 38, 38, 0.08) 0%, rgba(217, 119, 6, 0.04) 40%, var(--bg-main) 100%);
+  background: radial-gradient(circle at 50% 30%, rgba(230, 25, 60, 0.15) 0%, rgba(255, 183, 3, 0.06) 40%, rgba(2, 6, 23, 0.95) 100%);
 }
 
 .bg-vignette {
-  background: radial-gradient(circle at center, transparent 30%, var(--bg-main) 100%);
+  background: radial-gradient(circle at center, transparent 30%, rgba(2, 6, 23, 0.95) 100%);
 }
 
 /* Esports Tactical Cut Corners */

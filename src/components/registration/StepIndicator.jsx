@@ -22,7 +22,7 @@ export default function StepIndicator({ currentStep, steps }) {
                       ? 'bg-emerald-500 text-slate-950 shadow-md font-bold'
                       : isCurrent
                       ? 'bg-bgmi-red text-white shadow-red-glow border-2 border-rose-400 scale-105'
-                      : 'bg-bgmi-surface dark:bg-bgmi-surface light:bg-slate-100 text-slate-500 border border-bgmi-border dark:border-bgmi-border light:border-slate-300'
+                      : 'bg-white dark:bg-bgmi-surface text-slate-700 dark:text-slate-400 border border-slate-300 dark:border-bgmi-border'
                   }`}
                 >
                   {isCompleted ? <Check className="w-5 h-5 stroke-[3]" /> : stepNum}
@@ -32,8 +32,8 @@ export default function StepIndicator({ currentStep, steps }) {
                     isCurrent
                       ? 'text-bgmi-red'
                       : isCompleted
-                      ? 'text-slate-200 dark:text-slate-200 light:text-slate-800'
-                      : 'text-slate-500'
+                      ? 'text-slate-900 dark:text-slate-200'
+                      : 'text-slate-600 dark:text-slate-500'
                   }`}
                 >
                   {step.title}
@@ -44,7 +44,7 @@ export default function StepIndicator({ currentStep, steps }) {
               {idx < steps.length - 1 && (
                 <div
                   className={`flex-1 h-0.5 mx-2 sm:mx-4 transition-colors duration-300 ${
-                    currentStep > stepNum ? 'bg-emerald-500' : 'bg-bgmi-border dark:bg-bgmi-border light:bg-slate-300'
+                    currentStep > stepNum ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-bgmi-border'
                   }`}
                 />
               )}

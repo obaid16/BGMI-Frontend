@@ -62,7 +62,7 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[92vh] flex flex-col justify-between pt-28 pb-10 overflow-hidden bg-slate-900 dark:bg-bgmi-dark text-white select-none"
+      className="relative min-h-[92vh] flex flex-col justify-between pt-28 pb-10 overflow-hidden bg-slate-950 text-white select-none"
     >
       {/* Background Video Layer */}
       <HeroVideo />
@@ -75,7 +75,7 @@ export default function Hero() {
           <div ref={leftColRef} className="lg:col-span-7 space-y-6 text-left">
             
             {/* BADGE */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-900/90 dark:bg-bgmi-surface/90 border border-bgmi-red/50 shadow-red-glow backdrop-blur-md">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-900/90 border border-bgmi-red/50 shadow-red-glow backdrop-blur-md">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bgmi-red opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-bgmi-red"></span>
@@ -93,7 +93,7 @@ export default function Hero() {
               <h1 className="font-display font-black text-5xl sm:text-7xl md:text-8xl tracking-tight text-white uppercase leading-[0.9] drop-shadow-2xl">
                 NIT <span className="text-transparent bg-clip-text bg-gradient-to-r from-bgmi-red via-rose-500 to-amber-500">BGMI</span>
               </h1>
-              <h2 className="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight text-white/90 uppercase leading-none">
+              <h2 className="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight text-white uppercase leading-none">
                 CHAMPIONSHIP
               </h2>
             </div>
@@ -103,7 +103,7 @@ export default function Hero() {
               <p className="text-base sm:text-xl font-display tracking-[0.18em] text-bgmi-gold font-black uppercase">
                 "ONE COLLEGE. ONE BATTLEGROUND. ONE CHAMPION."
               </p>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-200 font-medium leading-relaxed">
                 Drop into Erangel, Miramar & Sanhok custom rooms. Represent your branch, secure WWCD placement points, and battle for total campus dominance.
               </p>
             </div>
@@ -126,17 +126,17 @@ export default function Hero() {
 
           {/* RIGHT COLUMN: FLOATING LIVE MATCH RADAR CARD (5 COLS) */}
           <div ref={rightColRef} className="lg:col-span-5">
-            <div className="relative bg-slate-950/90 dark:bg-bgmi-surface/95 border-2 border-bgmi-red/60 rounded-2xl p-6 sm:p-7 clip-tactical shadow-red-glow space-y-6">
+            <div className="relative bg-slate-950/90 border-2 border-bgmi-red/60 rounded-2xl p-6 sm:p-7 clip-tactical shadow-red-glow space-y-6">
               
               {/* CARD TOP HEADER */}
-              <div className="flex items-center justify-between border-b border-slate-800 dark:border-bgmi-border/80 pb-4">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
                   <span className="font-display font-black text-xs text-emerald-400 uppercase tracking-widest">
                     LIVE MATCH RADAR
                   </span>
                 </div>
-                <span className="text-[10px] font-mono text-slate-400 bg-slate-900 dark:bg-bgmi-dark px-2 py-0.5 rounded border border-slate-800 dark:border-bgmi-border">
+                <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
                   PING: 18ms
                 </span>
               </div>
@@ -154,20 +154,20 @@ export default function Hero() {
                 </div>
 
                 {/* COUNTDOWN TIMER DISPLAY */}
-                <div className="p-4 bg-slate-900 dark:bg-bgmi-dark/95 rounded-xl border border-slate-800 dark:border-bgmi-border text-center space-y-1">
+                <div className="p-4 bg-slate-900 rounded-xl border border-slate-800 text-center space-y-1">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">
                     CUSTOM ROOM LAUNCH COUNTDOWN
                   </span>
                   <div className="flex items-center justify-center gap-2 font-display font-black text-3xl text-bgmi-red">
-                    <span className="bg-slate-950 dark:bg-bgmi-surface px-3 py-1 rounded border border-slate-800 dark:border-bgmi-border text-white">
+                    <span className="bg-slate-950 px-3 py-1 rounded border border-slate-800 text-white">
                       {String(timeLeft.hours).padStart(2, '0')}h
                     </span>
                     <span>:</span>
-                    <span className="bg-slate-950 dark:bg-bgmi-surface px-3 py-1 rounded border border-slate-800 dark:border-bgmi-border text-white">
+                    <span className="bg-slate-950 px-3 py-1 rounded border border-slate-800 text-white">
                       {String(timeLeft.minutes).padStart(2, '0')}m
                     </span>
                     <span>:</span>
-                    <span className="bg-slate-950 dark:bg-bgmi-surface px-3 py-1 rounded border border-slate-800 dark:border-bgmi-border text-bgmi-red">
+                    <span className="bg-slate-950 px-3 py-1 rounded border border-slate-800 text-bgmi-red">
                       {String(timeLeft.seconds).padStart(2, '0')}s
                     </span>
                   </div>
@@ -175,15 +175,15 @@ export default function Hero() {
 
                 {/* MATCH QUICK STATS ROW */}
                 <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                  <div className="p-2.5 bg-slate-900 dark:bg-bgmi-dark/80 rounded-lg border border-slate-800 dark:border-bgmi-border/60">
+                  <div className="p-2.5 bg-slate-900 rounded-lg border border-slate-800">
                     <span className="text-[9px] text-slate-400 font-bold block uppercase">CAPACITY</span>
                     <span className="font-display font-black text-white">24 / 24 SQUADS</span>
                   </div>
-                  <div className="p-2.5 bg-slate-900 dark:bg-bgmi-dark/80 rounded-lg border border-slate-800 dark:border-bgmi-border/60">
+                  <div className="p-2.5 bg-slate-900 rounded-lg border border-slate-800">
                     <span className="text-[9px] text-slate-400 font-bold block uppercase">MAP</span>
                     <span className="font-display font-black text-bgmi-cyan">ERANGEL</span>
                   </div>
-                  <div className="p-2.5 bg-slate-900 dark:bg-bgmi-dark/80 rounded-lg border border-slate-800 dark:border-bgmi-border/60">
+                  <div className="p-2.5 bg-slate-900 rounded-lg border border-slate-800">
                     <span className="text-[9px] text-slate-400 font-bold block uppercase">ROOM CODE</span>
                     <span className="font-display font-black text-bgmi-gold">DROP @ 10:15</span>
                   </div>
@@ -208,7 +208,7 @@ export default function Hero() {
       </div>
 
       {/* BOTTOM TICKER BAR */}
-      <div ref={tickerRef} className="relative z-20 mt-8 border-y border-slate-800 dark:border-bgmi-border/80 bg-slate-950/90 dark:bg-bgmi-surface/90 py-3 overflow-hidden">
+      <div ref={tickerRef} className="relative z-20 mt-8 border-y border-slate-800 bg-slate-950 py-3 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 flex flex-wrap items-center justify-between gap-4 text-xs font-bold text-slate-300">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2 text-bgmi-gold">

@@ -12,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-bgmi-dark dark:bg-bgmi-dark light:bg-slate-50 text-slate-100 dark:text-slate-100 light:text-slate-900 min-h-screen flex flex-col antialiased selection:bg-bgmi-red selection:text-white">
+      <body className="bg-slate-50 dark:bg-bgmi-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-bgmi-red selection:text-white">
         <ThemeProvider>
           <ToastProvider>
             <ConditionalLayout>{children}</ConditionalLayout>

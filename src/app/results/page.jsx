@@ -22,14 +22,14 @@ export default function ResultsPage() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
       {/* HEADER */}
-      <div className="border-b border-bgmi-border/60 dark:border-bgmi-border/60 light:border-slate-200 pb-6 space-y-2">
-        <h1 className="font-display font-black text-3xl sm:text-5xl text-white dark:text-white light:text-slate-900 uppercase tracking-wide flex items-center gap-3">
+      <div className="border-b border-slate-200 dark:border-bgmi-border/60 pb-6 space-y-2">
+        <h1 className="font-display font-black text-3xl sm:text-5xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-3">
           <Flame className="w-9 h-9 sm:w-11 sm:h-11 text-bgmi-red" /> Completed Match Scorecards
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 max-w-2xl">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl font-medium">
           Verified match scorecards, WWCD winners, MVP fraggers, and anti-cheat proof archives.
         </p>
       </div>
