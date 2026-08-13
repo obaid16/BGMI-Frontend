@@ -133,9 +133,11 @@ export default function MVPLeaderboardPage() {
 
           {/* LEADERBOARD TABLE */}
           <div className="bg-white dark:bg-bgmi-surface/90 border border-slate-200 dark:border-bgmi-border rounded-2xl overflow-hidden clip-tactical shadow-lg dark:shadow-2xl">
-            <div className="p-4 bg-slate-100 dark:bg-bgmi-dark/80 border-b border-slate-200 dark:border-bgmi-border flex items-center gap-2">
-              <Zap className="w-4 h-4 text-bgmi-red" />
-              <span className="font-display font-black text-xs uppercase tracking-wider text-slate-800 dark:text-slate-200">Detailed Fragger Leaderboard</span>
+            <div className="p-4 bg-slate-100 dark:bg-bgmi-dark/80 border-b border-slate-200 dark:border-bgmi-border flex items-center justify-between">
+              <span className="font-display font-black text-xs uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                <Zap className="w-4 h-4 text-bgmi-red" /> Detailed Fragger & K/D Leaderboard
+              </span>
+              <span className="text-[10px] font-mono text-bgmi-gold uppercase font-bold">K/D Formula: Kills ÷ Matches</span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
@@ -144,38 +146,51 @@ export default function MVPLeaderboardPage() {
                     <th className="p-4 w-16 text-center">Rank</th>
                     <th className="p-4">Player / IGN</th>
                     <th className="p-4">Squad Name</th>
-                    <th className="p-4 text-center w-28">Kills</th>
+                    <th className="p-4 text-center">Matches</th>
+                    <th className="p-4 text-center">Total Kills</th>
+                    <th className="p-4 text-center">K/D Ratio</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-bgmi-border/40 font-mono text-slate-800 dark:text-slate-300">
-                  {filteredPlayers.map((player, idx) => (
-                    <tr
-                      key={player.id || player._id || idx}
-                      className="hover:bg-slate-50 dark:hover:bg-bgmi-dark/60 transition-colors"
-                    >
-                      <td className="p-4 text-center font-display font-black text-sm">
-                        {idx + 1 === 1 ? (
-                          <span className="text-amber-600 dark:text-bgmi-gold font-bold">★ 1</span>
-                        ) : idx + 1 === 2 ? (
-                          <span className="text-slate-700 dark:text-slate-300 font-bold">★ 2</span>
-                        ) : idx + 1 === 3 ? (
-                          <span className="text-amber-600 font-bold">★ 3</span>
-                        ) : (
-                          idx + 1
-                        )}
-                      </td>
-                      <td className="p-4 font-sans">
-                        <p className="font-bold text-slate-900 dark:text-white text-sm">{player.ign || player.name}</p>
-                        <p className="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest">{player.role}</p>
-                      </td>
-                      <td className="p-4 font-sans font-bold text-slate-800 dark:text-slate-200">{player.teamName || 'N/A'}</td>
-                      <td className="p-4 text-center font-black text-sky-600 dark:text-bgmi-cyan text-sm">{player.kills || 0}</td>
-                    </tr>
-                  ))}
+                  {filteredPlayers.map((player, idx) => {
+                    const pKills = player.kills || 0;
+                    const pMatches = player.matchesPlayed || 1;
+                    const pKd = (pKills / Math.max(1, pMatches)).toFixed(2);
+
+                    return (
+                      <tr
+                        key={player.id || player._id || idx}
+                        className="hover:bg-slate-50 dark:hover:bg-bgmi-dark/60 transition-colors"
+                      >
+                        <td className="p-4 text-center font-display font-black text-sm">
+                          {idx + 1 === 1 ? (
+                            <span className="text-amber-600 dark:text-bgmi-gold font-bold">★ 1</span>
+                          ) : idx + 1 === 2 ? (
+                            <span className="text-slate-700 dark:text-slate-300 font-bold">★ 2</span>
+                          ) : idx + 1 === 3 ? (
+                            <span className="text-amber-600 font-bold">★ 3</span>
+                          ) : (
+                            idx + 1
+                          )}
+                        </td>
+                        <td className="p-4 font-sans">
+                          <p className="font-bold text-slate-900 dark:text-white text-sm">{player.ign || player.name}</p>
+                          <p className="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest">{player.role}</p>
+                        </td>
+                        <td className="p-4 font-sans font-bold text-slate-800 dark:text-slate-200">{player.teamName || 'N/A'}</td>
+                        <td className="p-4 text-center font-bold text-slate-400">{pMatches} M</td>
+                        <td className="p-4 text-center font-black text-bgmi-gold text-sm flex items-center justify-center gap-1">
+                          <Flame className="w-3.5 h-3.5 text-bgmi-red" /> {pKills}
+                        </td>
+                        <td className="p-4 text-center font-black text-sky-400 text-sm">{pKd}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           </div>
+
 
         </div>
       )}

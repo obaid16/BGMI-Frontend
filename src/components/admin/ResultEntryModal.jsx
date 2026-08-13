@@ -10,6 +10,9 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
   const [selectedTeamId, setSelectedTeamId] = useState('team-1');
   const [placementRank, setPlacementRank] = useState(1);
   const [kills, setKills] = useState(12);
+  const [mvpPlayerName, setMvpPlayerName] = useState('');
+  const [mvpKills, setMvpKills] = useState('');
+
 
   // Sync state once data loads
   React.useEffect(() => {
@@ -123,7 +126,7 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
             <input
               type="number"
               min="1"
-              max="16"
+              max="24"
               value={placementRank}
               onChange={(e) => setPlacementRank(e.target.value)}
               className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-white text-center font-bold"
@@ -131,7 +134,7 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
           </div>
 
           <div className="space-y-1">
-            <label className="font-bold text-slate-400 uppercase">Kill Count</label>
+            <label className="font-bold text-slate-400 uppercase">Team Total Kills</label>
             <input
               type="number"
               min="0"
@@ -141,6 +144,41 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
             />
           </div>
         </div>
+
+        {/* MVP / TOP FRAGGER ENTRY */}
+        <div className="p-4 bg-[#0a0b0e] rounded-xl border border-bgmi-gold/30 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-bgmi-gold uppercase text-xs flex items-center gap-1.5">
+              <Trophy className="w-4 h-4 text-bgmi-gold" /> MATCH MVP & TOP FRAGGER SPOTLIGHT
+            </span>
+            <span className="text-[10px] text-slate-400 font-mono">PLAYER STATS</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Player IGN / Name</label>
+              <input
+                type="text"
+                placeholder="e.g. Jonathan_OP / Player_1"
+                value={mvpPlayerName}
+                onChange={(e) => setMvpPlayerName(e.target.value)}
+                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-white font-bold"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Kills</label>
+              <input
+                type="number"
+                min="0"
+                placeholder="e.g. 7"
+                value={mvpKills}
+                onChange={(e) => setMvpKills(e.target.value)}
+                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-bgmi-gold text-center font-bold font-mono"
+              />
+            </div>
+          </div>
+        </div>
+
 
         {/* LIVE CALCULATION PREVIEW BOX */}
         <div className="p-4 bg-gradient-to-r from-bgmi-surface via-bgmi-card to-bgmi-surface border border-bgmi-gold/50 rounded-xl clip-tactical space-y-2">

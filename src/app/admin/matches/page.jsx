@@ -19,6 +19,8 @@ export default function AdminMatchesPage() {
   const [map, setMap] = useState('Erangel');
   const [date, setDate] = useState('2026-08-09');
   const [time, setTime] = useState('11:00 AM');
+  const [roomId, setRoomId] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     async function loadData() {
@@ -34,32 +36,36 @@ export default function AdminMatchesPage() {
     setMap('Erangel');
     setDate('2026-08-09');
     setTime('11:00 AM');
+    setRoomId('');
+    setPassword('');
     setIsModalOpen(true);
   };
 
   const handleEditClick = (match) => {
     setEditingMatch(match);
-    setRound(match.round);
-    setMap(match.map);
-    setDate(match.date);
-    setTime(match.time);
+    setRound(match.round || 'Semifinal');
+    setMap(match.map || 'Erangel');
+    setDate(match.date || '2026-08-09');
+    setTime(match.time || '11:00 AM');
+    setRoomId(match.roomId || '');
+    setPassword(match.password || '');
     setIsModalOpen(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingMatch) {
-      const updated = await updateMatch(editingMatch.id, { round, map, date, time });
+      const updated = await updateMatch(editingMatch.id || editingMatch._id, { round, map, date, time, roomId, password });
       if (updated) {
-        setMatches((prev) => prev.map((m) => (m.id === editingMatch.id ? updated : m)));
-        showToast('Match Lobby Updated Successfully!', 'success');
+        setMatches((prev) => prev.map((m) => ((m.id || m._id) === (editingMatch.id || editingMatch._id) ? { ...m, ...updated, roomId, password } : m)));
+        showToast('Match Lobby & Room Credentials Published!', 'success');
       } else {
         showToast('Failed to update match', 'error');
       }
     } else {
-      const created = await createMatch({ round, map, date, time, status: 'Upcoming' });
+      const created = await createMatch({ round, map, date, time, roomId, password, status: 'Upcoming' });
       setMatches([created, ...matches]);
-      showToast('Match Lobby Scheduled Successfully!', 'success');
+      showToast('Match Lobby & Room Credentials Created!', 'success');
     }
     setIsModalOpen(false);
     setEditingMatch(null);
@@ -81,7 +87,7 @@ export default function AdminMatchesPage() {
           <h1 className="font-display font-black text-2xl text-white uppercase tracking-wide flex items-center gap-2">
             <Swords className="w-6 h-6 text-bgmi-gold" /> Custom Match Lobby Manager
           </h1>
-          <p className="text-xs text-slate-400">Schedule custom matches, dispatch room credentials, and change live stream status.</p>
+          <p className="text-xs text-slate-400">Schedule custom matches, publish Room ID & Passwords, and change live status.</p>
         </div>
 
         <Button variant="primary" size="md" icon={Plus} onClick={handleCreateClick}>
@@ -97,6 +103,7 @@ export default function AdminMatchesPage() {
               <th className="p-4">Match Number</th>
               <th className="p-4">Stage Round</th>
               <th className="p-4">Map</th>
+              <th className="p-4">Room ID & Pass</th>
               <th className="p-4">Schedule Time</th>
               <th className="p-4">Status</th>
               <th className="p-4 text-right">Actions</th>
@@ -104,10 +111,21 @@ export default function AdminMatchesPage() {
           </thead>
           <tbody className="divide-y divide-bgmi-border/40">
             {matches.map((m) => (
-              <tr key={m.id} className="hover:bg-bgmi-dark/40 transition-colors">
+              <tr key={m.id || m._id} className="hover:bg-bgmi-dark/40 transition-colors">
                 <td className="p-4 font-bold text-white text-sm">Match #{m.matchNumber}</td>
                 <td className="p-4 text-bgmi-gold font-bold">{m.round}</td>
                 <td className="p-4 text-bgmi-cyan font-bold">{m.map}</td>
+                <td className="p-4 font-mono">
+                  {m.roomId ? (
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-bgmi-gold font-bold">ID: {m.roomId}</span>
+                      <span className="text-slate-400">|</span>
+                      <span className="text-sky-400 font-bold">PASS: {m.password || 'N/A'}</span>
+                    </div>
+                  ) : (
+                    <span className="text-slate-500 italic">Not set yet</span>
+                  )}
+                </td>
                 <td className="p-4 text-slate-300">{m.date} @ {m.time}</td>
                 <td className="p-4">
                   <Badge variant={m.status === 'Live' ? 'live' : m.status === 'Completed' ? 'green' : 'gold'} size="sm">
@@ -121,12 +139,12 @@ export default function AdminMatchesPage() {
                     icon={Edit2}
                     onClick={() => handleEditClick(m)}
                   >
-                    Edit
+                    Edit & Room Code
                   </Button>
                   <Button
                     variant={m.status === 'Upcoming' ? 'danger' : m.status === 'Live' ? 'primary' : 'outline'}
                     size="sm"
-                    onClick={() => handleStatusToggle(m.id, m.status)}
+                    onClick={() => handleStatusToggle(m.id || m._id, m.status)}
                   >
                     {m.status === 'Upcoming' ? '● Launch LIVE' : m.status === 'Live' ? 'Finish Match' : 'Reopen Match'}
                   </Button>
@@ -144,7 +162,7 @@ export default function AdminMatchesPage() {
           setIsModalOpen(false);
           setEditingMatch(null);
         }}
-        title={editingMatch ? `Edit Match #${editingMatch.matchNumber}` : "Schedule New Match Lobby"}
+        title={editingMatch ? `Edit Match #${editingMatch.matchNumber} & Room Code` : "Schedule New Match Lobby"}
         maxWidth="max-w-md"
       >
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
@@ -170,8 +188,35 @@ export default function AdminMatchesPage() {
               className="w-full p-2.5 bg-bgmi-dark border border-bgmi-border rounded-lg text-white font-bold"
             >
               <option value="Erangel">Erangel</option>
+              <option value="Miramar">Miramar</option>
+              <option value="Sanhok">Sanhok</option>
+              <option value="Vikendi">Vikendi</option>
               <option value="Livik">Livik</option>
             </select>
+          </div>
+
+          {/* ROOM CREDENTIALS INPUTS */}
+          <div className="grid grid-cols-2 gap-3 p-3 bg-[#0a0b0e] rounded border border-bgmi-gold/30">
+            <div className="space-y-1">
+              <label className="font-bold text-bgmi-gold uppercase text-[10px]">CUSTOM ROOM ID</label>
+              <input
+                type="text"
+                placeholder="e.g. 8492041"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+                className="w-full p-2 bg-bgmi-dark border border-bgmi-border rounded text-white font-mono font-bold"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="font-bold text-sky-400 uppercase text-[10px]">ROOM PASSWORD</label>
+              <input
+                type="text"
+                placeholder="e.g. NIT2026"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 bg-bgmi-dark border border-bgmi-border rounded text-white font-mono font-bold"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -209,7 +254,7 @@ export default function AdminMatchesPage() {
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="md">
-              {editingMatch ? "Update Match" : "Schedule Match"}
+              {editingMatch ? "Save & Publish Credentials" : "Schedule Match"}
             </Button>
           </div>
         </form>

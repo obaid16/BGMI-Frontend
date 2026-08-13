@@ -12,11 +12,11 @@ export default function AdminStatCard({ title, value, subtext, icon: Icon, color
   };
 
   return (
-    <div className="p-5 bg-[#12141c] dark:bg-[#12141c] light:bg-white border border-white/10 dark:border-white/10 light:border-slate-200 rounded-lg clip-tactical flex items-center justify-between shadow-lg">
+    <div className="p-5 bg-white dark:bg-[#12141c] border border-slate-200 dark:border-white/10 rounded-lg clip-tactical flex items-center justify-between shadow-md dark:shadow-lg transition-colors duration-200">
       <div className="space-y-1">
-        <p className="text-[11px] font-mono font-bold text-slate-400 dark:text-slate-400 light:text-slate-600 uppercase tracking-wider">{title}</p>
-        <p className="font-broadcast font-bold text-3xl text-white dark:text-white light:text-slate-900">{value}</p>
-        {subtext && <p className="text-[10px] font-mono text-slate-400 dark:text-slate-400 light:text-slate-600">{subtext}</p>}
+        <p className="text-[11px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{title}</p>
+        <p className="font-broadcast font-bold text-3xl text-slate-900 dark:text-white">{value}</p>
+        {subtext && <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">{subtext}</p>}
       </div>
       {Icon && (
         <div className={`w-11 h-11 rounded border flex items-center justify-center p-2 clip-tactical ${colorStyles[color]}`}>
@@ -25,5 +25,6 @@ export default function AdminStatCard({ title, value, subtext, icon: Icon, color
       )}
     </div>
   );
+
 }
 

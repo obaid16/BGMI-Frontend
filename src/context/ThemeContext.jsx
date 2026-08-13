@@ -27,12 +27,21 @@ export function ThemeProvider({ children }) {
 
   const applyTheme = (newTheme) => {
     const root = document.documentElement;
+    const body = document.body;
     if (newTheme === 'dark') {
       root.classList.add('dark');
       root.classList.remove('light');
+      if (body) {
+        body.classList.add('dark');
+        body.classList.remove('light');
+      }
     } else {
       root.classList.remove('dark');
       root.classList.add('light');
+      if (body) {
+        body.classList.remove('dark');
+        body.classList.add('light');
+      }
     }
   };
 
@@ -46,6 +55,7 @@ export function ThemeProvider({ children }) {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
   };
+
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme, mounted }}>

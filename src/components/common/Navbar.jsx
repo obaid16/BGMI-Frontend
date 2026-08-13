@@ -60,17 +60,17 @@ export default function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300">
       
       {/* 1. TOP BROADCAST TICKER BAR */}
-      <div className="bg-[#0a0b0e]/95 text-slate-300 text-[10px] sm:text-xs py-1.5 px-4 sm:px-8 border-b border-white/10 flex items-center justify-between font-mono">
-        <div className="flex items-center gap-3 overflow-hidden">
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-bgmi-red/20 text-bgmi-red font-black rounded border border-bgmi-red/40 shrink-0 uppercase tracking-widest text-[9px] sm:text-[10px]">
+      <div className="bg-[#0a0b0e] dark:bg-[#0a0b0e] light:bg-slate-900 text-slate-300 text-[10px] sm:text-xs py-1.5 px-3 sm:px-8 border-b border-white/10 flex items-center justify-between font-mono">
+        <div className="flex items-center gap-2 sm:gap-3 overflow-hidden min-w-0">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-bgmi-red/20 text-bgmi-red font-black rounded border border-bgmi-red/40 shrink-0 uppercase tracking-widest text-[9px] sm:text-[10px]">
             <Radio className="w-3 h-3 animate-pulse text-bgmi-red" /> LIVE BROADCAST
           </span>
-          <span className="truncate text-slate-300 font-bold uppercase tracking-wider text-[10px]">
+          <span className="truncate text-slate-200 font-bold uppercase tracking-wider text-[10px]">
             SEASON 01 • IN-HOUSE CHAMPIONSHIP ARENA • ROOM CREDS AT 10:15
           </span>
         </div>
 
-        <div className="hidden sm:flex items-center gap-4 shrink-0">
+        <div className="hidden md:flex items-center gap-4 shrink-0">
           <span className="flex items-center gap-1 text-slate-400 text-[10px] font-mono tracking-widest">
             <Shield className="w-3 h-3 text-bgmi-gold" /> OFFICIAL NIT CAMPUS TOURNAMENT
           </span>
@@ -81,8 +81,8 @@ export default function Navbar() {
       <div
         className={`w-full transition-all duration-300 ${
           scrolled
-            ? 'bg-[#0a0b0e]/95 dark:bg-[#0a0b0e]/95 backdrop-blur-xl border-b border-white/10 shadow-2xl py-3'
-            : 'bg-transparent border-b border-white/5 py-4'
+            ? 'bg-[#0a0b0e]/95 dark:bg-[#0a0b0e]/95 light:bg-white/95 backdrop-blur-xl border-b border-white/10 dark:border-white/10 light:border-slate-200 shadow-2xl py-3'
+            : 'bg-[#0a0b0e]/80 dark:bg-[#0a0b0e]/80 light:bg-white/90 backdrop-blur-md border-b border-white/10 dark:border-white/10 light:border-slate-200 py-3.5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -90,25 +90,25 @@ export default function Navbar() {
             
             {/* BRANDING LOGO */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-900 border border-white/15 rounded p-0.5 clip-tactical group-hover:border-bgmi-red/60 transition-colors">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-900 border border-white/15 rounded p-0.5 clip-tactical group-hover:border-bgmi-red/60 transition-colors flex-shrink-0">
                 <div className="w-full h-full bg-[#0a0b0e] flex items-center justify-center">
                   <Crosshair className="w-5 h-5 text-bgmi-red group-hover:rotate-90 transition-transform duration-500" />
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 font-broadcast font-bold text-base sm:text-lg tracking-wider text-white uppercase leading-none">
+                <div className="flex items-center gap-1.5 font-broadcast font-bold text-base sm:text-lg tracking-wider text-white dark:text-white light:text-slate-900 uppercase leading-none">
                   <span>NIT</span>
                   <span className="text-bgmi-red">BGMI</span>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-white/10 text-slate-300 font-mono rounded border border-white/10">2026</span>
+                  <span className="text-[9px] px-1.5 py-0.5 bg-bgmi-red/10 text-bgmi-red font-mono font-bold rounded border border-bgmi-red/30">2026</span>
                 </div>
-                <p className="text-[9px] tracking-[0.25em] text-slate-400 font-mono uppercase mt-0.5">
+                <p className="text-[9px] tracking-[0.2em] text-slate-300 dark:text-slate-300 light:text-slate-600 font-broadcast font-bold uppercase mt-1">
                   ESPORTS CHAMPIONSHIP
                 </p>
               </div>
             </Link>
 
             {/* DESKTOP NAVIGATION LINKS */}
-            <nav className="hidden lg:flex items-center gap-1 bg-slate-950/60 p-1.5 rounded-lg border border-white/10 backdrop-blur-md">
+            <nav className="hidden lg:flex items-center gap-1 bg-slate-950/60 dark:bg-slate-950/60 light:bg-slate-100 p-1.5 rounded-lg border border-white/10 dark:border-white/10 light:border-slate-200 backdrop-blur-md">
               {navLinks.map((link) => {
                 const active = isActive(link.href);
                 return (
@@ -118,7 +118,7 @@ export default function Navbar() {
                     className={`px-3.5 py-1.5 text-xs font-broadcast font-bold uppercase tracking-wider rounded transition-all duration-200 ${
                       active
                         ? 'bg-bgmi-red text-white shadow-md'
-                        : 'text-slate-300 hover:text-white hover:bg-white/10'
+                        : 'text-slate-300 dark:text-slate-300 light:text-slate-700 hover:text-white dark:hover:text-white light:hover:text-slate-900 hover:bg-white/10 dark:hover:bg-white/10 light:hover:bg-slate-200'
                     }`}
                   >
                     {link.name}
@@ -137,6 +137,7 @@ export default function Navbar() {
                 </Button>
               </Link>
             </div>
+
 
             {/* MOBILE HAMBURGER BUTTON */}
             <div className="flex lg:hidden items-center gap-2">

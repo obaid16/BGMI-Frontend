@@ -13,12 +13,19 @@ const CACHE_TTL = 15 * 1000; // 15 seconds Cache TTL
 async function fetchAPI(endpoint, options = {}) {
   const isGet = !options.method || options.method.toUpperCase() === 'GET';
 
-  if (isGet) {
+  // Never use cache for /media endpoints or non-GET mutations
+  if (isGet && !endpoint.startsWith('/media')) {
     const cached = apiCache.get(endpoint);
     if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
       return cached.data;
     }
   }
+
+  // Clear cache on mutations
+  if (!isGet) {
+    apiCache.clear();
+  }
+
 
   let token = null;
   if (typeof window !== 'undefined') {
@@ -217,7 +224,7 @@ export async function submitMatchResult(resultData) {
 }
 
 // ==================== MEDIA API ====================
-export async function getMedia(filter = 'All') {
+export async function getMedia(filter = 'All', status = 'All') {
   try {
     let url = '/media';
     const params = [];
@@ -226,9 +233,8 @@ export async function getMedia(filter = 'All') {
       params.push(`type=${filter}`);
     }
 
-    const token = typeof window !== 'undefined' ? localStorage.getItem('bgmi_esports_admin_token') : null;
-    if (token) {
-      params.push('status=All'); // Admin gets all (published, pending, rejected)
+    if (status) {
+      params.push(`status=${status}`);
     }
 
     if (params.length > 0) {
@@ -243,13 +249,17 @@ export async function getMedia(filter = 'All') {
   }
 }
 
-export async function submitMedia(mediaData) {
+export async function uploadMedia(mediaData) {
   const isFormData = typeof FormData !== 'undefined' && mediaData instanceof FormData;
   const res = await fetchAPI('/media', {
     method: 'POST',
     body: isFormData ? mediaData : JSON.stringify(mediaData),
   });
   return res;
+}
+
+export async function submitMedia(mediaData) {
+  return uploadMedia(mediaData);
 }
 
 export async function updateMediaStatus(mediaId, status) {
@@ -259,6 +269,7 @@ export async function updateMediaStatus(mediaId, status) {
   });
   return { success: res.success };
 }
+
 
 // ==================== ANNOUNCEMENTS API ====================
 export async function getAnnouncements() {
@@ -306,18 +317,20 @@ export async function getPlayers() {
   }
 }
 
-export async function uploadMedia(formData) {
+export async function updatePlayer(playerId, playerData) {
   try {
-    const res = await fetchAPI('/media', {
-      method: 'POST',
-      body: formData,
+    const res = await fetchAPI(`/players/${playerId}`, {
+      method: 'PUT',
+      body: JSON.stringify(playerData),
     });
-    return res;
+    return res.data;
   } catch (err) {
-    console.warn('uploadMedia failed:', err);
+    console.warn('updatePlayer failed:', err);
     return null;
   }
 }
+
+
 
 export async function verifyPlayerStatus(playerId, verificationStatus) {
   try {

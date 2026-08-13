@@ -75,9 +75,9 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* RECENT PENDING REGISTRATIONS QUEUE */}
-        <div className="lg:col-span-2 bg-[#12141c] dark:bg-[#12141c] light:bg-white border border-white/10 dark:border-white/10 light:border-slate-200 rounded-lg p-6 clip-tactical space-y-4 shadow-xl">
-          <div className="flex items-center justify-between border-b border-white/10 dark:border-white/10 light:border-slate-200 pb-3">
-            <h3 className="font-broadcast font-bold text-base text-white dark:text-white light:text-slate-900 uppercase flex items-center gap-2">
+        <div className="lg:col-span-2 bg-white dark:bg-[#12141c] border border-slate-200 dark:border-white/10 rounded-lg p-6 clip-tactical space-y-4 shadow-md dark:shadow-xl transition-colors duration-200">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+            <h3 className="font-broadcast font-bold text-base text-slate-900 dark:text-white uppercase flex items-center gap-2">
               <Clock className="w-4 h-4 text-bgmi-red" /> Pending Squad Approvals Queue
             </h3>
             <Link href="/admin/registrations" className="text-xs font-mono text-bgmi-red font-bold hover:underline flex items-center gap-1">
@@ -87,7 +87,7 @@ export default function AdminDashboardPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0a0b0e] text-slate-400 font-broadcast font-bold uppercase text-[10px]">
+              <thead className="bg-slate-100 dark:bg-[#0a0b0e] text-slate-600 dark:text-slate-400 font-broadcast font-bold uppercase text-[10px]">
                 <tr>
                   <th className="p-3">Squad Name</th>
                   <th className="p-3">Captain</th>
@@ -96,13 +96,13 @@ export default function AdminDashboardPage() {
                   <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-slate-200 dark:divide-white/5">
                 {teams.slice(0, 5).map((team) => (
-                  <tr key={team.id || team._id} className="hover:bg-white/5 transition-colors">
+                  <tr key={team.id || team._id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
                     <td className="p-3">
-                      <p className="font-broadcast font-bold text-white text-sm">{team.teamName || team.name}</p>
+                      <p className="font-broadcast font-bold text-slate-900 dark:text-white text-sm">{team.teamName || team.name}</p>
                     </td>
-                    <td className="p-3 text-slate-300">{team.captainName || team.captain?.name}</td>
+                    <td className="p-3 text-slate-600 dark:text-slate-300">{team.captainName || team.captain?.name}</td>
                     <td className="p-3 text-bgmi-red font-bold">{team.registrationId || team.regId}</td>
                     <td className="p-3">
                       <Badge variant={team.status === 'Approved' ? 'green' : team.status === 'Rejected' ? 'rejected' : 'pending'} size="sm">
@@ -112,7 +112,7 @@ export default function AdminDashboardPage() {
                     <td className="p-3 text-right">
                       <button
                         onClick={() => setSelectedTeam(team)}
-                        className="px-3 py-1 bg-slate-900 border border-white/10 hover:border-bgmi-red/60 text-slate-200 rounded font-bold transition-colors"
+                        className="px-3 py-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-bgmi-red/60 text-slate-800 dark:text-slate-200 rounded font-bold transition-colors"
                       >
                         Review
                       </button>
@@ -125,14 +125,14 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* QUICK CONTROL CENTER SHORTCUTS */}
-        <div className="bg-[#12141c] dark:bg-[#12141c] light:bg-white border border-white/10 dark:border-white/10 light:border-slate-200 rounded-lg p-6 clip-tactical space-y-4 shadow-xl">
-          <h3 className="font-broadcast font-bold text-base text-white dark:text-white light:text-slate-900 uppercase border-b border-white/10 dark:border-white/10 light:border-slate-200 pb-3">
+        <div className="bg-white dark:bg-[#12141c] border border-slate-200 dark:border-white/10 rounded-lg p-6 clip-tactical space-y-4 shadow-md dark:shadow-xl transition-colors duration-200">
+          <h3 className="font-broadcast font-bold text-base text-slate-900 dark:text-white uppercase border-b border-slate-200 dark:border-white/10 pb-3">
             Admin Quick Actions
           </h3>
 
           <div className="space-y-3 font-mono">
             <Link href="/admin/results" className="block">
-              <div className="p-4 bg-gradient-to-r from-bgmi-red/20 via-[#12141c] to-[#0a0b0e] border border-bgmi-red/50 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white">
+              <div className="p-4 bg-gradient-to-r from-bgmi-red/20 via-slate-100 dark:via-[#12141c] to-white dark:to-[#0a0b0e] border border-bgmi-red/50 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
                 <span className="flex items-center gap-2">
                   <Trophy className="w-4 h-4 text-bgmi-gold" /> Publish Scorecard Results
                 </span>
@@ -140,8 +140,17 @@ export default function AdminDashboardPage() {
               </div>
             </Link>
 
+            <Link href="/admin/players" className="block">
+              <div className="p-4 bg-slate-50 dark:bg-[#0a0b0e] border border-slate-200 dark:border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
+                <span className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-bgmi-cyan" /> Player Rosters & MVP Kills
+                </span>
+                <span>→</span>
+              </div>
+            </Link>
+
             <Link href="/admin/matches" className="block">
-              <div className="p-4 bg-[#0a0b0e] border border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white">
+              <div className="p-4 bg-slate-50 dark:bg-[#0a0b0e] border border-slate-200 dark:border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
                 <span className="flex items-center gap-2">
                   <Swords className="w-4 h-4 text-bgmi-red" /> Schedule Custom Room
                 </span>
@@ -150,17 +159,19 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link href="/admin/announcements" className="block">
-              <div className="p-4 bg-[#0a0b0e] border border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-white">
+              <div className="p-4 bg-slate-50 dark:bg-[#0a0b0e] border border-slate-200 dark:border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
                 <span className="flex items-center gap-2">
-                  <Video className="w-4 h-4 text-slate-300" /> Broadcast Bulletin
+                  <Video className="w-4 h-4 text-slate-500 dark:text-slate-300" /> Broadcast Bulletin
                 </span>
                 <span>→</span>
               </div>
             </Link>
           </div>
+
         </div>
 
       </div>
+
 
       {/* REGISTRATION DETAILS REVIEW MODAL */}
       <RegistrationModal
