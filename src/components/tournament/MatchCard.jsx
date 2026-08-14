@@ -57,7 +57,7 @@ export default function MatchCard({ match }) {
           {match.status === 'Completed' ? 'Scorecard Published' : 'Room ID Drops @ 10:15'}
         </span>
         <Link
-          href={`/matches/${match.id || match.matchNumber}`}
+          href={`/matches/${match.matchNumber || match.id}`}
           className="inline-flex items-center gap-1 font-bold text-bgmi-red group-hover:translate-x-1 transition-transform"
         >
           Details <ArrowRight className="w-3.5 h-3.5" />

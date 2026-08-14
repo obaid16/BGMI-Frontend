@@ -9,7 +9,7 @@ export default function TeamCard({ team }) {
   if (!team) return null;
 
   return (
-    <Link href={`/teams/${team.id || team._id}`}>
+    <Link href={`/teams/${team.shortName || team.registrationId || team.id || team._id}`}>
       <div className="group relative bg-white dark:bg-bgmi-surface/95 border border-slate-200 dark:border-bgmi-border hover:border-bgmi-red rounded-2xl overflow-hidden transition-all duration-300 transform hover:-translate-y-1.5 clip-tactical shadow-md dark:shadow-xl flex flex-col justify-between h-full">
         
         {/* TOP TRADING CARD BANNER HEADER */}

@@ -28,7 +28,7 @@ export default function StandingRow({ standing }) {
 
       {/* SQUAD NAME & COLLEGE */}
       <td className="py-3.5 px-4">
-        <Link href={`/teams/${standing.teamId}`} className="flex items-center gap-3 group">
+        <Link href={`/teams/${standing.shortName || standing.registrationId || standing.teamId}`} className="flex items-center gap-3 group">
           <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border flex items-center justify-center text-xs font-black text-bgmi-red group-hover:scale-105 transition-transform flex-shrink-0">
             {standing.logo ? (
               <img src={standing.logo} alt={standing.teamName} className="w-full h-full object-cover rounded-md" />

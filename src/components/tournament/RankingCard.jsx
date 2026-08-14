@@ -25,7 +25,7 @@ export default function RankingCard({ standing }) {
           </span>
 
           <div>
-            <Link href={`/teams/${standing.teamId}`}>
+            <Link href={`/teams/${standing.shortName || standing.registrationId || standing.teamId}`}>
               <h4 className="font-display font-black text-base text-slate-900 dark:text-white hover:text-bgmi-red transition-colors">
                 {standing.teamName}
               </h4>

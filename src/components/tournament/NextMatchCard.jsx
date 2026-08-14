@@ -341,7 +341,7 @@ export default function NextMatchCard({ match, topTeams = [] }) {
               <span className="text-[10px] font-mono text-slate-400">
                 * All 24 squads enter custom room 10 minutes prior to launch.
               </span>
-              <Link href={`/matches/${match.id || match.matchNumber}`} onClick={() => setShowModal(false)}>
+              <Link href={`/matches/${match.matchNumber || match.id}`} onClick={() => setShowModal(false)}>
                 <Button variant="secondary" size="sm" className="w-full sm:w-auto text-xs">
                   GO TO FULL MATCH PAGE →
                 </Button>
