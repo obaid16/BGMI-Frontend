@@ -79,15 +79,15 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
         <div className="pt-4 border-t border-bgmi-border/60 flex items-center justify-end gap-3">
           {team.status === 'Pending' ? (
             <>
-              <Button variant="danger" size="md" icon={X} onClick={() => onReject(team.id)}>
+              <Button variant="danger" size="md" icon={X} onClick={() => onReject(team.id || team._id)}>
                 Reject Application
               </Button>
-              <Button variant="primary" size="md" icon={Check} onClick={() => onApprove(team.id)}>
+              <Button variant="primary" size="md" icon={Check} onClick={() => onApprove(team.id || team._id)}>
                 Approve Team
               </Button>
             </>
           ) : (
-            <Button variant="danger" size="md" icon={Trash2} onClick={() => onDelete && onDelete(team.id)}>
+            <Button variant="danger" size="md" icon={Trash2} onClick={() => onDelete && onDelete(team.id || team._id)}>
               Delete Team
             </Button>
           )}

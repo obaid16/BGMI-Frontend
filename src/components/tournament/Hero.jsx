@@ -45,8 +45,7 @@ export default function Hero() {
           { opacity: 0, y: 10 },
           { opacity: 1, y: 0, duration: 0.4, stagger: 0.08 },
           '-=0.2'
-        )
-        .fromTo(bottomBarRef.current, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5 }, '-=0.3');
+        );
     }, heroRef);
 
     return () => ctx.revert();
@@ -177,29 +176,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* 3. BOTTOM BROADCAST TICKER BAR */}
-      <div ref={bottomBarRef} className="relative z-20 mt-8 border-t border-white/10 bg-[#0a0b0e]/90 backdrop-blur-md py-3 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400">
-          <div className="flex flex-wrap items-center gap-6">
-            <span className="flex items-center gap-2 text-slate-300 font-bold">
-              <Trophy className="w-4 h-4 text-bgmi-gold" />
-              <span>24 SQUADS REGISTERED</span>
-            </span>
-            <span className="hidden sm:flex items-center gap-2 text-slate-300">
-              <Activity className="w-4 h-4 text-sky-400" />
-              <span>96 VERIFIED PLAYERS</span>
-            </span>
-            <span className="hidden md:flex items-center gap-2 text-slate-300">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>ANTI-CHEAT SYSTEM ACTIVE</span>
-            </span>
-          </div>
 
-          <div className="flex items-center gap-2 text-slate-400 text-[11px] font-mono uppercase tracking-widest">
-            <span>OFFICIAL NIT ARENA</span>
-          </div>
-        </div>
-      </div>
 
     </section>
   );

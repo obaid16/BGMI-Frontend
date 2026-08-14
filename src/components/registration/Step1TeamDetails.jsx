@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Shield, Mail, Phone, User, Building } from 'lucide-react';
+import { Shield, Mail, Phone, User, Upload, Image as ImageIcon, X } from 'lucide-react';
 import Button from '../common/Button';
 
 export default function Step1TeamDetails({ formData, updateFormData, onNext }) {
   const [errors, setErrors] = useState({});
+  const [isDragging, setIsDragging] = useState(false);
 
   const validate = () => {
     const newErrors = {};
@@ -22,6 +23,34 @@ export default function Step1TeamDetails({ formData, updateFormData, onNext }) {
     if (validate()) {
       onNext();
     }
+  };
+
+  const handleFile = (file) => {
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updateFormData({ teamLogo: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
   };
 
   return (
@@ -55,35 +84,75 @@ export default function Step1TeamDetails({ formData, updateFormData, onNext }) {
           {errors.teamName && <p className="text-[11px] text-bgmi-red font-bold">{errors.teamName}</p>}
         </div>
 
-        {/* COLLEGE NAME */}
-        <div className="space-y-1.5">
+        {/* SQUAD / TEAM LOGO WITH DRAG & DROP AND URL */}
+        <div className="space-y-1.5 sm:col-span-2">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-            College / Campus Name
+            Squad / Team Logo (Drag & Drop, Upload or Paste URL)
           </label>
-          <div className="relative">
-            <Building className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type="text"
-              value={formData.collegeName || 'NIT'}
-              onChange={(e) => updateFormData({ collegeName: e.target.value })}
-              className="w-full pl-10 pr-4 py-3 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-bgmi-red transition-colors"
-            />
-          </div>
-        </div>
-
-        {/* SQUAD / TEAM LOGO */}
-        <div className="space-y-1.5">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-            Squad / Team Logo (URL or Upload)
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Paste Logo Image URL or Upload File"
-              value={formData.teamLogo || ''}
-              onChange={(e) => updateFormData({ teamLogo: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-bgmi-red transition-colors"
-            />
+          
+          <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={`relative border-2 border-dashed rounded-xl p-4 text-center transition-all bg-slate-100 dark:bg-bgmi-dark/60 ${
+              isDragging
+                ? 'border-bgmi-red bg-bgmi-red/10 scale-[1.01]'
+                : 'border-slate-300 dark:border-bgmi-border hover:border-bgmi-red/60'
+            }`}
+          >
+            {formData.teamLogo ? (
+              <div className="flex items-center justify-between gap-4 p-2 bg-white dark:bg-bgmi-dark rounded-lg border border-slate-200 dark:border-bgmi-border">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={formData.teamLogo}
+                    alt="Logo Preview"
+                    className="w-12 h-12 object-cover rounded-lg border border-bgmi-red/60 shadow-sm"
+                  />
+                  <div className="text-left">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1">
+                      <ImageIcon className="w-3.5 h-3.5 text-emerald-400" /> Logo Attached
+                    </p>
+                    <p className="text-[10px] text-slate-500 truncate max-w-xs">Ready for roster registration</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => updateFormData({ teamLogo: '' })}
+                  className="p-1.5 text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+                  title="Remove Logo"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3 py-2">
+                <div className="w-10 h-10 mx-auto rounded-full bg-slate-200 dark:bg-bgmi-surface flex items-center justify-center text-bgmi-red">
+                  <Upload className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                    Drag & Drop your team logo here, or{' '}
+                    <label className="text-bgmi-red hover:underline cursor-pointer">
+                      browse file
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+                        className="hidden"
+                      />
+                    </label>
+                  </p>
+                  <p className="text-[10px] text-slate-500 mt-0.5">Supports PNG, JPG, WEBP or paste URL below</p>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Or paste image URL (e.g. https://domain.com/logo.png)"
+                  value={formData.teamLogo || ''}
+                  onChange={(e) => updateFormData({ teamLogo: e.target.value })}
+                  className="w-full px-3 py-2 bg-white dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red"
+                />
+              </div>
+            )}
           </div>
         </div>
 

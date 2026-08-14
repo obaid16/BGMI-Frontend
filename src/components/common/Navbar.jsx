@@ -59,23 +59,7 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300">
       
-      {/* 1. TOP BROADCAST TICKER BAR */}
-      <div className="bg-[#0a0b0e] dark:bg-[#0a0b0e] light:bg-slate-900 text-slate-300 text-[10px] sm:text-xs py-1.5 px-3 sm:px-8 border-b border-white/10 flex items-center justify-between font-mono">
-        <div className="flex items-center gap-2 sm:gap-3 overflow-hidden min-w-0">
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-bgmi-red/20 text-bgmi-red font-black rounded border border-bgmi-red/40 shrink-0 uppercase tracking-widest text-[9px] sm:text-[10px]">
-            <Radio className="w-3 h-3 animate-pulse text-bgmi-red" /> LIVE BROADCAST
-          </span>
-          <span className="truncate text-slate-200 font-bold uppercase tracking-wider text-[10px]">
-            SEASON 01 • IN-HOUSE CHAMPIONSHIP ARENA • ROOM CREDS AT 10:15
-          </span>
-        </div>
 
-        <div className="hidden md:flex items-center gap-4 shrink-0">
-          <span className="flex items-center gap-1 text-slate-400 text-[10px] font-mono tracking-widest">
-            <Shield className="w-3 h-3 text-bgmi-gold" /> OFFICIAL NIT CAMPUS TOURNAMENT
-          </span>
-        </div>
-      </div>
 
       {/* 2. MAIN NAVIGATION BAR */}
       <div

@@ -132,15 +132,22 @@ export async function getTeamById(id) {
 }
 
 export async function registerTeam(registrationData) {
-  const res = await fetchAPI('/teams/register', {
-    method: 'POST',
-    body: JSON.stringify(registrationData),
-  });
-  return {
-    success: res.success,
-    registrationId: res.data?.registrationId,
-    team: res.data?.team
-  };
+  try {
+    const res = await fetchAPI('/teams/register', {
+      method: 'POST',
+      body: JSON.stringify(registrationData),
+    });
+    return {
+      success: res.success,
+      registrationId: res.data?.registrationId,
+      team: res.data?.team
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message || 'Registration failed'
+    };
+  }
 }
 
 export async function updateTeamStatus(teamId, status) {

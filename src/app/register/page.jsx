@@ -42,15 +42,17 @@ export default function RegisterPage() {
   };
 
   const handleFinalSubmit = async () => {
+    if (submitting) return;
     try {
       setSubmitting(true);
       const res = await registerTeam(formData);
-      if (res.success) {
-        setSubmittedRegId(res.registrationId);
+      if (res && (res.success || res.registrationId)) {
+        const passId = res.registrationId || res.data?.registrationId || 'BGMI-2026-PASS';
+        setSubmittedRegId(passId);
         setCurrentStep(4);
         showToast('Squad Registered Successfully!', 'success');
       } else {
-        showToast(res.message || 'Registration failed.', 'error');
+        showToast(res?.message || 'Registration failed. Please check if team name is taken.', 'error');
       }
     } catch (err) {
       showToast(err.message || 'Registration failed. Please check fields.', 'error');

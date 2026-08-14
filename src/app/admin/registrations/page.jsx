@@ -25,13 +25,18 @@ export default function AdminRegistrationsPage() {
     loadData();
   }, []);
 
-  const handleApprove = async (id) => {
+  const handleApprove = async (teamOrId) => {
+    const targetId = typeof teamOrId === 'object' ? (teamOrId.id || teamOrId._id) : teamOrId;
     try {
-      const res = await updateTeamStatus(id, 'Approved');
+      const res = await updateTeamStatus(targetId, 'Approved');
       if (res && res.success) {
         showToast('Team Registration Approved! Approval email dispatched.', 'success');
         setSelectedTeam(null);
-        setTeams((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Approved', verified: true } : t)));
+        setTeams((prev) =>
+          prev.map((t) => ((t.id || t._id) === targetId ? { ...t, status: 'Approved', verified: true } : t))
+        );
+        const refreshed = await getTeams();
+        if (refreshed && refreshed.length > 0) setTeams(refreshed);
       } else {
         showToast(res?.message || 'Failed to approve team', 'error');
       }
@@ -40,13 +45,18 @@ export default function AdminRegistrationsPage() {
     }
   };
 
-  const handleReject = async (id) => {
+  const handleReject = async (teamOrId) => {
+    const targetId = typeof teamOrId === 'object' ? (teamOrId.id || teamOrId._id) : teamOrId;
     try {
-      const res = await updateTeamStatus(id, 'Rejected');
+      const res = await updateTeamStatus(targetId, 'Rejected');
       if (res && res.success) {
         showToast('Team Registration Rejected. Rejection notice dispatched.', 'info');
         setSelectedTeam(null);
-        setTeams((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Rejected' } : t)));
+        setTeams((prev) =>
+          prev.map((t) => ((t.id || t._id) === targetId ? { ...t, status: 'Rejected', verified: false } : t))
+        );
+        const refreshed = await getTeams();
+        if (refreshed && refreshed.length > 0) setTeams(refreshed);
       } else {
         showToast(res?.message || 'Failed to reject team', 'error');
       }
@@ -55,13 +65,16 @@ export default function AdminRegistrationsPage() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (teamOrId) => {
+    const targetId = typeof teamOrId === 'object' ? (teamOrId.id || teamOrId._id) : teamOrId;
     if (window.confirm('Are you sure you want to delete this squad registration permanently?')) {
-      const res = await deleteTeam(id);
+      const res = await deleteTeam(targetId);
       if (res) {
         showToast('Team registration deleted', 'info');
         setSelectedTeam(null);
-        setTeams((prev) => prev.filter((t) => (t.id || t._id) !== id));
+        setTeams((prev) => prev.filter((t) => (t.id || t._id) !== targetId));
+        const refreshed = await getTeams();
+        if (refreshed) setTeams(refreshed);
       } else {
         showToast('Failed to delete team', 'error');
       }
