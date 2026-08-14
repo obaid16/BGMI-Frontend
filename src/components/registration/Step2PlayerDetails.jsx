@@ -59,6 +59,20 @@ export default function Step2PlayerDetails({ formData, updateFormData, onNext, o
                 />
               </div>
 
+              {/* In-Game Name (IGN) */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  In-Game Name (IGN)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. JONATHAN_OP"
+                  value={player.ign || ''}
+                  onChange={(e) => handlePlayerChange(idx, 'ign', e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-bgmi-red transition-colors"
+                />
+              </div>
+
               {/* Player Role */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
@@ -75,6 +89,23 @@ export default function Step2PlayerDetails({ formData, updateFormData, onNext, o
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Player Photo / Avatar */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  Player Photo / Avatar (URL)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Paste Photo URL or leave blank for default"
+                  value={player.photo || player.avatar || ''}
+                  onChange={(e) => {
+                    handlePlayerChange(idx, 'photo', e.target.value);
+                    handlePlayerChange(idx, 'avatar', e.target.value);
+                  }}
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-bgmi-red transition-colors"
+                />
               </div>
             </div>
           </div>

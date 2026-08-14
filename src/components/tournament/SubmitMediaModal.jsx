@@ -72,6 +72,10 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
         submissionData.append('file', selectedFile);
       }
 
+      if (filePreview) {
+        submissionData.append('imageUrl', filePreview);
+      }
+
       const res = await submitMedia(submissionData);
 
       if (res && res.success) {

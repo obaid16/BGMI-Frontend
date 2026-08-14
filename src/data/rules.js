@@ -38,15 +38,10 @@ export const mockRules = [
     category: 'Scoring System',
     title: '5. Point System Breakdown',
     content: `Points are awarded per match as follows:
-    - 1st Place (WWCD): 15 Points
-    - 2nd Place: 12 Points
-    - 3rd Place: 10 Points
-    - 4th Place: 8 Points
-    - 5th Place: 6 Points
-    - 6th Place: 4 Points
-    - 7th Place: 2 Points
-    - 8th Place: 1 Point
-    - 9th - 16th Place: 0 Points
+    - 1st Place (WWCD): 10 Points
+    - 2nd Place: 8 Points
+    - 3rd Place: 5 Points
+    - 4th Place and below (4th - 16th): 0 Points
     - Finish / Kill Points: 1 Point per kill.`
   },
   {

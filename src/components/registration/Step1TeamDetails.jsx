@@ -56,7 +56,7 @@ export default function Step1TeamDetails({ formData, updateFormData, onNext }) {
         </div>
 
         {/* COLLEGE NAME */}
-        <div className="space-y-1.5 sm:col-span-2">
+        <div className="space-y-1.5">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
             College / Campus Name
           </label>
@@ -67,6 +67,22 @@ export default function Step1TeamDetails({ formData, updateFormData, onNext }) {
               value={formData.collegeName || 'NIT'}
               onChange={(e) => updateFormData({ collegeName: e.target.value })}
               className="w-full pl-10 pr-4 py-3 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-bgmi-red transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* SQUAD / TEAM LOGO */}
+        <div className="space-y-1.5">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Squad / Team Logo (URL or Upload)
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Paste Logo Image URL or Upload File"
+              value={formData.teamLogo || ''}
+              onChange={(e) => updateFormData({ teamLogo: e.target.value })}
+              className="w-full px-4 py-3 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-bgmi-red transition-colors"
             />
           </div>
         </div>

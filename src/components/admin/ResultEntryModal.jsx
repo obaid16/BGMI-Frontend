@@ -5,7 +5,7 @@ import Modal from '../common/Modal';
 import Button from '../common/Button';
 import { Trophy, Save, Send, Calculator } from 'lucide-react';
 
-export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matches = [], teams = [] }) {
+export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matches = [], teams = [], editingResult = null }) {
   const [selectedMatchId, setSelectedMatchId] = useState('match-07');
   const [selectedTeamId, setSelectedTeamId] = useState('team-1');
   const [placementRank, setPlacementRank] = useState(1);
@@ -13,31 +13,31 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
   const [mvpPlayerName, setMvpPlayerName] = useState('');
   const [mvpKills, setMvpKills] = useState('');
 
-
-  // Sync state once data loads
+  // Sync state when modal opens or editingResult changes
   React.useEffect(() => {
-    if (matches.length > 0 && (selectedMatchId === 'match-07' || !matches.some(m => m.id === selectedMatchId))) {
-      setSelectedMatchId(matches[0].id);
+    if (editingResult) {
+      if (editingResult.matchId) setSelectedMatchId(editingResult.matchId);
+      if (editingResult.winner?.teamId) setSelectedTeamId(editingResult.winner.teamId);
+      if (editingResult.leaderboard?.[0]?.rank) setPlacementRank(editingResult.leaderboard[0].rank);
+      if (editingResult.winner?.kills !== undefined) setKills(editingResult.winner.kills);
+      if (editingResult.mvp?.name) setMvpPlayerName(editingResult.mvp.name);
+      if (editingResult.mvp?.kills !== undefined) setMvpKills(editingResult.mvp.kills);
+    } else {
+      if (matches.length > 0 && !matches.some((m) => (m.id || m._id) === selectedMatchId)) {
+        setSelectedMatchId(matches[0].id || matches[0]._id);
+      }
+      if (teams.length > 0 && !teams.some((t) => (t.id || t._id) === selectedTeamId)) {
+        setSelectedTeamId(teams[0].id || teams[0]._id);
+      }
     }
-  }, [matches, selectedMatchId]);
-
-  React.useEffect(() => {
-    if (teams.length > 0 && (selectedTeamId === 'team-1' || !teams.some(t => t.id === selectedTeamId))) {
-      setSelectedTeamId(teams[0].id);
-    }
-  }, [teams, selectedTeamId]);
+  }, [editingResult, isOpen, matches, teams]);
 
   // Live points calculation preview
   const getPlacementPoints = (rank) => {
     const r = parseInt(rank, 10);
-    if (r === 1) return 15;
-    if (r === 2) return 12;
-    if (r === 3) return 10;
-    if (r === 4) return 8;
-    if (r === 5) return 6;
-    if (r === 6) return 4;
-    if (r === 7) return 2;
-    if (r === 8) return 1;
+    if (r === 1) return 10;
+    if (r === 2) return 8;
+    if (r === 3) return 5;
     return 0;
   };
 

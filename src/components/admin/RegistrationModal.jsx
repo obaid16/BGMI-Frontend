@@ -4,9 +4,9 @@ import React from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 import Badge from '../common/Badge';
-import { Shield, Check, X, Users, Mail, Phone } from 'lucide-react';
+import { Shield, Check, X, Users, Mail, Phone, Trash2 } from 'lucide-react';
 
-export default function RegistrationModal({ team, isOpen, onClose, onApprove, onReject }) {
+export default function RegistrationModal({ team, isOpen, onClose, onApprove, onReject, onDelete }) {
   if (!team) return null;
 
   return (
@@ -77,12 +77,20 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
 
         {/* Action Buttons */}
         <div className="pt-4 border-t border-bgmi-border/60 flex items-center justify-end gap-3">
-          <Button variant="danger" size="md" icon={X} onClick={() => onReject(team.id)}>
-            Reject Application
-          </Button>
-          <Button variant="primary" size="md" icon={Check} onClick={() => onApprove(team.id)}>
-            Approve Team
-          </Button>
+          {team.status === 'Pending' ? (
+            <>
+              <Button variant="danger" size="md" icon={X} onClick={() => onReject(team.id)}>
+                Reject Application
+              </Button>
+              <Button variant="primary" size="md" icon={Check} onClick={() => onApprove(team.id)}>
+                Approve Team
+              </Button>
+            </>
+          ) : (
+            <Button variant="danger" size="md" icon={Trash2} onClick={() => onDelete && onDelete(team.id)}>
+              Delete Team
+            </Button>
+          )}
         </div>
 
       </div>

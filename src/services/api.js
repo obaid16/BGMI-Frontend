@@ -16,16 +16,16 @@ export function getMediaImageUrl(item) {
 
   url = url.trim();
 
+  // If URL contains /uploads/ (relative or absolute), resolve against active backend origin
+  if (url.includes('/uploads/')) {
+    const cleanPath = url.substring(url.indexOf('/uploads/'));
+    const backendOrigin = API_BASE_URL.replace(/\/api\/?$/, '');
+    return `${backendOrigin}${cleanPath}`;
+  }
+
   // Preserved Cloudinary URLs, Data URLs, or full HTTP/HTTPS URLs uploaded by users
   if (url.includes('cloudinary.com') || url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:image/')) {
     return url;
-  }
-
-  // Handle relative upload paths from backend
-  if (url.startsWith('/uploads/') || url.startsWith('uploads/')) {
-    const backendOrigin = API_BASE_URL.replace(/\/api\/?$/, '');
-    const cleanPath = url.startsWith('/') ? url : `/${url}`;
-    return `${backendOrigin}${cleanPath}`;
   }
 
   return url;
@@ -248,6 +248,18 @@ export async function submitMatchResult(resultData) {
     body: JSON.stringify(resultData),
   });
   return res.data;
+}
+
+export async function deleteMatchResult(id) {
+  try {
+    const res = await fetchAPI(`/results/${id}`, {
+      method: 'DELETE',
+    });
+    return res;
+  } catch (err) {
+    console.error('deleteMatchResult failed:', err);
+    return null;
+  }
 }
 
 // ==================== MEDIA API ====================

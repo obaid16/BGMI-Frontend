@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import RegistrationModal from '@/components/admin/RegistrationModal';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
-import { getTeams, updateTeamStatus } from '@/services/api';
+import { getTeams, updateTeamStatus, deleteTeam } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { ClipboardList, Search, Check, X, Eye } from 'lucide-react';
+import { ClipboardList, Search, Check, X, Eye, Trash2 } from 'lucide-react';
 
 export default function AdminRegistrationsPage() {
   const { showToast } = useToast();
@@ -26,17 +26,46 @@ export default function AdminRegistrationsPage() {
   }, []);
 
   const handleApprove = async (id) => {
-    await updateTeamStatus(id, 'Approved');
-    showToast('Team Registration Approved!', 'success');
-    setSelectedTeam(null);
-    setTeams((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Approved', verified: true } : t)));
+    try {
+      const res = await updateTeamStatus(id, 'Approved');
+      if (res && res.success) {
+        showToast('Team Registration Approved! Approval email dispatched.', 'success');
+        setSelectedTeam(null);
+        setTeams((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Approved', verified: true } : t)));
+      } else {
+        showToast(res?.message || 'Failed to approve team', 'error');
+      }
+    } catch (err) {
+      showToast(err.message || 'Error approving team', 'error');
+    }
   };
 
   const handleReject = async (id) => {
-    await updateTeamStatus(id, 'Rejected');
-    showToast('Team Registration Rejected', 'error');
-    setSelectedTeam(null);
-    setTeams((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Rejected' } : t)));
+    try {
+      const res = await updateTeamStatus(id, 'Rejected');
+      if (res && res.success) {
+        showToast('Team Registration Rejected. Rejection notice dispatched.', 'info');
+        setSelectedTeam(null);
+        setTeams((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Rejected' } : t)));
+      } else {
+        showToast(res?.message || 'Failed to reject team', 'error');
+      }
+    } catch (err) {
+      showToast(err.message || 'Error rejecting team', 'error');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this squad registration permanently?')) {
+      const res = await deleteTeam(id);
+      if (res) {
+        showToast('Team registration deleted', 'info');
+        setSelectedTeam(null);
+        setTeams((prev) => prev.filter((t) => (t.id || t._id) !== id));
+      } else {
+        showToast('Failed to delete team', 'error');
+      }
+    }
   };
 
   const filteredTeams = filter === 'All' ? teams : teams.filter((t) => t.status === filter);
@@ -106,7 +135,7 @@ export default function AdminRegistrationsPage() {
                     <Button variant="secondary" size="sm" icon={Eye} onClick={() => setSelectedTeam(team)}>
                       View
                     </Button>
-                    {team.status === 'Pending' && (
+                    {team.status === 'Pending' ? (
                       <>
                         <Button variant="primary" size="sm" icon={Check} onClick={() => handleApprove(team.id)}>
                           Approve
@@ -115,6 +144,10 @@ export default function AdminRegistrationsPage() {
                           Reject
                         </Button>
                       </>
+                    ) : (
+                      <Button variant="danger" size="sm" icon={Trash2} onClick={() => handleDelete(team.id)}>
+                        Delete
+                      </Button>
                     )}
                   </div>
                 </td>
@@ -131,6 +164,7 @@ export default function AdminRegistrationsPage() {
         onClose={() => setSelectedTeam(null)}
         onApprove={handleApprove}
         onReject={handleReject}
+        onDelete={handleDelete}
       />
     </div>
   );

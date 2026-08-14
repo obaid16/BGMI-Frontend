@@ -17,6 +17,7 @@ export default function AdminTeamsPage() {
   // Form states
   const [newTeamName, setNewTeamName] = useState('');
   const [newCollege, setNewCollege] = useState('NIT');
+  const [newTeamLogo, setNewTeamLogo] = useState('');
 
   useEffect(() => {
     async function loadData() {
@@ -28,12 +29,13 @@ export default function AdminTeamsPage() {
 
   const handleCreateTeam = (e) => {
     e.preventDefault();
+    const logoUrl = newTeamLogo.trim() || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&auto=format&fit=crop&q=80';
     const newTeam = {
       id: `team-${Date.now()}`,
       name: newTeamName,
       shortName: newTeamName.substring(0, 5).toUpperCase(),
       college: newCollege,
-      logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&auto=format&fit=crop&q=80',
+      logo: logoUrl,
       rank: teams.length + 1,
       points: 0,
       wwcd: 0,
@@ -52,6 +54,7 @@ export default function AdminTeamsPage() {
     setIsAddModalOpen(false);
     setNewTeamName('');
     setNewCollege('');
+    setNewTeamLogo('');
   };
 
   const handleDeleteTeam = async (id) => {
@@ -148,6 +151,17 @@ export default function AdminTeamsPage() {
               readOnly
               value={newCollege}
               className="w-full p-2.5 bg-slate-100 dark:bg-bgmi-dark/60 border border-slate-200 dark:border-bgmi-border/40 rounded-lg text-slate-500 dark:text-slate-400 font-bold select-none cursor-not-allowed"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Team / Squad Logo URL</label>
+            <input
+              type="text"
+              placeholder="Paste Logo Image URL or leave blank for default"
+              value={newTeamLogo}
+              onChange={(e) => setNewTeamLogo(e.target.value)}
+              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
             />
           </div>
 
