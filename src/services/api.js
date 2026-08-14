@@ -4,6 +4,33 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/a
 const apiCache = new Map();
 const CACHE_TTL = 15 * 1000; // 15 seconds Cache TTL
 
+export const DEFAULT_GAMING_IMAGE = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80';
+
+export function getMediaImageUrl(item) {
+  if (!item) return DEFAULT_GAMING_IMAGE;
+
+  let url = item.imageUrl || item.thumbnail || item.url || item.fileUrl || item.mediaUrl;
+  if (!url || typeof url !== 'string' || !url.trim() || url === 'undefined' || url === 'null') {
+    return DEFAULT_GAMING_IMAGE;
+  }
+
+  url = url.trim();
+
+  // Preserved Cloudinary URLs, Data URLs, or full HTTP/HTTPS URLs uploaded by users
+  if (url.includes('cloudinary.com') || url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:image/')) {
+    return url;
+  }
+
+  // Handle relative upload paths from backend
+  if (url.startsWith('/uploads/') || url.startsWith('uploads/')) {
+    const backendOrigin = API_BASE_URL.replace(/\/api\/?$/, '');
+    const cleanPath = url.startsWith('/') ? url : `/${url}`;
+    return `${backendOrigin}${cleanPath}`;
+  }
+
+  return url;
+}
+
 /**
  * Reusable helper to make HTTP requests to the backend with auto-attached JWT headers
  * @param {string} endpoint - API path (e.g. '/teams')
@@ -224,7 +251,7 @@ export async function submitMatchResult(resultData) {
 }
 
 // ==================== MEDIA API ====================
-export async function getMedia(filter = 'All', status = 'All') {
+export async function getMedia(filter = 'All', status = 'Published') {
   try {
     let url = '/media';
     const params = [];
@@ -242,7 +269,15 @@ export async function getMedia(filter = 'All', status = 'All') {
     }
 
     const res = await fetchAPI(url);
-    return res.data || [];
+    const list = res.data || [];
+    return list.map((item) => {
+      const formattedUrl = getMediaImageUrl(item);
+      return {
+        ...item,
+        imageUrl: formattedUrl,
+        thumbnail: formattedUrl,
+      };
+    });
   } catch (err) {
     console.error('getMedia failed:', err);
     return [];
@@ -270,6 +305,18 @@ export async function updateMediaStatus(mediaId, status) {
   return { success: res.success };
 }
 
+export async function deleteMedia(mediaId) {
+  try {
+    const res = await fetchAPI(`/media/${mediaId}`, {
+      method: 'DELETE',
+    });
+    return { success: res.success };
+  } catch (err) {
+    console.error('deleteMedia failed:', err);
+    return { success: false, message: err.message };
+  }
+}
+
 
 // ==================== ANNOUNCEMENTS API ====================
 export async function getAnnouncements() {
@@ -277,7 +324,7 @@ export async function getAnnouncements() {
     const token = typeof window !== 'undefined' ? localStorage.getItem('bgmi_esports_admin_token') : null;
     let url = '/announcements';
     if (token) {
-      url += '?published=true'; // Modify if admins need unpublished
+      url += '?published=true';
     }
     const res = await fetchAPI(url);
     return res.data || [];

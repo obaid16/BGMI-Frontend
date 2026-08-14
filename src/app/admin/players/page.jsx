@@ -123,7 +123,7 @@ export default function AdminPlayersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full overflow-hidden">
       
       {/* HEADER */}
       <div className="border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
@@ -157,19 +157,19 @@ export default function AdminPlayersPage() {
         )}
       </div>
 
-      {/* PLAYERS TABLE */}
-      <div className="bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-xl overflow-hidden clip-tactical shadow-md dark:shadow-xl transition-colors duration-200">
-        <table className="w-full text-left text-xs border-collapse">
+      {/* PLAYERS TABLE WITH HORIZONTAL SCROLL */}
+      <div className="bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-xl overflow-x-auto clip-tactical shadow-md dark:shadow-xl transition-colors duration-200">
+        <table className="w-full text-left text-xs border-collapse min-w-[900px]">
           <thead className="bg-slate-100 dark:bg-bgmi-dark text-slate-700 dark:text-slate-400 font-display font-bold uppercase text-[10px] border-b border-slate-200 dark:border-bgmi-border">
             <tr>
-              <th className="p-4">Player & IGN</th>
-              <th className="p-4">Squad</th>
-              <th className="p-4">Role</th>
-              <th className="p-4 text-center">Matches</th>
-              <th className="p-4 text-center">Total Kills</th>
-              <th className="p-4 text-center">K/D Ratio</th>
-              <th className="p-4">Status</th>
-              <th className="p-4 text-right">Actions</th>
+              <th className="p-4 whitespace-nowrap min-w-[180px]">Player & IGN</th>
+              <th className="p-4 whitespace-nowrap min-w-[140px]">Squad</th>
+              <th className="p-4 whitespace-nowrap min-w-[100px]">Role</th>
+              <th className="p-4 whitespace-nowrap text-center min-w-[90px]">Matches</th>
+              <th className="p-4 whitespace-nowrap text-center min-w-[100px]">Total Kills</th>
+              <th className="p-4 whitespace-nowrap text-center min-w-[90px]">K/D Ratio</th>
+              <th className="p-4 whitespace-nowrap min-w-[120px]">Status</th>
+              <th className="p-4 whitespace-nowrap text-right min-w-[220px]">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200 dark:divide-bgmi-border/40">
@@ -190,78 +190,79 @@ export default function AdminPlayersPage() {
                 
                 return (
                   <tr key={pId} className="hover:bg-slate-50 dark:hover:bg-bgmi-dark/40 transition-colors">
-                    <td className="p-4">
+                    <td className="p-4 whitespace-nowrap">
                       <p className="font-bold text-slate-900 dark:text-white text-sm">{player.ign}</p>
                       <p className="text-slate-500 dark:text-slate-400 text-[11px]">{player.name}</p>
                     </td>
-                    <td className="p-4">
+                    <td className="p-4 whitespace-nowrap">
                       <p className="font-bold text-slate-900 dark:text-white">{player.teamName}</p>
                     </td>
-                    <td className="p-4"><Badge variant="default" size="sm">{player.role || 'Player'}</Badge></td>
+                    <td className="p-4 whitespace-nowrap"><Badge variant="default" size="sm">{player.role || 'Player'}</Badge></td>
                     
                     {/* MATCHES PLAYED COLUMN */}
-                    <td className="p-4 text-center font-mono font-bold text-slate-600 dark:text-slate-300">
+                    <td className="p-4 whitespace-nowrap text-center font-mono font-bold text-slate-600 dark:text-slate-300">
                       {pMatches} M
                     </td>
 
-
                     {/* KILLS COLUMN */}
-                    <td className="p-4 text-center">
-                      <span className="font-mono font-bold text-bgmi-gold text-sm flex items-center justify-center gap-1">
+                    <td className="p-4 whitespace-nowrap text-center">
+                      <span className="font-mono font-bold text-amber-600 dark:text-bgmi-gold text-sm inline-flex items-center justify-center gap-1">
                         <Flame className="w-3.5 h-3.5 text-bgmi-red" /> {pKills}
                       </span>
                     </td>
 
                     {/* AUTO-CALCULATED K/D RATIO COLUMN */}
-                    <td className="p-4 text-center font-mono font-bold text-sky-400">
+                    <td className="p-4 whitespace-nowrap text-center font-mono font-bold text-sky-600 dark:text-sky-400">
                       {pKd.toFixed(2)}
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 whitespace-nowrap">
                       <Badge variant={isVerified ? 'green' : isRejected ? 'rejected' : 'pending'} size="sm">
                         {statusLabel}
                       </Badge>
                     </td>
 
-                    <td className="p-4 text-right space-x-2">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon={Edit3}
-                        onClick={() => handleOpenEdit(player)}
-                      >
-                        Edit Stats
-                      </Button>
-                      {!isVerified && (
+                    <td className="p-4 whitespace-nowrap text-right">
+                      <div className="flex items-center justify-end gap-1.5">
                         <Button
-                          variant="primary"
+                          variant="secondary"
                           size="sm"
-                          icon={Check}
-                          onClick={() => handleUpdateStatus(pId, 'Verified')}
+                          icon={Edit3}
+                          onClick={() => handleOpenEdit(player)}
                         >
-                          Verify
+                          Edit
                         </Button>
-                      )}
-                      {!isRejected && (
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          icon={X}
-                          onClick={() => handleUpdateStatus(pId, 'Rejected')}
+                        {!isVerified && (
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            icon={Check}
+                            onClick={() => handleUpdateStatus(pId, 'Verified')}
+                          >
+                            Verify
+                          </Button>
+                        )}
+                        {!isRejected && (
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            icon={X}
+                            onClick={() => handleUpdateStatus(pId, 'Rejected')}
+                          >
+                            Reject
+                          </Button>
+                        )}
+                        <button
+                          onClick={() => handleDeletePlayer(pId)}
+                          disabled={deletingId === pId}
+                          className={`inline-flex items-center justify-center p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors ${
+                            deletingId === pId ? 'opacity-40 cursor-not-allowed' : ''
+                          }`}
+                          title="Delete Player"
                         >
-                          Reject
-                        </Button>
-                      )}
-                      <button
-                        onClick={() => handleDeletePlayer(pId)}
-                        disabled={deletingId === pId}
-                        className={`inline-flex items-center justify-center p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors align-middle ${
-                          deletingId === pId ? 'opacity-40 cursor-not-allowed' : ''
-                        }`}
-                        title="Delete Player"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -359,7 +360,6 @@ export default function AdminPlayersPage() {
               </div>
             </div>
 
-
             <div className="pt-4 flex justify-end gap-3">
               <Button
                 variant="secondary"
@@ -379,5 +379,3 @@ export default function AdminPlayersPage() {
     </div>
   );
 }
-
-

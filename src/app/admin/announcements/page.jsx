@@ -47,15 +47,15 @@ export default function AdminAnnouncementsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-bgmi-border/60 pb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
         <div>
-          <h1 className="font-display font-black text-2xl text-white uppercase tracking-wide flex items-center gap-2">
-            <Bell className="w-6 h-6 text-bgmi-gold" /> Official Bulletins & News Manager
+          <h1 className="font-display font-black text-2xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
+            <Bell className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> Official Bulletins & News Manager
           </h1>
-          <p className="text-xs text-slate-400">Post tournament updates, registration reminders, and lobby schedule bulletins.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Post tournament updates, registration reminders, and lobby schedule bulletins.</p>
         </div>
 
         <Button variant="primary" size="md" icon={Plus} onClick={() => setIsModalOpen(true)}>
@@ -66,19 +66,19 @@ export default function AdminAnnouncementsPage() {
       {/* ANNOUNCEMENTS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {announcements.map((ann) => (
-          <div key={ann.id} className="bg-bgmi-surface border border-bgmi-border rounded-xl p-5 clip-tactical space-y-3">
+          <div key={ann.id} className="bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-xl p-5 clip-tactical space-y-3 shadow-md dark:shadow-xl transition-colors duration-200">
             <div className="flex items-center justify-between">
               <Badge variant="gold" size="sm">{ann.category}</Badge>
-              <span className="text-[10px] text-slate-400 font-bold uppercase">{ann.date}</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">{ann.date}</span>
             </div>
 
-            <h3 className="font-display font-bold text-base text-white">{ann.title}</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">{ann.content}</p>
+            <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">{ann.title}</h3>
+            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{ann.content}</p>
 
-            <div className="pt-3 border-t border-bgmi-border/40 flex justify-end">
+            <div className="pt-3 border-t border-slate-200 dark:border-bgmi-border/40 flex justify-end">
               <button
                 onClick={() => handleDelete(ann.id)}
-                className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 font-bold"
+                className="text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1 font-bold"
               >
                 <Trash2 className="w-3.5 h-3.5" /> Remove
               </button>
@@ -91,23 +91,23 @@ export default function AdminAnnouncementsPage() {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create Official Bulletin" maxWidth="max-w-md">
         <form onSubmit={handleCreate} className="space-y-4 text-xs">
           <div className="space-y-1">
-            <label className="font-bold text-slate-300 uppercase">Bulletin Headline Title</label>
+            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Bulletin Headline Title</label>
             <input
               type="text"
               required
               placeholder="e.g. Lobby credentials for Match #07 dispatched"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2.5 bg-bgmi-dark border border-bgmi-border rounded-lg text-white font-bold"
+              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="font-bold text-slate-300 uppercase">Category</label>
+            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full p-2.5 bg-bgmi-dark border border-bgmi-border rounded-lg text-white font-bold"
+              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
             >
               <option value="Schedule">Schedule</option>
               <option value="Registration">Registration</option>
@@ -117,14 +117,14 @@ export default function AdminAnnouncementsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="font-bold text-slate-300 uppercase">Bulletin Body Content</label>
+            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Bulletin Body Content</label>
             <textarea
               rows={4}
               required
               placeholder="Enter announcement details..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full p-2.5 bg-bgmi-dark border border-bgmi-border rounded-lg text-white font-medium"
+              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-medium"
             ></textarea>
           </div>
 

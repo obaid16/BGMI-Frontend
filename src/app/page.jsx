@@ -42,7 +42,7 @@ export default function HomePage() {
           getMatches(),
           getStandings(),
           getResults(),
-          getMedia(),
+          getMedia('All', 'Published'),
           getAnnouncements(),
           getTeams()
         ]);
@@ -54,7 +54,8 @@ export default function HomePage() {
         setNextMatch(matches.find((m) => m.status === 'Live' || m.status === 'Upcoming') || matches[0]);
         setTopStandings(standings.slice(0, 5));
         setRecentResults(results.slice(0, 3));
-        setMediaItems(media.slice(0, 4));
+        const publishedMediaOnly = (media || []).filter((item) => item.status === 'Published' || item.verified === true);
+        setMediaItems(publishedMediaOnly.slice(0, 4));
 
         const isTournamentComplete = matches.length > 0 && !matches.some((m) => m.status === 'Live' || m.status === 'Upcoming');
         setIsComplete(isTournamentComplete);

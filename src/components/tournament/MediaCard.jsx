@@ -3,11 +3,13 @@
 import React from 'react';
 import { Play, Image, Video, ShieldCheck } from 'lucide-react';
 import Badge from '../common/Badge';
+import { getMediaImageUrl, DEFAULT_GAMING_IMAGE } from '@/services/api';
 
 export default function MediaCard({ item, onClick }) {
   if (!item) return null;
 
   const isVideo = item.type === 'POV' || item.type === 'Highlight' || !!item.videoUrl;
+  const imageSrc = getMediaImageUrl(item);
 
   return (
     <div
@@ -18,9 +20,13 @@ export default function MediaCard({ item, onClick }) {
         {/* Media Thumbnail Container */}
         <div className="relative aspect-video w-full bg-slate-900 dark:bg-bgmi-dark overflow-hidden">
           <img
-            src={item.thumbnail}
-            alt={item.title}
-            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-85 group-hover:opacity-100"
+            src={imageSrc}
+            alt={item.title || 'Media Highlight'}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = DEFAULT_GAMING_IMAGE;
+            }}
+            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-90 group-hover:opacity-100"
           />
 
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 dark:from-bgmi-dark via-transparent to-transparent opacity-90" />
@@ -29,7 +35,7 @@ export default function MediaCard({ item, onClick }) {
           <div className="absolute top-3 left-3 z-10">
             <Badge variant={isVideo ? 'live' : 'cyan'} size="sm">
               {isVideo ? <Video className="w-3 h-3 mr-1 inline" /> : <Image className="w-3 h-3 mr-1 inline" />}
-              {item.type}
+              {item.type || 'Screenshot'}
             </Badge>
           </div>
 
@@ -55,15 +61,15 @@ export default function MediaCard({ item, onClick }) {
           <div className="pt-2 border-t border-slate-200 dark:border-bgmi-border/40 grid grid-cols-2 gap-x-2 gap-y-1.5 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-500 block">Squad</span>
-              <span className="text-slate-900 dark:text-slate-200 font-bold line-clamp-1">{item.team}</span>
+              <span className="text-slate-900 dark:text-slate-200 font-bold line-clamp-1">{item.team || 'N/A'}</span>
             </div>
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-500 block">Match</span>
-              <span className="text-sky-600 dark:text-bgmi-cyan font-bold line-clamp-1">{item.match}</span>
+              <span className="text-sky-600 dark:text-bgmi-cyan font-bold line-clamp-1">{item.match || 'Match #01'}</span>
             </div>
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-500 block">Player</span>
-              <span className="text-slate-900 dark:text-slate-200 line-clamp-1">{item.player || 'N/A'}</span>
+              <span className="text-slate-900 dark:text-slate-200 line-clamp-1">{item.player || 'Player'}</span>
             </div>
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-500 block">Referee Check</span>

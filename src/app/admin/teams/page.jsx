@@ -75,15 +75,15 @@ export default function AdminTeamsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-bgmi-border/60 pb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
         <div>
-          <h1 className="font-display font-black text-2xl text-white uppercase tracking-wide flex items-center gap-2">
-            <Users className="w-6 h-6 text-bgmi-gold" /> Squad Roster Management
+          <h1 className="font-display font-black text-2xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
+            <Users className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> Squad Roster Management
           </h1>
-          <p className="text-xs text-slate-400">Add, edit, verify, or remove participating tournament squads.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Add, edit, verify, or remove participating tournament squads.</p>
         </div>
 
         <Button variant="primary" size="md" icon={Plus} onClick={() => setIsAddModalOpen(true)}>
@@ -94,28 +94,28 @@ export default function AdminTeamsPage() {
       {/* TEAMS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {teams.map((team) => (
-          <div key={team.id} className="bg-bgmi-surface border border-bgmi-border rounded-xl p-5 clip-tactical space-y-4">
+          <div key={team.id} className="bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-xl p-5 clip-tactical space-y-4 shadow-md dark:shadow-xl transition-colors duration-200">
             <div className="flex items-center justify-between">
-              <span className="font-display font-black text-lg text-bgmi-gold">#{team.rank}</span>
+              <span className="font-display font-black text-lg text-amber-600 dark:text-bgmi-gold">#{team.rank}</span>
               <Badge variant={team.verified ? 'green' : 'pending'} size="sm">
                 {team.verified ? 'Verified' : 'Pending'}
               </Badge>
             </div>
 
             <div className="flex items-center gap-3">
-              <img src={team.logo} alt={team.name} className="w-12 h-12 rounded-lg border border-bgmi-border object-cover" />
+              <img src={team.logo} alt={team.name} className="w-12 h-12 rounded-lg border border-slate-200 dark:border-bgmi-border object-cover shrink-0" />
               <div>
-                <h3 className="font-display font-bold text-base text-white">{team.name}</h3>
-                <p className="text-xs text-slate-400">Captain: {team.captain?.name || 'N/A'}</p>
+                <h3 className="font-display font-bold text-base text-slate-900 dark:text-white line-clamp-1">{team.name}</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Captain: {team.captain?.name || 'N/A'}</p>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-bgmi-border/40 flex items-center justify-between text-xs">
-              <span className="text-slate-400">{team.players?.length || 4} Squad Members</span>
+            <div className="pt-3 border-t border-slate-200 dark:border-bgmi-border/40 flex items-center justify-between text-xs">
+              <span className="text-slate-600 dark:text-slate-400 font-medium">{team.players?.length || 4} Squad Members</span>
               <button
                 onClick={() => handleDeleteTeam(team.id)}
                 disabled={deletingId === team.id}
-                className={`text-rose-400 hover:text-rose-300 flex items-center gap-1 font-bold ${
+                className={`text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1 font-bold ${
                   deletingId === team.id ? 'opacity-40 cursor-not-allowed' : ''
                 }`}
               >
@@ -130,24 +130,24 @@ export default function AdminTeamsPage() {
       <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Create New Team Roster" maxWidth="max-w-md">
         <form onSubmit={handleCreateTeam} className="space-y-4 text-xs">
           <div className="space-y-1">
-            <label className="font-bold text-slate-300 uppercase">Team / Squad Name</label>
+            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Team / Squad Name</label>
             <input
               type="text"
               required
               placeholder="e.g. Cyber Knights"
               value={newTeamName}
               onChange={(e) => setNewTeamName(e.target.value)}
-              className="w-full p-2.5 bg-bgmi-dark border border-bgmi-border rounded-lg text-white font-bold"
+              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="font-bold text-slate-300 uppercase">College</label>
+            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">College</label>
             <input
               type="text"
               readOnly
               value={newCollege}
-              className="w-full p-2.5 bg-bgmi-dark/60 border border-bgmi-border/40 rounded-lg text-slate-400 font-bold select-none cursor-not-allowed"
+              className="w-full p-2.5 bg-slate-100 dark:bg-bgmi-dark/60 border border-slate-200 dark:border-bgmi-border/40 rounded-lg text-slate-500 dark:text-slate-400 font-bold select-none cursor-not-allowed"
             />
           </div>
 
