@@ -35,35 +35,43 @@ export default function AdminMediaPage() {
 
   const handleUpdateStatus = async (item, status) => {
     const targetId = item.id || item._id;
-    const res = await updateMediaStatus(targetId, status);
-    if (res.success) {
-      setMediaList((prev) =>
-        prev.map((m) =>
-          ((m.id || m._id) === targetId) ? { ...m, status, verified: status === 'Published' || status === 'Verified' || status === 'Approved' } : m
-        )
-      );
-      showToast(
-        status === 'Published'
-          ? 'Media Published to Home Page!'
-          : status === 'Approved' || status === 'Verified'
-          ? 'Media Screenshot Approved!'
-          : `Media status set to ${status}`,
-        'success'
-      );
-    } else {
-      showToast('Failed to update media status', 'error');
+    try {
+      const res = await updateMediaStatus(targetId, status);
+      if (res && res.success) {
+        setMediaList((prev) =>
+          prev.map((m) =>
+            ((m.id || m._id) === targetId) ? { ...m, status, verified: status === 'Published' || status === 'Verified' || status === 'Approved' || m.verified } : m
+          )
+        );
+        showToast(
+          status === 'Published'
+            ? 'Media Published to Home Page!'
+            : status === 'Approved' || status === 'Verified'
+            ? 'Media Screenshot Approved!'
+            : `Media status set to ${status}`,
+          'success'
+        );
+      } else {
+        showToast('Failed to update media status', 'error');
+      }
+    } catch (err) {
+      showToast(err.message || 'Error updating media status', 'error');
     }
   };
 
   const handleDelete = async (item) => {
     const targetId = item.id || item._id;
     if (window.confirm(`Are you sure you want to delete media "${item.title}" permanently?`)) {
-      const res = await deleteMedia(targetId);
-      if (res.success) {
-        setMediaList((prev) => prev.filter((m) => (m.id || m._id) !== targetId));
-        showToast('Media proof deleted permanently!', 'info');
-      } else {
-        showToast('Failed to delete media', 'error');
+      try {
+        const res = await deleteMedia(targetId);
+        if (res && res.success) {
+          setMediaList((prev) => prev.filter((m) => (m.id || m._id) !== targetId));
+          showToast('Media proof deleted permanently!', 'info');
+        } else {
+          showToast('Failed to delete media', 'error');
+        }
+      } catch (err) {
+        showToast(err.message || 'Error deleting media', 'error');
       }
     }
   };
@@ -273,12 +281,12 @@ export default function AdminMediaPage() {
                           Preview
                         </Button>
                         <Button
-                          variant={m.status === 'Approved' || m.status === 'Verified' ? 'success' : 'primary'}
+                          variant={m.status === 'Approved' || m.status === 'Verified' || m.status === 'Published' || m.verified ? 'success' : 'primary'}
                           size="sm"
                           icon={Check}
                           onClick={() => handleUpdateStatus(m, 'Approved')}
                         >
-                          {m.status === 'Approved' || m.status === 'Verified' ? 'Approved' : 'Approve'}
+                          {m.status === 'Approved' || m.status === 'Verified' || m.status === 'Published' || m.verified ? 'Approved' : 'Approve'}
                         </Button>
                         <Button
                           variant={m.status === 'Published' ? 'success' : 'primary'}

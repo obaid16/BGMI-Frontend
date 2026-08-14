@@ -113,97 +113,72 @@ export default function MatchDetailPage() {
             <table className="w-full text-left border-collapse text-xs">
               <thead className="bg-bgmi-dark/90 text-slate-400 font-display font-black uppercase tracking-wider border-b border-bgmi-border">
                 <tr>
-                  <th className="py-3 px-4 text-center">Rank</th>
-                  <th className="py-3 px-4">Squad Name</th>
-                  <th className="py-3 px-4 text-center">Placement Pts</th>
-                  <th className="py-3 px-4 text-center">Kills</th>
-                  <th className="py-3 px-4 text-center">Kill Pts</th>
-                  <th className="py-3 px-4 text-center">Total Points</th>
+                  <th className="py-3.5 px-4 text-center">Rank</th>
+                  <th className="py-3.5 px-4">Squad Name</th>
+                  <th className="py-3.5 px-4 text-center">Placement Pts</th>
+                  <th className="py-3.5 px-4 text-center">Kills</th>
+                  <th className="py-3.5 px-4 text-center">Kill Pts</th>
+                  <th className="py-3.5 px-4 text-center">Total Points</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-bgmi-border/40">
-                {result.leaderboard.map((row, idx) => (
-                  <tr key={idx} className={idx === 0 ? 'bg-bgmi-gold/10 font-bold' : ''}>
-                    <td className="py-3 px-4 text-center">#{row.rank}</td>
-                    <td className="py-3 px-4 font-bold text-white">{row.team}</td>
-                    <td className="py-3 px-4 text-center text-slate-300">{row.placementPts}</td>
-                    <td className="py-3 px-4 text-center text-bgmi-cyan">{row.kills}</td>
-                    <td className="py-3 px-4 text-center text-slate-300">{row.killPts}</td>
-                    <td className="py-3 px-4 text-center font-black text-bgmi-gold text-sm">{row.total} PTS</td>
-                  </tr>
-                ))}
+                {result.leaderboard.map((row, idx) => {
+                  const rank = parseInt(row.rank, 10);
+                  const placementPts = rank === 1 ? 10 : rank === 2 ? 8 : rank === 3 ? 5 : 0;
+                  const kills = parseInt(row.kills || 0, 10);
+                  const killPts = kills;
+                  const totalPts = placementPts + killPts;
+
+                  return (
+                    <tr key={idx} className={idx === 0 ? 'bg-bgmi-gold/10 font-bold' : ''}>
+                      <td className="py-3.5 px-4 text-center font-mono">#{rank}</td>
+                      <td className="py-3.5 px-4 font-bold text-white text-sm">{row.team}</td>
+                      <td className="py-3.5 px-4 text-center text-slate-300 font-mono">{placementPts}</td>
+                      <td className="py-3.5 px-4 text-center text-bgmi-cyan font-bold font-mono">{kills}</td>
+                      <td className="py-3.5 px-4 text-center text-slate-300 font-mono">{killPts}</td>
+                      <td className="py-3.5 px-4 text-center font-black text-bgmi-gold text-sm font-mono">{totalPts} PTS</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         </section>
       )}
 
-      {/* MATCH PROOF (POV & SCREENSHOTS) */}
-      {result && result.proofs && (
+      {/* MATCH SCOREBOARD PROOF SCREENSHOTS */}
+      {result && result.proofs && result.proofs.screenshots && result.proofs.screenshots.length > 0 && (
         <section className="space-y-6">
           <div className="border-b border-bgmi-border/60 pb-4">
             <h2 className="font-display font-black text-2xl text-white uppercase tracking-wide flex items-center gap-2">
-              <ShieldCheck className="w-6 h-6 text-bgmi-green" /> Verified Anti-Cheat & POV Proofs
+              <ShieldCheck className="w-6 h-6 text-bgmi-green" /> Verified Scoreboard Proof Screenshots
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* POV Videos */}
-            <div className="bg-bgmi-surface border border-bgmi-border rounded-xl p-5 clip-tactical space-y-3">
-              <h3 className="font-display font-bold text-sm text-bgmi-gold uppercase flex items-center gap-2">
-                <Play className="w-4 h-4" /> Winner POV Recordings
-              </h3>
-              <div className="space-y-2">
-                {result.proofs.povVideos?.map((v, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() =>
-                      setSelectedMedia({
-                        title: v.title,
-                        type: 'POV',
-                        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                        team: result.winner?.teamName,
-                        match: `Match #${match.matchNumber}`,
-                        date: match.date,
-                      })
-                    }
-                    className="p-3 bg-bgmi-dark/80 hover:bg-bgmi-dark rounded-lg border border-bgmi-border/60 flex items-center justify-between text-xs cursor-pointer group transition-colors"
-                  >
-                    <span className="font-bold text-white group-hover:text-bgmi-gold">{v.title}</span>
-                    <Badge variant="red" size="sm">
-                      Play Video
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Screenshots */}
-            <div className="bg-bgmi-surface border border-bgmi-border rounded-xl p-5 clip-tactical space-y-3">
-              <h3 className="font-display font-bold text-sm text-bgmi-cyan uppercase flex items-center gap-2">
-                <Image className="w-4 h-4" /> Scoreboard Proof Screenshots
-              </h3>
-              <div className="grid grid-cols-2 gap-3">
-                {result.proofs.screenshots?.map((img, idx) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt="Proof"
-                    onClick={() =>
-                      setSelectedMedia({
-                        title: `Match #${match.matchNumber} Scoreboard Proof`,
-                        type: 'Screenshots',
-                        imageUrl: img,
-                        thumbnail: img,
-                        team: result.winner?.teamName,
-                        match: `Match #${match.matchNumber}`,
-                        date: match.date,
-                      })
-                    }
-                    className="w-full h-24 object-cover rounded-lg border border-bgmi-border hover:border-bgmi-gold cursor-pointer transition-all hover:scale-105"
-                  />
-                ))}
-              </div>
+          <div className="bg-bgmi-surface border border-bgmi-border rounded-xl p-6 clip-tactical space-y-4 shadow-xl">
+            <h3 className="font-display font-bold text-sm text-bgmi-cyan uppercase flex items-center gap-2">
+              <Image className="w-4 h-4 text-bgmi-cyan" /> Scoreboard Proof Screenshots
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {result.proofs.screenshots.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt="Scoreboard Proof Screenshot"
+                  onClick={() =>
+                    setSelectedMedia({
+                      title: `Match #${match.matchNumber} Scoreboard Proof`,
+                      type: 'Screenshots',
+                      imageUrl: img,
+                      thumbnail: img,
+                      team: result.winner?.teamName,
+                      match: `Match #${match.matchNumber}`,
+                      date: match.date,
+                    })
+                  }
+                  className="w-full h-52 object-cover rounded-lg border border-bgmi-border hover:border-bgmi-gold cursor-pointer transition-all hover:scale-105"
+                />
+              ))}
             </div>
           </div>
         </section>
