@@ -46,7 +46,7 @@ export default function StandingRow({ standing }) {
       </td>
 
       {/* PLAYED */}
-      <td className="py-3.5 px-4 text-center text-slate-700 dark:text-slate-300 font-mono">{standing.matchesPlayed || standing.played || 4}</td>
+      <td className="py-3.5 px-4 text-center text-slate-700 dark:text-slate-300 font-mono">{standing.matches ?? standing.matchesPlayed ?? standing.played ?? 0}</td>
 
       {/* WWCD */}
       <td className="py-3.5 px-4 text-center font-bold text-amber-600 dark:text-bgmi-gold">

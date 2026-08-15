@@ -26,7 +26,12 @@ export default function HomePage() {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [championTeam, setChampionTeam] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
-  const [teamsStats, setTeamsStats] = useState({ registeredSquads: 0, verifiedPlayers: 0 });
+  const [teamsStats, setTeamsStats] = useState({
+    registeredSquads: 4,
+    verifiedPlayers: 16,
+    totalMatches: 4,
+    currentRound: 2
+  });
 
   // Scroll reveal refs for GSAP animations
   const resultsGridRef = useRef(null);
@@ -47,9 +52,21 @@ export default function HomePage() {
           getTeams()
         ]);
 
-        const registered = teams ? teams.length : 0;
-        const verified = teams ? teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0) : 0;
-        setTeamsStats({ registeredSquads: registered, verifiedPlayers: verified });
+        const registered = teams && teams.length > 0 ? teams.length : 4;
+        const verified = teams && teams.length > 0
+          ? teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0)
+          : 16;
+        const totMatches = matches && matches.length > 0 ? matches.length : 4;
+        const currRound = matches && matches.length > 0
+          ? (matches.filter((m) => m.status === 'Completed' || m.status === 'Live').length || 1)
+          : 2;
+
+        setTeamsStats({
+          registeredSquads: registered,
+          verifiedPlayers: verified,
+          totalMatches: totMatches,
+          currentRound: currRound
+        });
 
         setNextMatch(matches.find((m) => m.status === 'Live' || m.status === 'Upcoming') || matches[0]);
         setTopStandings(standings.slice(0, 5));
@@ -93,8 +110,8 @@ export default function HomePage() {
         <TournamentStats
           registeredSquads={teamsStats.registeredSquads}
           verifiedPlayers={teamsStats.verifiedPlayers}
-          totalMatches={4}
-          currentRound={4}
+          totalMatches={teamsStats.totalMatches}
+          currentRound={teamsStats.currentRound}
         />
 
         {/* 3. GRAND CHAMPION SECTION */}
@@ -169,7 +186,7 @@ export default function HomePage() {
               Full Schedule <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-          <NextMatchCard match={nextMatch} topTeams={topStandings} />
+          <NextMatchCard match={nextMatch} topTeams={topStandings} registeredSquadsCount={teamsStats.registeredSquads} />
         </section>
 
         {/* 5. TOP 3 PODIUM & LEADERBOARD SPOTLIGHT */}

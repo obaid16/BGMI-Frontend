@@ -6,7 +6,7 @@ import { Radio, Clock, Swords, Shield, Copy, Check, X, Users, Key, MapPin, Troph
 import Badge from '../common/Badge';
 import Button from '../common/Button';
 
-export default function NextMatchCard({ match, topTeams = [] }) {
+export default function NextMatchCard({ match, topTeams = [], registeredSquadsCount }) {
   const [timeLeft, setTimeLeft] = useState({ hours: 2, minutes: 45, seconds: 30 });
   const [showModal, setShowModal] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
@@ -29,7 +29,7 @@ export default function NextMatchCard({ match, topTeams = [] }) {
 
   const isLive = match.status === 'Live';
 
-  // Extract all participating teams (up to 24 squads)
+  // Extract participating teams or fallback to top contender list
   const participatingSquads = topTeams.length > 0
     ? topTeams
     : [
@@ -42,6 +42,9 @@ export default function NextMatchCard({ match, topTeams = [] }) {
         { teamName: 'VALOR REAPERS', rank: 7, department: 'CSE' },
         { teamName: 'TITAN SQUAD', rank: 8, department: 'AI-DS' },
       ];
+
+  const totalSquadsCount = registeredSquadsCount || participatingSquads.length || 24;
+  const totalPlayersCount = totalSquadsCount * 4;
 
   const roomDetails = {
     roomId: match.roomId || '8492041',
@@ -69,7 +72,7 @@ export default function NextMatchCard({ match, topTeams = [] }) {
 
   return (
     <>
-      <div className="relative overflow-hidden bg-white dark:bg-[#121620] border border-slate-200 dark:border-white/10 rounded-lg p-6 sm:p-8 clip-tactical shadow-lg dark:shadow-2xl space-y-6">
+      <div className="relative overflow-hidden bg-white dark:bg-[#121620] border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-8 clip-tactical shadow-lg dark:shadow-2xl space-y-6">
         <div className="absolute inset-0 bg-tactical-grid opacity-15 pointer-events-none" />
 
         {/* 1. MATCH SPOTLIGHT HEADER */}
@@ -82,8 +85,9 @@ export default function NextMatchCard({ match, topTeams = [] }) {
                 </span>
               </Badge>
             ) : (
-              <span className="px-3 py-1 bg-bgmi-gold/10 text-amber-600 dark:text-bgmi-gold border border-amber-500/30 dark:border-bgmi-gold/30 rounded text-xs font-mono font-bold uppercase tracking-wider">
-                SPOTLIGHT BATTLE
+              <span className="px-3 py-1 bg-bgmi-gold/10 text-amber-600 dark:text-bgmi-gold border border-amber-500/30 dark:border-bgmi-gold/30 rounded text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                LIVE MATCH RADAR SPOTLIGHT
               </span>
             )}
             <span className="font-broadcast font-bold text-base sm:text-lg text-slate-900 dark:text-white uppercase">
@@ -99,20 +103,57 @@ export default function NextMatchCard({ match, topTeams = [] }) {
               <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-bgmi-gold" /> {match.round || 'Grand Finals'}
             </span>
             <span className="flex items-center gap-1 text-sky-600 dark:text-sky-400">
-              <Users className="w-3.5 h-3.5" /> 24 Squads (96 Players)
+              <Users className="w-3.5 h-3.5" /> {totalSquadsCount} Squads ({totalPlayersCount} Players)
             </span>
           </div>
         </div>
 
-        {/* 2. BATTLE ROYALE SHOWCASE: MAP DETAILS & ALL PARTICIPATING SQUADS */}
+        {/* 2. BATTLE ROYALE SHOWCASE: RADAR VISUAL, MAP SPECS & PARTICIPATING SQUADS */}
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
-          {/* MAP & MATCH SPECS BOX (4 COLS) */}
-          <div className="lg:col-span-4 p-5 bg-slate-50 dark:bg-[#0B0E14] rounded border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4">
+          {/* MAP & RADAR HUD DISPLAY BOX (5 COLS) */}
+          <div className="lg:col-span-5 p-5 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4 relative overflow-hidden">
+            
+            {/* TACTICAL RADAR SWEEP GRAPHIC */}
+            <div className="relative w-full h-36 bg-slate-900/90 rounded border border-bgmi-red/30 overflow-hidden flex items-center justify-center p-2 group">
+              <div className="absolute inset-0 bg-tactical-grid opacity-30" />
+              
+              {/* Radar concentric circles */}
+              <div className="absolute w-28 h-28 rounded-full border border-bgmi-red/20" />
+              <div className="absolute w-20 h-20 rounded-full border border-bgmi-red/30" />
+              <div className="absolute w-12 h-12 rounded-full border border-bgmi-red/40" />
+              <div className="absolute w-full h-[1px] bg-bgmi-red/20" />
+              <div className="absolute h-full w-[1px] bg-bgmi-red/20" />
+
+              {/* Radar Sweeping Beam Animation */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-bgmi-red/20 to-transparent animate-spin origin-center duration-3000 pointer-events-none" />
+
+              {/* Simulated Squad Radar Blips */}
+              <span className="absolute top-8 left-12 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="absolute top-8 left-12 w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="absolute bottom-10 right-14 w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+              <span className="absolute bottom-10 right-14 w-2 h-2 rounded-full bg-amber-400" />
+              <span className="absolute top-12 right-10 w-2 h-2 rounded-full bg-bgmi-red animate-ping" />
+              <span className="absolute top-12 right-10 w-2 h-2 rounded-full bg-bgmi-red" />
+
+              {/* Radar Center HUD Text */}
+              <div className="relative z-10 text-center space-y-0.5 pointer-events-none">
+                <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-emerald-400 uppercase block">
+                  RADAR SCANNER ACTIVE
+                </span>
+                <span className="text-sm font-broadcast font-black text-white uppercase tracking-wider block">
+                  {match.map || 'ERANGEL'} ZONE
+                </span>
+                <span className="text-[9px] font-mono text-slate-400 block">
+                  34.12° N, 74.83° E • AIR DROP INCOMING
+                </span>
+              </div>
+            </div>
+
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
                 <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-bgmi-gold uppercase tracking-widest flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5" /> ARENA MAP
+                  <MapPin className="w-3.5 h-3.5" /> BATTLEGROUND MAP
                 </span>
                 <span className="text-xs font-broadcast font-bold text-slate-900 dark:text-white uppercase">{match.map || 'Erangel'}</span>
               </div>
@@ -128,7 +169,7 @@ export default function NextMatchCard({ match, topTeams = [] }) {
                 </div>
                 <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
                   <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">CAPACITY</span>
-                  <span className="font-bold text-sky-600 dark:text-sky-400">24 SQUADS</span>
+                  <span className="font-bold text-sky-600 dark:text-sky-400">{totalSquadsCount} SQUADS</span>
                 </div>
                 <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
                   <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">ROOM CODE</span>
@@ -139,22 +180,22 @@ export default function NextMatchCard({ match, topTeams = [] }) {
 
             <div className="pt-2 border-t border-slate-200 dark:border-white/10">
               <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                * All 24 registered squads drop simultaneously into the arena.
+                * All {totalSquadsCount} registered squads drop simultaneously into the arena custom lobby.
               </p>
             </div>
           </div>
 
-          {/* ALL PARTICIPATING SQUADS GRID (8 COLS) */}
-          <div className="lg:col-span-8 p-5 bg-slate-50 dark:bg-[#0B0E14] rounded border border-slate-200 dark:border-white/10 space-y-3 flex flex-col justify-between">
+          {/* ALL PARTICIPATING SQUADS GRID (7 COLS) */}
+          <div className="lg:col-span-7 p-5 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 space-y-3 flex flex-col justify-between">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
               <h4 className="font-broadcast font-bold text-xs uppercase text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                <Swords className="w-4 h-4 text-bgmi-red" /> ALL PARTICIPATING SQUADS ({participatingSquads.length}/24 LOBBY)
+                <Swords className="w-4 h-4 text-bgmi-red" /> LOBBY SQUAD MATRIX ({participatingSquads.length}/{totalSquadsCount} SEEDED)
               </h4>
-              <span className="text-[10px] font-mono text-amber-600 dark:text-bgmi-gold font-bold uppercase">LIVE LOBBY MATRIX</span>
+              <span className="text-[10px] font-mono text-amber-600 dark:text-bgmi-gold font-bold uppercase">LIVE FEED</span>
             </div>
 
             {/* SQUAD CHIPS GRID */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-h-48 overflow-y-auto pr-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-56 overflow-y-auto pr-1">
               {participatingSquads.map((sq, idx) => (
                 <div
                   key={idx}
@@ -179,7 +220,7 @@ export default function NextMatchCard({ match, topTeams = [] }) {
               ))}
             </div>
 
-            <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400">
+            <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-500 dark:text-slate-400">
               <span>Points System: WWCD = 10 PTS • Kill = 1 PT</span>
               <span className="text-emerald-600 dark:text-emerald-400 font-bold">ANTI-CHEAT MOSAC ENABLED</span>
             </div>
