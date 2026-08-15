@@ -1,33 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Root Theme Variable Tokens */
+/* Root Theme Variable Tokens - Premium Esports Palette */
 :root {
-  --bg-main: #08090d;
-  --bg-surface: #0f121a;
-  --bg-card: #151924;
-  --border-color: #222838;
-  --text-main: #f1f5f9;
-  --text-muted: #8e96a8;
-  --accent-red: #e6193c;
-  --accent-gold: #ffb703;
-  --accent-cyan: #00f0ff;
-  --grid-line: rgba(34, 40, 56, 0.35);
+  /* Dark Mode Defaults (Graphite / Steel / Crimson / Muted Gold) */
+  --bg-main: #0B0E14;
+  --bg-surface: #121620;
+  --bg-card: #181E2C;
+  --border-color: #1E2638;
+  --border-bright: #2C364F;
+  --text-main: #F8F9FA;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+  --accent-red: #E5383B;
+  --accent-red-hover: #C52225;
+  --accent-red-glow: rgba(229, 56, 59, 0.25);
+  --accent-gold: #D4AF37;
+  --accent-gold-muted: #C5A059;
+  --accent-gold-glow: rgba(212, 175, 55, 0.2);
+  --grid-line: rgba(30, 38, 56, 0.35);
 }
 
 html.light {
-  --bg-main: #f8fafc;
-  --bg-surface: #ffffff;
-  --bg-card: #ffffff;
-  --border-color: #e2e8f0;
-  --text-main: #0f172a;
+  /* Light Mode Defaults (Crisp Editorial Sports Theme) */
+  --bg-main: #F4F6F8;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --border-color: #E2E8F0;
+  --border-bright: #CBD5E1;
+  --text-main: #0F172A;
   --text-muted: #475569;
-  --accent-red: #dc2626;
-  --accent-gold: #d97706;
-  --accent-cyan: #0284c7;
+  --text-dim: #64748B;
+  --accent-red: #D90429;
+  --accent-red-hover: #B7092B;
+  --accent-red-glow: rgba(217, 4, 41, 0.15);
+  --accent-gold: #B8860B;
+  --accent-gold-muted: #A67C1E;
+  --accent-gold-glow: rgba(184, 134, 11, 0.15);
   --grid-line: rgba(203, 213, 225, 0.4);
 }
 
@@ -40,9 +52,9 @@ html, body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6, .font-display {
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: -0.02em;
+h1, h2, h3, h4, h5, h6, .font-display, .font-broadcast {
+  font-family: 'Chakra Petch', 'Outfit', sans-serif;
+  letter-spacing: -0.01em;
 }
 
 /* Tactical Background Utilities */
@@ -50,31 +62,48 @@ h1, h2, h3, h4, h5, h6, .font-display {
   background-image: 
     linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background-size: 36px 36px;
 }
 
-.bg-hero-radial {
-  background: radial-gradient(circle at 50% 30%, rgba(230, 25, 60, 0.15) 0%, rgba(255, 183, 3, 0.06) 40%, rgba(2, 6, 23, 0.95) 100%);
+.bg-hero-left-dark {
+  background: linear-gradient(to right, rgba(11, 14, 20, 0.95) 0%, rgba(11, 14, 20, 0.85) 45%, rgba(11, 14, 20, 0.4) 75%, rgba(11, 14, 20, 0.2) 100%);
+}
+
+html.light .bg-hero-left-dark {
+  background: linear-gradient(to right, rgba(244, 246, 248, 0.95) 0%, rgba(244, 246, 248, 0.85) 45%, rgba(244, 246, 248, 0.4) 75%, rgba(244, 246, 248, 0.2) 100%);
 }
 
 .bg-vignette {
-  background: radial-gradient(circle at center, transparent 30%, rgba(2, 6, 23, 0.95) 100%);
+  background: radial-gradient(circle at center, transparent 35%, rgba(11, 14, 20, 0.92) 100%);
 }
 
-/* Esports Tactical Cut Corners */
+html.light .bg-vignette {
+  background: radial-gradient(circle at center, transparent 35%, rgba(244, 246, 248, 0.92) 100%);
+}
+
+/* Atmospheric Glow Spotlights */
+.bg-glow-red {
+  background: radial-gradient(circle at 20% 50%, rgba(229, 56, 59, 0.12) 0%, transparent 60%);
+}
+
+.bg-glow-gold {
+  background: radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+}
+
+/* Esports Technical Geometry Cut Corners */
 .clip-tactical {
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
 }
 
 .clip-badge {
   clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
 }
 
-.clip-hero-btn {
-  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+.clip-technical-btn {
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
 }
 
-/* Mobile Sideways Touch Scroll Utilities */
+/* Mobile Sideways Scroll Utilities */
 .table-scroll-container {
   width: 100%;
   overflow-x: auto !important;
@@ -84,20 +113,20 @@ h1, h2, h3, h4, h5, h6, .font-display {
   scrollbar-width: thin;
 }
 
-/* Theme aware Glass panels */
+/* Glass Panels with refined theme borders */
 .glass-panel {
-  background: rgba(15, 18, 26, 0.85);
+  background: rgba(18, 22, 32, 0.82);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(34, 40, 56, 0.8);
+  border: 1px solid rgba(30, 38, 56, 0.8);
 }
 
 html.light .glass-panel {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(226, 232, 240, 0.9);
 }
 
-/* Custom Scrollbars */
+/* Custom Subtle Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -115,3 +144,4 @@ html.light .glass-panel {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-red);
 }
+

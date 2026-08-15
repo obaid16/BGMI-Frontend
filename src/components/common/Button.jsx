@@ -10,7 +10,7 @@ export default function Button({
   className = '',
   icon: Icon,
 }) {
-  const baseStyles = 'group relative inline-flex items-center justify-center font-broadcast font-bold uppercase tracking-wider transition-all duration-200 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none clip-broadcast-btn';
+  const baseStyles = 'group relative inline-flex items-center justify-center font-broadcast font-bold uppercase tracking-wider transition-all duration-300 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none clip-technical-btn hover:-translate-y-0.5 active:translate-y-0';
 
   const sizeStyles = {
     sm: 'px-4 py-2 text-xs gap-2',
@@ -19,14 +19,14 @@ export default function Button({
   };
 
   const variantStyles = {
-    primary: 'bg-bgmi-red hover:bg-bgmi-red-hover text-white font-black border border-red-500/40 shadow-lg hover:border-red-400/80 active:scale-[0.98]',
-    gold: 'bg-bgmi-gold hover:bg-amber-500 text-slate-950 font-black border border-amber-300 active:scale-[0.98]',
-    secondary: 'bg-slate-900/90 hover:bg-slate-800/90 text-white border border-slate-700/80 hover:border-slate-500 active:scale-[0.98]',
-    cyan: 'bg-sky-500 hover:bg-sky-400 text-slate-950 font-black border border-sky-300 active:scale-[0.98]',
-    danger: 'bg-rose-600 hover:bg-rose-700 text-white border border-rose-500 active:scale-[0.98]',
-    outline: 'bg-transparent text-slate-200 border border-slate-700 hover:border-bgmi-red hover:text-white hover:bg-bgmi-red/10 active:scale-[0.98]',
-    'outline-gold': 'bg-transparent text-bgmi-gold border border-bgmi-gold/60 hover:bg-bgmi-gold/10 hover:border-bgmi-gold active:scale-[0.98]',
-    ghost: 'bg-transparent hover:bg-slate-800/60 text-slate-300 hover:text-white',
+    primary: 'bg-bgmi-red hover:bg-bgmi-red-hover text-white font-black border border-red-500/50 shadow-md hover:border-red-400 shadow-red-glow/30',
+    gold: 'bg-bgmi-gold hover:bg-amber-500 text-slate-950 font-black border border-amber-300 shadow-gold-glow/30',
+    secondary: 'bg-slate-100 dark:bg-slate-900/90 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 hover:border-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/90',
+    cyan: 'bg-sky-500 hover:bg-sky-400 text-slate-950 font-black border border-sky-300',
+    danger: 'bg-rose-600 hover:bg-rose-700 text-white border border-rose-500',
+    outline: 'bg-transparent text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-bgmi-red hover:text-white dark:hover:text-white hover:bg-bgmi-red/10',
+    'outline-gold': 'bg-transparent text-amber-600 dark:text-bgmi-gold border border-amber-500/60 dark:border-bgmi-gold/60 hover:bg-bgmi-gold/10 hover:border-bgmi-gold',
+    ghost: 'bg-transparent hover:bg-slate-200 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white',
   };
 
   return (
@@ -36,10 +36,11 @@ export default function Button({
       disabled={disabled}
       className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
     >
-      {Icon && <Icon className="w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />}
+      {Icon && <Icon className="w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:translate-x-0.5" />}
       <span>{children}</span>
     </button>
   );
 }
+
 
 

@@ -15,7 +15,7 @@ export default function MediaLightbox({ item, isOpen, onClose }) {
     <Modal isOpen={isOpen} onClose={onClose} title={item.title} maxWidth="max-w-4xl">
       <div className="space-y-4">
         {/* Media Content Display */}
-        <div className="relative aspect-video w-full bg-black rounded-xl overflow-hidden border border-bgmi-border dark:border-bgmi-border light:border-slate-200">
+        <div className="relative aspect-video w-full bg-black rounded-xl overflow-hidden border border-slate-200 dark:border-bgmi-border">
           {isVideo ? (
             <iframe
               src={item.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ'}
@@ -38,14 +38,14 @@ export default function MediaLightbox({ item, isOpen, onClose }) {
         </div>
 
         {/* Media Metadata */}
-        <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-bgmi-dark/70 dark:bg-bgmi-dark/70 light:bg-slate-100 rounded-xl border border-bgmi-border/40 dark:border-bgmi-border/40 light:border-slate-200 text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-slate-100 dark:bg-bgmi-dark/70 rounded-xl border border-slate-200 dark:border-bgmi-border/40 text-xs">
           <div>
-            <p className="text-slate-400 dark:text-slate-400 light:text-slate-600">Team: <span className="text-white dark:text-white light:text-slate-900 font-bold">{item.team || 'N/A'}</span></p>
-            {item.player && <p className="text-slate-400 dark:text-slate-400 light:text-slate-600">Player: <span className="text-bgmi-gold dark:text-bgmi-gold light:text-amber-600 font-bold">{item.player}</span></p>}
+            <p className="text-slate-600 dark:text-slate-400">Team: <span className="text-slate-900 dark:text-white font-bold">{item.team || 'N/A'}</span></p>
+            {item.player && <p className="text-slate-600 dark:text-slate-400">Player: <span className="text-amber-600 dark:text-bgmi-gold font-bold">{item.player}</span></p>}
           </div>
           <div>
-            <p className="text-slate-400 dark:text-slate-400 light:text-slate-600">Match: <span className="text-bgmi-cyan dark:text-bgmi-cyan light:text-sky-600 font-bold">{item.match || 'Match #01'}</span></p>
-            <p className="text-slate-400 dark:text-slate-400 light:text-slate-600">Date: <span className="text-white dark:text-white light:text-slate-900 font-bold">{item.date}</span></p>
+            <p className="text-slate-600 dark:text-slate-400">Match: <span className="text-sky-600 dark:text-bgmi-cyan font-bold">{item.match || 'Match #01'}</span></p>
+            <p className="text-slate-600 dark:text-slate-400">Date: <span className="text-slate-900 dark:text-white font-bold">{item.date}</span></p>
           </div>
           <Badge variant="green" size="sm">
             Referee Verified Proof
@@ -55,3 +55,4 @@ export default function MediaLightbox({ item, isOpen, onClose }) {
     </Modal>
   );
 }
+
