@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Crosshair, Shield, Award, ExternalLink, Flame } from 'lucide-react';
 
 export default function Footer() {
@@ -12,23 +13,32 @@ export default function Footer() {
           
           {/* COL 1: BRAND */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-bgmi-red rounded-lg p-0.5 clip-tactical flex items-center justify-center text-white font-black shadow-red-glow">
-                <Crosshair className="w-5 h-5" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <div className="h-12 px-3 py-1.5 bg-white rounded-lg border border-slate-200 dark:border-white/20 flex items-center justify-center shadow-md">
+                <img
+                  src="/images/nexcore-logo-transparent.png"
+                  alt="Nexcore Institute of Technology"
+                  className="h-9 w-auto object-contain"
+                />
               </div>
-              <span className="font-display font-black text-xl text-slate-900 dark:text-white uppercase tracking-wider">
-                NIT <span className="text-bgmi-red">BGMI</span> CHAMPIONSHIP
-              </span>
+              <div className="flex flex-col border-l border-slate-300 dark:border-white/15 pl-3">
+                <span className="font-display font-black text-lg text-slate-900 dark:text-white uppercase tracking-wider leading-none">
+                  NIT <span className="text-bgmi-red">BGMI</span> CHAMPIONSHIP
+                </span>
+                <span className="text-[9px] font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-0.5">
+                  OFFICIAL CAMPUS ESPORTS 2026
+                </span>
+              </div>
             </div>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm leading-relaxed">
-              Official NIT BGMI Esports Championship 2026. An exclusive tournament platform for college squads to compete, survive, and claim ultimate victory.
+              Official NIT BGMI Esports Championship 2026 organized by Nexcore Institute of Technology. An exclusive tournament platform for campus squads to compete, survive, and claim ultimate victory.
             </p>
             <div className="flex flex-wrap items-center gap-2 pt-2">
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-bgmi-red bg-bgmi-red/10 px-2.5 py-1 rounded border border-bgmi-red/30">
                 <Shield className="w-3.5 h-3.5" /> Anti-Cheat Verified
               </span>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-bgmi-gold bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/30">
-                <Award className="w-3.5 h-3.5" /> Official Campus Event
+                <Award className="w-3.5 h-3.5" /> Nexcore Campus Event
               </span>
             </div>
           </div>
@@ -77,7 +87,7 @@ export default function Footer() {
 
         {/* BOTTOM COPYRIGHT */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-500">
-          <p>© 2026 NIT BGMI Esports Championship. All Rights Reserved.</p>
+          <p>© 2026 Nexcore Institute of Technology — NIT BGMI Esports Championship. All Rights Reserved.</p>
           <div className="flex items-center gap-6 text-[11px]">
             <Link href="/rules" className="hover:text-bgmi-red">Rules & Code of Conduct</Link>
             <span className="hover:text-bgmi-red cursor-pointer">Anti-Cheat Policy</span>

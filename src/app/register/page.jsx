@@ -18,7 +18,7 @@ export default function RegisterPage() {
 
   const [formData, setFormData] = useState({
     teamName: '',
-    collegeName: 'NIT',
+    collegeName: 'Nexcore Institute of Technology',
     captainName: '',
     captainPhone: '',
     captainEmail: '',

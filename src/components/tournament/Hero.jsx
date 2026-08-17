@@ -45,7 +45,7 @@ export default function Hero() {
             {/* SUBTITLE KICKER */}
             <div className="flex items-center gap-3">
               <span className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-bgmi-red border-l-2 border-bgmi-red pl-3 py-0.5">
-                NIT ESPORTS // 2026
+                NEXCORE ESPORTS // 2026
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono text-[10px] font-bold uppercase tracking-wider">
                 <Radio className="w-3 h-3 animate-pulse" /> TOURNAMENT ACTIVE
@@ -65,7 +65,7 @@ export default function Hero() {
             {/* EDITORIAL TAGLINE */}
             <div className="space-y-2 max-w-xl">
               <p className="font-broadcast font-bold text-base sm:text-xl text-slate-200 uppercase tracking-widest border-l-2 border-amber-500 pl-3">
-                IN-HOUSE COLLEGE TOURNAMENT
+                NEXCORE INSTITUTE OF TECHNOLOGY
               </p>
               <p className="text-xs sm:text-sm text-slate-400 font-normal leading-relaxed">
                 24 verified squads from our campus competing across custom room matches. Dominate the circle and claim ultimate glory.
@@ -92,7 +92,7 @@ export default function Hero() {
 
             {/* TELEMETRY METADATA STRIP */}
             <div className="pt-4 border-t border-white/10 flex flex-wrap items-center gap-4 text-[10px] font-mono text-slate-400 uppercase tracking-widest">
-              <span>ORGANIZER: NIT ESPORTS CLUB</span>
+              <span>ORGANIZER: NEXCORE INSTITUTE OF TECHNOLOGY</span>
               <span>•</span>
               <span>FORMAT: TPP SQUAD BATTLE ROYALE</span>
               <span>•</span>
@@ -149,7 +149,7 @@ export default function Hero() {
 
               {/* CARD FOOTER CTA */}
               <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono">
-                <span className="text-slate-400">NIT ESPORTS OFFICIAL LOBBY</span>
+                <span className="text-slate-400">NEXCORE ESPORTS OFFICIAL LOBBY</span>
                 <Link href="/matches" className="text-bgmi-red font-bold hover:underline flex items-center gap-1">
                   <span>ROOM SCHEDULE</span>
                   <span>→</span>

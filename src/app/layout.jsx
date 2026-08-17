@@ -4,9 +4,9 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import ConditionalLayout from '@/components/common/ConditionalLayout';
 
 export const metadata = {
-  title: 'NIT BGMI Esports Championship 2026 | Official Tournament Platform',
-  description: 'Official NIT BGMI Esports Tournament Management Platform. Live matches, standings, squad registration, and tournament statistics.',
-  keywords: 'NIT, BGMI, Esports, College Esports, Battlegrounds Mobile India, Tournament Platform, NIT Gaming',
+  title: 'NIT BGMI Esports Championship 2026 | Nexcore Institute of Technology',
+  description: 'Official NIT BGMI Esports Championship 2026 organized by Nexcore Institute of Technology. Live matches, standings, squad registration, and tournament statistics.',
+  keywords: 'Nexcore Institute of Technology, NIT, BGMI, Esports, College Esports, Battlegrounds Mobile India, Tournament Platform, NIT Gaming',
 };
 
 export default function RootLayout({ children }) {

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Crosshair, ArrowUpRight } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
@@ -44,19 +45,23 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 w-full font-sans border-b border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[#0B0E14]/95 backdrop-blur-md">
       {/* MAIN EDITORIAL NAVIGATION BAR */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         {/* BRAND IDENTITY */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 bg-bgmi-red text-white flex items-center justify-center font-broadcast font-black text-lg clip-badge shadow-red-glow">
-            <Crosshair className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
+        <Link href="/" className="flex items-center gap-3 group shrink-0">
+          <div className="h-10 sm:h-11 px-3 py-1 bg-white rounded-lg border border-slate-200 dark:border-white/20 flex items-center justify-center shadow-md group-hover:border-bgmi-red/60 transition-all group-hover:scale-105">
+            <img
+              src="/images/nexcore-logo-transparent.png"
+              alt="Nexcore Institute of Technology"
+              className="h-8 sm:h-9 w-auto object-contain"
+            />
           </div>
-          <div className="flex flex-col">
-            <span className="font-broadcast font-black text-lg sm:text-xl text-slate-900 dark:text-white uppercase tracking-tight leading-none">
-              NIT <span className="text-bgmi-red">BGMI</span>
+          <div className="hidden sm:flex flex-col border-l border-slate-300 dark:border-white/15 pl-3">
+            <span className="font-broadcast font-black text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider leading-none">
+              BGMI <span className="text-bgmi-red">CHAMPIONSHIP</span>
             </span>
-            <span className="text-[9px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">
-              CHAMPIONSHIP 2026
+            <span className="text-[8px] sm:text-[9px] font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-0.5">
+              OFFICIAL 2026
             </span>
           </div>
         </Link>
@@ -112,7 +117,7 @@ export default function Navbar() {
 
       {/* MOBILE FULLSCREEN NAVIGATION MATRIX */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-[90px] bg-white dark:bg-[#0B0E14] z-50 p-6 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-top-4 duration-200">
+        <div className="lg:hidden fixed inset-0 top-16 bg-white dark:bg-[#0B0E14] z-50 p-6 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-top-4 duration-200">
           <div className="space-y-4">
             <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-200 dark:border-white/10 pb-2">
               TOURNAMENT SECTIONS

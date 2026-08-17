@@ -30,7 +30,7 @@ export default function RankingCard({ standing }) {
                 {standing.teamName}
               </h4>
             </Link>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">{standing.collegeName || 'NIT Roster'}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">{standing.collegeName || 'Nexcore Roster'}</p>
           </div>
         </div>
 

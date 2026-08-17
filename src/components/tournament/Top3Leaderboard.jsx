@@ -42,7 +42,7 @@ export default function Top3Leaderboard({ standings = [] }) {
                 <h3 className="font-broadcast font-black text-3xl sm:text-5xl uppercase tracking-tight text-slate-950 drop-shadow-md">
                   {first.teamName}
                 </h3>
-                <p className="text-xs font-mono font-bold text-slate-900">{first.collegeName || 'NIT BGMI ROSTER'}</p>
+                <p className="text-xs font-mono font-bold text-slate-900">{first.collegeName || 'NEXCORE BGMI ROSTER'}</p>
               </div>
 
             </div>
