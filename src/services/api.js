@@ -404,7 +404,27 @@ export async function getRules() {
   }
 }
 
-// ==================== PLAYERS API ====================
+// ==================== TOURNAMENT API ====================
+export async function getTournament() {
+  try {
+    const res = await fetchAPI('/tournament');
+    if (res.data) return res.data;
+  } catch (err) {
+    console.warn('getTournament failed, using fallback:', err);
+  }
+  return {
+    tournamentName: 'NIT BGMI Esports Championship 2026',
+    status: 'Active',
+    registeredSquads: CANONICAL_TEAMS.length || 24,
+    verifiedPlayers: getPlayerData().length || 96,
+    totalMatches: CANONICAL_MATCHES.length || 12,
+    matchesPlayed: getResultsData().length || 2,
+    currentRound: 3,
+    nextMatch: CANONICAL_MATCHES.find(m => m.status === 'Live' || m.status === 'Upcoming') || CANONICAL_MATCHES[0]
+  };
+}
+
+// ==================== PLAYERS & MVP API ====================
 export async function getPlayers() {
   try {
     const res = await fetchAPI('/players');
@@ -413,6 +433,24 @@ export async function getPlayers() {
     console.warn('getPlayers failed:', err);
   }
   return getPlayerData();
+}
+
+export async function getPlayerStats() {
+  return getPlayers();
+}
+
+export async function getMVP() {
+  try {
+    const res = await fetchAPI('/mvp');
+    if (res.data && res.data.topMvp) return res.data;
+  } catch (err) {
+    console.warn('getMVP failed:', err);
+  }
+  const players = getPlayerData();
+  return {
+    topMvp: players[0] || null,
+    players
+  };
 }
 
 export async function updatePlayer(playerId, playerData) {

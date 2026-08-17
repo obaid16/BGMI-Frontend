@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getPlayers } from '@/services/api';
+import { getMVP } from '@/services/api';
 import { Trophy, Search, Flame, Award, Zap, Shield, Target } from 'lucide-react';
 import { SkeletonGrid } from '@/components/common/Skeleton';
 
@@ -14,8 +14,9 @@ export default function MVPLeaderboardPage() {
     async function loadData() {
       try {
         setLoading(true);
-        const data = await getPlayers();
-        const sorted = data.sort((a, b) => (b.kills || 0) - (a.kills || 0));
+        const data = await getMVP();
+        const playerList = data?.players || data || [];
+        const sorted = playerList.sort((a, b) => (b.kills || 0) - (a.kills || 0));
         setPlayers(sorted);
       } catch (err) {
         console.error('Failed to load players for MVP:', err);
