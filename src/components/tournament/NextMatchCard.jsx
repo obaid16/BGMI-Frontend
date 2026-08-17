@@ -278,48 +278,58 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
 
             {/* ROOM CREDENTIALS CARDS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* ROOM ID */}
-              <div className="p-4 bg-slate-50 dark:bg-[#0B0E14] rounded border border-slate-200 dark:border-white/10 space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
-                  <span className="flex items-center gap-1.5 font-bold uppercase">
-                    <Key className="w-4 h-4 text-amber-600 dark:text-bgmi-gold" /> ROOM ID
-                  </span>
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">ACTIVE</span>
-                </div>
+              {/* ROOM ID CARD */}
+              <div className="p-4 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono font-bold text-2xl tracking-wider text-amber-600 dark:text-bgmi-gold">
+                  <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    ROOM STATUS
+                  </span>
+                  <span className="text-[11px] font-mono text-emerald-400 font-bold flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> ROOM READY
+                  </span>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono text-slate-400 uppercase block font-bold">ROOM ID</span>
+                  <span className="font-mono font-black text-2xl tracking-wider text-amber-500 dark:text-amber-400 block">
                     {roomDetails.roomId}
                   </span>
-                  <button
-                    onClick={() => copyToClipboard(roomDetails.roomId, 'id')}
-                    className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-300 dark:border-white/15 rounded text-xs font-mono flex items-center gap-1 text-slate-800 dark:text-slate-200 transition-colors"
-                  >
-                    {copiedId ? <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                    <span>{copiedId ? 'COPIED' : 'COPY'}</span>
-                  </button>
                 </div>
+
+                <button
+                  onClick={() => copyToClipboard(roomDetails.roomId, 'id')}
+                  className="w-full py-2 bg-slate-900 hover:bg-bgmi-red dark:bg-slate-800 dark:hover:bg-bgmi-red text-white rounded text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                >
+                  {copiedId ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedId ? 'ROOM ID COPIED' : 'COPY ROOM ID'}</span>
+                </button>
               </div>
 
-              {/* ROOM PASSWORD */}
-              <div className="p-4 bg-slate-50 dark:bg-[#0B0E14] rounded border border-slate-200 dark:border-white/10 space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
-                  <span className="flex items-center gap-1.5 font-bold uppercase">
-                    <Shield className="w-4 h-4 text-sky-600 dark:text-sky-400" /> PASSWORD
-                  </span>
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">VERIFIED</span>
-                </div>
+              {/* ROOM PASSWORD CARD */}
+              <div className="p-4 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono font-bold text-2xl tracking-wider text-sky-600 dark:text-sky-400">
+                  <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    SECURITY ACCESS
+                  </span>
+                  <span className="text-[11px] font-mono text-sky-400 font-bold flex items-center gap-1">
+                    <Shield className="w-3.5 h-3.5" /> VERIFIED
+                  </span>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[10px] font-mono text-slate-400 uppercase block font-bold">PASSWORD</span>
+                  <span className="font-mono font-black text-2xl tracking-wider text-sky-400 block">
                     {roomDetails.password}
                   </span>
-                  <button
-                    onClick={() => copyToClipboard(roomDetails.password, 'pass')}
-                    className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-300 dark:border-white/15 rounded text-xs font-mono flex items-center gap-1 text-slate-800 dark:text-slate-200 transition-colors"
-                  >
-                    {copiedPass ? <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                    <span>{copiedPass ? 'COPIED' : 'COPY'}</span>
-                  </button>
                 </div>
+
+                <button
+                  onClick={() => copyToClipboard(roomDetails.password, 'pass')}
+                  className="w-full py-2 bg-slate-900 hover:bg-sky-600 dark:bg-slate-800 dark:hover:bg-sky-600 text-white rounded text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                >
+                  {copiedPass ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedPass ? 'PASSWORD COPIED' : 'COPY PASSWORD'}</span>
+                </button>
               </div>
             </div>
 

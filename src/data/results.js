@@ -1,1 +1,3 @@
-export const mockResults = [];
+import { getResultsData } from './tournamentData';
+
+export const mockResults = getResultsData();

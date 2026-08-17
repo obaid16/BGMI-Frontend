@@ -1,3 +1,11 @@
+import {
+  CANONICAL_TEAMS,
+  CANONICAL_MATCHES,
+  getStandingsData,
+  getResultsData,
+  getPlayerData
+} from '../data/tournamentData';
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 // Simple in-memory cache for GET requests to boost page navigation speed
@@ -107,7 +115,16 @@ export async function getTeams(filter = 'All', searchQuery = '') {
     }
 
     const res = await fetchAPI(url);
-    let teams = res.data || [];
+    let teams = res.data && res.data.length > 0 ? res.data : CANONICAL_TEAMS;
+
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      teams = teams.filter((t) =>
+        t.teamName?.toLowerCase().includes(q) ||
+        t.shortName?.toLowerCase().includes(q) ||
+        t.captainName?.toLowerCase().includes(q)
+      );
+    }
 
     // Local filters for complex criteria
     if (filter === 'Top Teams') {
@@ -116,19 +133,19 @@ export async function getTeams(filter = 'All', searchQuery = '') {
 
     return teams;
   } catch (err) {
-    console.error('getTeams failed, returning empty:', err);
-    return [];
+    console.error('getTeams failed, returning canonical fallback:', err);
+    return CANONICAL_TEAMS;
   }
 }
 
 export async function getTeamById(id) {
   try {
     const res = await fetchAPI(`/teams/${id}`);
-    return res.data || null;
+    if (res.data) return res.data;
   } catch (err) {
     console.error('getTeamById failed:', err);
-    return null;
   }
+  return CANONICAL_TEAMS.find((t) => t.id === id || t.shortName === id || t.registrationId === id) || CANONICAL_TEAMS[0];
 }
 
 export async function registerTeam(registrationData) {
@@ -166,21 +183,28 @@ export async function getMatches(filter = 'All') {
       url += `?status=${filter}`;
     }
     const res = await fetchAPI(url);
-    return res.data || [];
+    const data = res.data && res.data.length > 0 ? res.data : CANONICAL_MATCHES;
+    if (filter !== 'All') {
+      return data.filter((m) => m.status === filter);
+    }
+    return data;
   } catch (err) {
     console.error('getMatches failed:', err);
-    return [];
+    if (filter !== 'All') {
+      return CANONICAL_MATCHES.filter((m) => m.status === filter);
+    }
+    return CANONICAL_MATCHES;
   }
 }
 
 export async function getMatchById(id) {
   try {
     const res = await fetchAPI(`/matches/${id}`);
-    return res.data || null;
+    if (res.data) return res.data;
   } catch (err) {
     console.error('getMatchById failed:', err);
-    return null;
   }
+  return CANONICAL_MATCHES.find((m) => String(m.id) === String(id) || String(m.matchNumber) === String(id)) || CANONICAL_MATCHES[0];
 }
 
 export async function createMatch(matchData) {
@@ -211,42 +235,50 @@ export async function updateMatch(matchId, matchData) {
 export async function getStandings() {
   try {
     const res = await fetchAPI('/standings');
-    return res.data || [];
+    if (res.data && res.data.length > 0) return res.data;
   } catch (err) {
     console.error('getStandings failed:', err);
-    return [];
   }
+  return getStandingsData();
 }
 
 export async function getScoringRules() {
   try {
     const res = await fetchAPI('/standings/rules');
-    return res.data || {};
+    if (res.data && Object.keys(res.data).length > 0) return res.data;
   } catch (err) {
     console.error('getScoringRules failed:', err);
-    return {};
   }
+  return {
+    placementPoints: [
+      { rank: 1, points: 10 },
+      { rank: 2, points: 8 },
+      { rank: 3, points: 5 },
+      { rank: 4, points: 3 },
+      { rank: 5, points: 1 }
+    ]
+  };
 }
 
 // ==================== RESULTS API ====================
 export async function getResults() {
   try {
     const res = await fetchAPI('/results');
-    return res.data || [];
+    if (res.data && res.data.length > 0) return res.data;
   } catch (err) {
     console.error('getResults failed:', err);
-    return [];
   }
+  return getResultsData();
 }
 
 export async function getResultById(id) {
   try {
     const res = await fetchAPI(`/results/${id}`);
-    return res.data || null;
+    if (res.data) return res.data;
   } catch (err) {
     console.error('getResultById failed:', err);
-    return null;
   }
+  return getResultsData().find((r) => String(r.id) === String(id) || String(r.matchNumber) === String(id)) || getResultsData()[0];
 }
 
 export async function submitMatchResult(resultData) {
@@ -376,11 +408,11 @@ export async function getRules() {
 export async function getPlayers() {
   try {
     const res = await fetchAPI('/players');
-    return res.data || [];
+    if (res.data && res.data.length > 0) return res.data;
   } catch (err) {
     console.warn('getPlayers failed:', err);
-    return [];
   }
+  return getPlayerData();
 }
 
 export async function updatePlayer(playerId, playerData) {
