@@ -178,12 +178,12 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
                     onChange={(e) => setFormData({ ...formData, match: e.target.value })}
                     className="w-full bg-bgmi-surface border border-bgmi-border rounded-lg px-3 py-2 text-xs text-white focus:border-bgmi-gold focus:outline-none"
                   >
-                    <option value="Match #01">Match #01 — Erangel</option>
-                    <option value="Match #02">Match #02 — Livik</option>
-                    <option value="Match #03">Match #03 — Livik</option>
-                    <option value="Match #04">Match #04 — Erangel</option>
-                    <option value="Match #05">Match #05 — Miramar</option>
-                    <option value="Match #06">Match #06 — Erangel</option>
+                    <option value="Match #01">Match #01 / Erangel</option>
+                    <option value="Match #02">Match #02 / Livik</option>
+                    <option value="Match #03">Match #03 / Livik</option>
+                    <option value="Match #04">Match #04 / Erangel</option>
+                    <option value="Match #05">Match #05 / Miramar</option>
+                    <option value="Match #06">Match #06 / Erangel</option>
                     <option value="Media Day">Media Day / General</option>
                   </select>
                 </div>

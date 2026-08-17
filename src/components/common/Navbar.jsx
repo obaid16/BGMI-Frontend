@@ -44,22 +44,22 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 w-full font-sans border-b border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[#0B0E14]/95 backdrop-blur-md">
       
-      {/* TOP BROADCAST TICKER STRIP */}
-      <div className="w-full bg-slate-900 text-white text-[10px] font-mono py-1 px-4 sm:px-8 border-b border-slate-800 flex items-center justify-between">
+      {/* TOP BROADCAST STRIP */}
+      <div className="w-full bg-slate-900 text-white text-[11px] font-mono py-1 px-4 sm:px-8 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 text-bgmi-red font-bold uppercase tracking-wider">
-            <Activity className="w-3 h-3 animate-pulse" /> LIVE BROADCAST
+            <Activity className="w-3.5 h-3.5 animate-pulse" /> LIVE BROADCAST
           </span>
-          <span className="hidden sm:inline text-slate-400">|</span>
-          <span className="hidden sm:inline text-slate-300 tracking-widest uppercase">
+          <span className="hidden sm:inline text-slate-500">|</span>
+          <span className="hidden sm:inline text-slate-300 font-bold uppercase">
             NIT COLLEGE ESPORTS CHAMPIONSHIP 2026
           </span>
         </div>
-        <div className="flex items-center gap-4 text-slate-400">
+        <div className="flex items-center gap-4 text-slate-300">
           <span className="flex items-center gap-1 text-emerald-400 font-bold">
-            <ShieldCheck className="w-3 h-3" /> VERIFIED ROSTERS ONLY
+            <ShieldCheck className="w-3.5 h-3.5" /> VERIFIED ROSTERS
           </span>
-          <span className="hidden md:inline text-amber-400 font-bold">STAGE: GRAND FINALS</span>
+          <span className="hidden md:inline text-amber-400 font-bold">GRAND FINALS STAGE</span>
         </div>
       </div>
 

@@ -2,7 +2,7 @@ export const mockMatches = [
   {
     id: 'match-01',
     matchNumber: 1,
-    title: 'Match #1 — Erangel',
+    title: 'Match #1 / Erangel',
     round: 'Match 1',
     map: 'Erangel',
     date: '2026-09-02',
@@ -15,7 +15,7 @@ export const mockMatches = [
   {
     id: 'match-02',
     matchNumber: 2,
-    title: 'Match #2 — Livik',
+    title: 'Match #2 / Livik',
     round: 'Match 2',
     map: 'Livik',
     date: '2026-09-02',
@@ -28,7 +28,7 @@ export const mockMatches = [
   {
     id: 'match-03',
     matchNumber: 3,
-    title: 'Match #3 — Livik',
+    title: 'Match #3 / Livik',
     round: 'Match 3',
     map: 'Livik',
     date: '2026-09-02',
@@ -41,7 +41,7 @@ export const mockMatches = [
   {
     id: 'match-04',
     matchNumber: 4,
-    title: 'Match #4 — Erangel',
+    title: 'Match #4 / Erangel',
     round: 'Match 4',
     map: 'Erangel',
     date: '2026-09-02',

@@ -101,68 +101,58 @@ export default function Hero() {
 
           </div>
 
-          {/* RIGHT LIVE MATCH TELEMETRY WIDGET (5 COLS) */}
+          {/* RIGHT LIVE MATCH SPOTLIGHT CARD (5 COLS) */}
           <div ref={rightColRef} className="lg:col-span-5">
-            <div className="bg-[#121620]/95 border-2 border-bgmi-red/60 rounded-2xl p-6 clip-tactical shadow-2xl space-y-5 relative backdrop-blur-xl">
-              <div className="absolute inset-0 bg-tactical-grid opacity-20 pointer-events-none" />
-
-              {/* WIDGET HEADER */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-3 relative z-10">
+            <div className="bg-[#121620]/90 border border-white/15 rounded-2xl p-6 shadow-2xl space-y-5 relative backdrop-blur-md">
+              
+              {/* CARD HEADER */}
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-bgmi-red uppercase tracking-wider">
-                  <Radio className="w-4 h-4 animate-pulse" /> LIVE MATCH SPOTLIGHT
+                  <Radio className="w-3.5 h-3.5 animate-pulse" /> NEXT MATCH SPOTLIGHT
                 </div>
-                <span className="px-2.5 py-0.5 rounded bg-bgmi-red/20 text-bgmi-red border border-bgmi-red/40 font-mono text-[10px] font-bold uppercase">
+                <span className="px-2.5 py-0.5 rounded bg-bgmi-red/20 text-bgmi-red font-mono text-[10px] font-bold uppercase">
                   MATCH 01
                 </span>
               </div>
 
-              {/* MAP SPECS DISPLAY */}
-              <div className="space-y-3 relative z-10">
+              {/* MAP & MATCH SPECS */}
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-400 flex items-center gap-1.5 uppercase font-bold">
-                    <MapPin className="w-4 h-4 text-bgmi-red" /> MAP ARENA
+                  <div>
+                    <span className="text-[10px] font-mono text-slate-400 block uppercase">BATTLEGROUND MAP</span>
+                    <span className="font-broadcast font-black text-2xl text-white uppercase">ERANGEL</span>
+                  </div>
+                  <span className="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded text-xs font-mono font-bold uppercase">
+                    GRAND FINALS
                   </span>
-                  <span className="font-broadcast font-black text-xl text-white uppercase">ERANGEL</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                  <div className="p-3 bg-[#0B0E14] rounded border border-white/10 space-y-0.5">
-                    <span className="text-[9px] text-slate-400 block uppercase">CAPACITY</span>
-                    <span className="font-bold text-white flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5 text-sky-400" /> 24 SQUADS
-                    </span>
+                  <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
+                    <span className="text-[10px] text-slate-400 block uppercase mb-0.5">MODE</span>
+                    <span className="font-bold text-white">TPP SQUAD (4v4)</span>
                   </div>
-                  <div className="p-3 bg-[#0B0E14] rounded border border-white/10 space-y-0.5">
-                    <span className="text-[9px] text-slate-400 block uppercase">STAGE</span>
-                    <span className="font-bold text-amber-400 flex items-center gap-1">
-                      <Shield className="w-3.5 h-3.5 text-amber-400" /> GRAND FINALS
-                    </span>
+                  <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
+                    <span className="text-[10px] text-slate-400 block uppercase mb-0.5">CAPACITY</span>
+                    <span className="font-bold text-sky-400">24 SQUADS (96 PLAYERS)</span>
                   </div>
+                </div>
+
+                <div className="p-3 bg-[#0B0E14] rounded-lg border border-emerald-500/30 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs font-broadcast font-bold text-white uppercase">CUSTOM ROOM PREPARED</span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-amber-400">10:15 AM</span>
                 </div>
               </div>
 
-              {/* RADAR BEAM GRAPHIC */}
-              <div className="h-28 bg-[#0B0E14] rounded border border-bgmi-red/30 relative flex items-center justify-center p-3 overflow-hidden">
-                <div className="absolute inset-0 bg-tactical-grid opacity-30" />
-                <div className="w-20 h-20 rounded-full border border-bgmi-red/30 absolute" />
-                <div className="w-12 h-12 rounded-full border border-bgmi-red/50 absolute" />
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-bgmi-red/25 to-transparent animate-spin origin-center duration-3000 pointer-events-none" />
-
-                <div className="relative z-10 text-center space-y-0.5">
-                  <span className="text-[9px] font-mono text-emerald-400 font-bold uppercase tracking-widest block">
-                    ● ROOM LOBBY READY
-                  </span>
-                  <span className="text-xs font-broadcast font-bold text-white uppercase tracking-wider block">
-                    CUSTOM LOBBY CODE ACTIVE
-                  </span>
-                </div>
-              </div>
-
-              {/* ACTION FOOTER */}
-              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono relative z-10">
-                <span className="text-slate-400">ROOM ID DROPS @ 10:15 AM</span>
-                <Link href="/matches" className="text-bgmi-red font-bold hover:underline">
-                  LOBBY PASS →
+              {/* CARD FOOTER CTA */}
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                <span className="text-slate-400">NIT ESPORTS OFFICIAL LOBBY</span>
+                <Link href="/matches" className="text-bgmi-red font-bold hover:underline flex items-center gap-1">
+                  <span>ROOM SCHEDULE</span>
+                  <span>→</span>
                 </Link>
               </div>
 

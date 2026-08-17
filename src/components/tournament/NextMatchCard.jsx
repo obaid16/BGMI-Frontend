@@ -91,7 +91,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
               </span>
             )}
             <span className="font-broadcast font-bold text-base sm:text-lg text-slate-900 dark:text-white uppercase">
-              MATCH #{match.matchNumber || 1} — <span className="text-bgmi-red">{match.map || 'Erangel'}</span>
+              MATCH #{match.matchNumber || 1} / <span className="text-bgmi-red">{match.map || 'Erangel'}</span>
             </span>
           </div>
 
@@ -111,41 +111,23 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
         {/* 2. BATTLE ROYALE SHOWCASE: RADAR VISUAL, MAP SPECS & PARTICIPATING SQUADS */}
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
-          {/* MAP & RADAR HUD DISPLAY BOX (5 COLS) */}
+          {/* MAP DISPLAY BOX (5 COLS) */}
           <div className="lg:col-span-5 p-5 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4 relative overflow-hidden">
             
-            {/* TACTICAL RADAR SWEEP GRAPHIC */}
-            <div className="relative w-full h-36 bg-slate-900/90 rounded border border-bgmi-red/30 overflow-hidden flex items-center justify-center p-2 group">
-              <div className="absolute inset-0 bg-tactical-grid opacity-30" />
+            {/* CLEAN MATCH MAP SPOTLIGHT BANNER */}
+            <div className="relative w-full h-36 bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center p-4 group border border-slate-800">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent z-10" />
               
-              {/* Radar concentric circles */}
-              <div className="absolute w-28 h-28 rounded-full border border-bgmi-red/20" />
-              <div className="absolute w-20 h-20 rounded-full border border-bgmi-red/30" />
-              <div className="absolute w-12 h-12 rounded-full border border-bgmi-red/40" />
-              <div className="absolute w-full h-[1px] bg-bgmi-red/20" />
-              <div className="absolute h-full w-[1px] bg-bgmi-red/20" />
-
-              {/* Radar Sweeping Beam Animation */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-bgmi-red/20 to-transparent animate-spin origin-center duration-3000 pointer-events-none" />
-
-              {/* Simulated Squad Radar Blips */}
-              <span className="absolute top-8 left-12 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span className="absolute top-8 left-12 w-2 h-2 rounded-full bg-emerald-400" />
-              <span className="absolute bottom-10 right-14 w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-              <span className="absolute bottom-10 right-14 w-2 h-2 rounded-full bg-amber-400" />
-              <span className="absolute top-12 right-10 w-2 h-2 rounded-full bg-bgmi-red animate-ping" />
-              <span className="absolute top-12 right-10 w-2 h-2 rounded-full bg-bgmi-red" />
-
-              {/* Radar Center HUD Text */}
-              <div className="relative z-10 text-center space-y-0.5 pointer-events-none">
-                <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-emerald-400 uppercase block">
-                  RADAR SCANNER ACTIVE
+              {/* Map Badge Info */}
+              <div className="relative z-20 text-center space-y-1">
+                <span className="text-[10px] font-mono font-bold tracking-widest text-emerald-400 uppercase block bg-slate-950/80 px-2 py-0.5 rounded border border-emerald-500/30 w-max mx-auto">
+                  LIVE ARENA MAP
                 </span>
-                <span className="text-sm font-broadcast font-black text-white uppercase tracking-wider block">
-                  {match.map || 'ERANGEL'} ZONE
+                <span className="text-xl font-broadcast font-black text-white uppercase tracking-wider block">
+                  {match.map || 'ERANGEL'}
                 </span>
-                <span className="text-[9px] font-mono text-slate-400 block">
-                  34.12° N, 74.83° E • AIR DROP INCOMING
+                <span className="text-[10px] font-mono text-slate-400 block">
+                  OFFICIAL BATTLE ROYALE MODE • TPP SQUAD
                 </span>
               </div>
             </div>
@@ -173,14 +155,14 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
                 </div>
                 <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
                   <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">ROOM CODE</span>
-                  <span className="font-bold text-amber-600 dark:text-bgmi-gold">DROP @ 10:15</span>
+                  <span className="font-bold text-amber-600 dark:text-bgmi-gold">LOBBY READY</span>
                 </div>
               </div>
             </div>
 
             <div className="pt-2 border-t border-slate-200 dark:border-white/10">
               <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                * All {totalSquadsCount} registered squads drop simultaneously into the arena custom lobby.
+                * All {totalSquadsCount} registered squads join the custom lobby 10 minutes prior to drop time.
               </p>
             </div>
           </div>
@@ -290,7 +272,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
                 <span className="text-xs font-mono text-slate-500 dark:text-slate-400">{match.round || 'GRAND FINALS'}</span>
               </div>
               <h3 className="font-broadcast font-bold text-2xl uppercase">
-                MATCH #{match.matchNumber || 1} — <span className="text-bgmi-red">{roomDetails.map}</span> CUSTOM ROOM
+                MATCH #{match.matchNumber || 1} / <span className="text-bgmi-red">{roomDetails.map}</span> CUSTOM ROOM
               </h3>
             </div>
 
