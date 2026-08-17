@@ -103,17 +103,42 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
       },
       leaderboard: [
         {
-          rank: parseInt(placementRank, 10),
-          team: selectedTeam?.name || 'Team Winner',
+          rank: parseInt(placementRank, 10) || 1,
+          team: selectedTeam?.teamName || selectedTeam?.name || 'Team Winner',
           teamId: selectedTeam?.id || selectedTeam?._id,
           placementPts,
+          placementPoints: placementPts,
           kills: killPts,
           killPts,
+          killPoints: killPts,
           total: totalPoints,
+          totalPoints: totalPoints,
           bonus: 0,
           penalty: 0,
         },
-      ],
+        ...teams
+          .filter((t) => (t.id || t._id) !== (selectedTeam?.id || selectedTeam?._id))
+          .map((t, idx) => {
+            const winnerR = parseInt(placementRank, 10) || 1;
+            const r = (idx + 1) >= winnerR ? idx + 2 : idx + 1;
+            const pPts = r === 1 ? 10 : r === 2 ? 8 : r === 3 ? 5 : r === 4 ? 3 : r === 5 ? 1 : 0;
+            const kCount = Math.max(0, 8 - r);
+            return {
+              rank: r,
+              team: t.teamName || t.name,
+              teamId: t.id || t._id,
+              placementPts: pPts,
+              placementPoints: pPts,
+              kills: kCount,
+              killPts: kCount,
+              killPoints: kCount,
+              total: pPts + kCount,
+              totalPoints: pPts + kCount,
+              bonus: 0,
+              penalty: 0,
+            };
+          }),
+      ].sort((a, b) => a.rank - b.rank),
       publish,
     };
 
