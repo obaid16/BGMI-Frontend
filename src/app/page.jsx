@@ -8,18 +8,17 @@ import NextMatchCard from '@/components/tournament/NextMatchCard';
 import Top3Leaderboard from '@/components/tournament/Top3Leaderboard';
 import StandingRow from '@/components/tournament/StandingRow';
 import RankingCard from '@/components/tournament/RankingCard';
-import ResultCard from '@/components/tournament/ResultCard';
+import MatchCard from '@/components/tournament/MatchCard';
 import MediaCard from '@/components/tournament/MediaCard';
 import MediaLightbox from '@/components/tournament/MediaLightbox';
-import Button from '@/components/common/Button';
 import { SkeletonGrid } from '@/components/common/Skeleton';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { getMatches, getStandings, getResults, getMedia, getAnnouncements, getTeamById, getTeams } from '@/services/api';
-import { Trophy, Swords, Flame, Video, ArrowRight, Crown } from 'lucide-react';
+import { Trophy, Swords, Flame, Video, ArrowRight, Crown, ShieldAlert } from 'lucide-react';
 
 export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [nextMatch, setNextMatch] = useState(null);
+  const [matchesList, setMatchesList] = useState([]);
   const [topStandings, setTopStandings] = useState([]);
   const [recentResults, setRecentResults] = useState([]);
   const [mediaItems, setMediaItems] = useState([]);
@@ -27,17 +26,11 @@ export default function HomePage() {
   const [championTeam, setChampionTeam] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
   const [teamsStats, setTeamsStats] = useState({
-    registeredSquads: 4,
-    verifiedPlayers: 16,
-    totalMatches: 4,
-    currentRound: 2
+    registeredSquads: 24,
+    verifiedPlayers: 96,
+    totalMatches: 12,
+    currentRound: 4
   });
-
-  // Scroll reveal refs for GSAP animations
-  const resultsGridRef = useRef(null);
-  const mediaGridRef = useRef(null);
-  useScrollReveal(resultsGridRef);
-  useScrollReveal(mediaGridRef, ':scope > *', { stagger: 0.08 });
 
   useEffect(() => {
     async function loadHomeData() {
@@ -52,14 +45,14 @@ export default function HomePage() {
           getTeams()
         ]);
 
-        const registered = teams && teams.length > 0 ? teams.length : 4;
+        const registered = teams && teams.length > 0 ? teams.length : 24;
         const verified = teams && teams.length > 0
           ? teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0)
-          : 16;
-        const totMatches = matches && matches.length > 0 ? matches.length : 4;
+          : 96;
+        const totMatches = matches && matches.length > 0 ? matches.length : 12;
         const currRound = matches && matches.length > 0
           ? (matches.filter((m) => m.status === 'Completed' || m.status === 'Live').length || 1)
-          : 2;
+          : 4;
 
         setTeamsStats({
           registeredSquads: registered,
@@ -68,6 +61,7 @@ export default function HomePage() {
           currentRound: currRound
         });
 
+        setMatchesList(matches);
         setNextMatch(matches.find((m) => m.status === 'Live' || m.status === 'Upcoming') || matches[0]);
         setTopStandings(standings.slice(0, 5));
         setRecentResults(results.slice(0, 3));
@@ -99,146 +93,122 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="space-y-20 pb-20 overflow-x-hidden">
+    <div className="space-y-16 pb-20 overflow-x-hidden font-sans">
       
-      {/* 1. CINEMATIC HERO SECTION */}
+      {/* 1. ASYMMETRIC HERO SECTION */}
       <Hero />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+      {/* 2. BROADCAST TELEMETRY TICKER STRIP (EDGE TO EDGE) */}
+      <TournamentStats
+        registeredSquads={teamsStats.registeredSquads}
+        verifiedPlayers={teamsStats.verifiedPlayers}
+        totalMatches={teamsStats.totalMatches}
+        currentRound={teamsStats.currentRound}
+      />
 
-        {/* 2. ANIMATED TOURNAMENT STATS COUNTERS */}
-        <TournamentStats
-          registeredSquads={teamsStats.registeredSquads}
-          verifiedPlayers={teamsStats.verifiedPlayers}
-          totalMatches={teamsStats.totalMatches}
-          currentRound={teamsStats.currentRound}
-        />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
 
-        {/* 3. GRAND CHAMPION SECTION */}
-        <section className="space-y-6">
-          {!isComplete ? (
-            <div className="relative bg-white border border-slate-200 dark:bg-gradient-to-r dark:from-bgmi-surface dark:via-bgmi-dark dark:to-bgmi-surface dark:border-bgmi-red/40 rounded-2xl p-8 sm:p-12 text-center clip-tactical shadow-md dark:shadow-red-glow overflow-hidden">
-              <div className="absolute inset-0 bg-tactical-grid opacity-15 pointer-events-none" />
-              <div className="relative z-10 max-w-xl mx-auto space-y-4">
-                <div className="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-bgmi-dark border-2 border-amber-500 dark:border-bgmi-gold shadow-md dark:shadow-gold-glow flex items-center justify-center text-amber-600 dark:text-bgmi-gold">
-                  <Trophy className="w-8 h-8" />
+        {/* 3. GRAND CHAMPION CROWN STAGE */}
+        {isComplete && championTeam && (
+          <section className="relative bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 text-slate-950 rounded-2xl p-8 clip-tactical shadow-2xl overflow-hidden">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-slate-950 text-amber-400 rounded-xl flex items-center justify-center font-black text-2xl shadow-xl">
+                  <Crown className="w-8 h-8" />
                 </div>
-                <h3 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-wider">
-                  CHAMPION WILL BE CROWNED
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                  The battle is raging across our college battlegrounds. Dominate the leaderboard, verify your roster, and survive the final circles to claim the ultimate championship glory.
-                </p>
-                <div className="pt-2">
-                  <span className="text-[10px] font-black uppercase tracking-[0.25em] text-bgmi-red bg-bgmi-red/10 px-4 py-1.5 rounded-full border border-bgmi-red/40 shadow-red-glow">
-                    GRAND FINALS UPCOMING
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest bg-slate-950 text-amber-400 px-2.5 py-0.5 rounded">
+                    OFFICIAL COLLEGE CHAMPION 2026
                   </span>
+                  <h3 className="font-broadcast font-black text-3xl uppercase tracking-tight">
+                    {championTeam.teamName}
+                  </h3>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="relative bg-white border-2 border-amber-500 dark:bg-gradient-to-b dark:from-bgmi-gold/20 dark:via-bgmi-surface dark:to-bgmi-dark dark:border-bgmi-gold rounded-2xl p-6 sm:p-10 clip-tactical shadow-md dark:shadow-gold-glow overflow-hidden">
-              <div className="absolute inset-0 bg-tactical-grid opacity-20 pointer-events-none" />
-
-              <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
-                <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-                  <div className="w-20 h-20 rounded-2xl bg-slate-100 dark:bg-bgmi-dark border-2 border-amber-500 dark:border-bgmi-gold shadow-md dark:shadow-gold-glow p-2 flex items-center justify-center flex-shrink-0 relative group">
-                    <div className="absolute -top-2.5 -left-2.5 w-7 h-7 bg-amber-500 dark:bg-bgmi-gold rounded-lg flex items-center justify-center text-slate-950 font-black shadow-md rotate-[-12deg]">
-                      <Crown className="w-4 h-4" />
-                    </div>
-                    {championTeam?.logo ? (
-                      <img src={championTeam.logo} alt={championTeam.teamName} className="w-full h-full object-cover rounded-xl" />
-                    ) : (
-                      <span className="font-display font-black text-2xl text-amber-600 dark:text-bgmi-gold">{championTeam?.teamName?.charAt(0)}</span>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-black text-amber-600 dark:text-bgmi-gold uppercase tracking-[0.25em] block">
-                      NIT BGMI COLLEGE CHAMPIONS 2026
-                    </span>
-                    <h3 className="font-display font-black text-3xl sm:text-4xl text-slate-900 dark:text-white uppercase tracking-tight">
-                      {championTeam?.teamName}
-                    </h3>
-                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                        Total Points: <strong className="text-slate-900 dark:text-white text-sm font-black">{(championTeam?.totalPoints !== undefined ? championTeam.totalPoints : championTeam?.points) || 0} PTS</strong>
-                      </span>
-                      <span className="text-slate-400 dark:text-slate-600">|</span>
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                        WWCD: <strong className="text-amber-600 dark:text-bgmi-gold text-sm font-black">{championTeam?.wwcd || 0} Matches</strong>
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              <div className="font-mono text-right">
+                <span className="font-broadcast font-black text-3xl text-slate-950 block">
+                  {championTeam.totalPoints || championTeam.points || 0} PTS
+                </span>
+                <span className="text-xs font-bold text-slate-900">🍗 {championTeam.wwcd || 0} WWCD VICTORIES</span>
               </div>
             </div>
-          )}
-        </section>
+          </section>
+        )}
 
-        {/* 4. NEXT / LIVE MATCH SPOTLIGHT */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
-            <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
-              <Swords className="w-6 h-6 text-bgmi-red" /> Spotlight Match
-            </h2>
-            <Link href="/matches" className="text-xs font-bold text-bgmi-red hover:underline flex items-center gap-1">
-              Full Schedule <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-          <NextMatchCard match={nextMatch} topTeams={topStandings} registeredSquadsCount={teamsStats.registeredSquads} />
-        </section>
-
-        {/* 5. TOP 3 PODIUM & LEADERBOARD SPOTLIGHT */}
+        {/* 4. BROADCAST MATCH SCOREBARS STACK */}
         <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
+          <div className="border-b-2 border-bgmi-red pb-3 flex items-center justify-between">
             <div>
-              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
-                <Trophy className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> Tournament Leaderboard
+              <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
+                /// LIVE MATCH SCHEDULE & SCOREBOARDS
+              </span>
+              <h2 className="font-broadcast font-black text-2xl sm:text-4xl text-slate-900 dark:text-white uppercase tracking-tight">
+                MATCH SCOREBARS
               </h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Current top contender standings in College Championship 2026</p>
             </div>
-            <Link href="/standings">
-              <Button variant="outline-gold" size="sm" icon={Trophy}>
-                FULL STANDINGS
-              </Button>
+            <Link
+              href="/matches"
+              className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-broadcast font-bold text-xs uppercase tracking-wider clip-technical-btn hover:bg-bgmi-red transition-colors flex items-center gap-1"
+            >
+              <span>SCHEDULE & LOBBIES</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          {/* TOP 3 PODIUM HIGHLIGHT */}
+          {/* HORIZONTAL MATCH STRIPIFIED SCHEDULE */}
+          <div className="space-y-3">
+            {matchesList.slice(0, 3).map((m) => (
+              <MatchCard key={m.id || m.matchNumber} match={m} />
+            ))}
+          </div>
+        </section>
+
+        {/* 5. TOP 3 PODIUM & SCOREBOARD TABLE */}
+        <section className="space-y-6">
+          <div className="border-b-2 border-amber-500 pb-3 flex items-center justify-between">
+            <div>
+              <span className="text-[10px] font-mono text-amber-500 font-bold uppercase tracking-widest block">
+                /// OFFICIAL TOURNAMENT RANKINGS
+              </span>
+              <h2 className="font-broadcast font-black text-2xl sm:text-4xl text-slate-900 dark:text-white uppercase tracking-tight">
+                STANDINGS SCOREBOARD
+              </h2>
+            </div>
+            <Link
+              href="/standings"
+              className="px-4 py-2 bg-amber-500 text-slate-950 font-broadcast font-black text-xs uppercase tracking-wider clip-technical-btn hover:bg-amber-400 transition-colors flex items-center gap-1"
+            >
+              <span>FULL STANDINGS MATRIX</span>
+              <Trophy className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {/* PODIUM ARENA */}
           <Top3Leaderboard standings={topStandings} />
 
-          {/* DESKTOP LEADERBOARD TABLE */}
-          <div className="hidden md:block overflow-x-auto bg-white border border-slate-200 dark:bg-bgmi-surface/90 dark:border-bgmi-border rounded-xl shadow-lg dark:shadow-2xl clip-tactical">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 dark:bg-bgmi-dark/95 dark:border-bgmi-border dark:text-slate-400 font-display font-black text-xs uppercase tracking-wider">
+          {/* DESKTOP SCOREBOARD TABLE */}
+          <div className="hidden md:block overflow-x-auto bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl shadow-xl clip-tactical">
+            <table className="w-full text-left border-collapse font-mono text-xs">
+              <thead className="bg-slate-900 text-white font-broadcast font-black uppercase text-xs">
                 <tr>
-                  <th className="py-4 px-4 text-center">Rank</th>
-                  <th className="py-4 px-4">Squad</th>
-                  <th className="py-4 px-4 text-center">Played</th>
-                  <th className="py-4 px-4 text-center">WWCD</th>
-                  <th className="py-4 px-4 text-center">Placement</th>
-                  <th className="py-4 px-4 text-center">Kill Pts</th>
-                  <th className="py-4 px-4 text-center">Total Points</th>
+                  <th className="py-3 px-4 text-center">RANK</th>
+                  <th className="py-3 px-4">SQUAD NAME</th>
+                  <th className="py-3 px-4 text-center">PLAYED</th>
+                  <th className="py-3 px-4 text-center">WWCD</th>
+                  <th className="py-3 px-4 text-center">PLACEMENT</th>
+                  <th className="py-3 px-4 text-center">KILLS</th>
+                  <th className="py-3 px-4 text-center">TOTAL PTS</th>
                 </tr>
               </thead>
-              <tbody>
-                {topStandings.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="py-8 text-center text-slate-500 font-semibold text-xs tracking-wider uppercase">
-                      No Standings Data Available
-                    </td>
-                  </tr>
-                ) : (
-                  topStandings.map((standing) => (
-                    <StandingRow key={standing.teamId || standing.rank} standing={standing} />
-                  ))
-                )}
+              <tbody className="divide-y divide-slate-200 dark:divide-white/5">
+                {topStandings.map((standing) => (
+                  <StandingRow key={standing.teamId || standing.rank} standing={standing} />
+                ))}
               </tbody>
             </table>
           </div>
 
-          {/* MOBILE RANKING CARDS STACK */}
+          {/* MOBILE RANKING CARDS */}
           <div className="md:hidden space-y-3">
             {topStandings.map((standing) => (
               <RankingCard key={standing.teamId || standing.rank} standing={standing} />
@@ -246,50 +216,27 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 6. RECENT MATCH RESULTS */}
+        {/* 6. MASONRY MEDIA GALLERY */}
         <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
+          <div className="border-b-2 border-sky-500 pb-3 flex items-center justify-between">
             <div>
-              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
-                <Flame className="w-6 h-6 text-bgmi-red" /> Recent Match Winners
+              <span className="text-[10px] font-mono text-sky-400 font-bold uppercase tracking-widest block">
+                /// PLAYER POVs & REPLAY HIGHLIGHTS
+              </span>
+              <h2 className="font-broadcast font-black text-2xl sm:text-4xl text-slate-900 dark:text-white uppercase tracking-tight">
+                MEDIA GALLERY
               </h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Verified scorecards and top fraggers from completed rounds</p>
             </div>
-            <Link href="/results">
-              <Button variant="secondary" size="sm">
-                View All Results
-              </Button>
+            <Link
+              href="/media"
+              className="px-4 py-2 bg-sky-500 text-slate-950 font-broadcast font-black text-xs uppercase tracking-wider clip-technical-btn hover:bg-sky-400 transition-colors flex items-center gap-1"
+            >
+              <span>ALL MEDIA POVS</span>
+              <Video className="w-4 h-4" />
             </Link>
           </div>
 
-          {loading ? (
-            <SkeletonGrid count={3} />
-          ) : (
-            <div ref={resultsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recentResults.map((result) => (
-                <ResultCard key={result.id || result.matchNumber} result={result} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* 7. MEDIA GALLERY PREVIEW */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
-            <div>
-              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
-                <Video className="w-6 h-6 text-sky-600 dark:text-bgmi-cyan" /> Media Highlights & POVs
-              </h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Player POV recordings, match screenshots, and victory photos</p>
-            </div>
-            <Link href="/media">
-              <Button variant="outline" size="sm">
-                VIEW ALL MEDIA
-              </Button>
-            </Link>
-          </div>
-
-          <div ref={mediaGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {mediaItems.map((item) => (
               <MediaCard key={item.id} item={item} onClick={(selected) => setSelectedMedia(selected)} />
             ))}

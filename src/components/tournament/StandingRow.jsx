@@ -6,61 +6,52 @@ import Link from 'next/link';
 export default function StandingRow({ standing }) {
   if (!standing) return null;
 
+  const rankStr = String(standing.rank).padStart(2, '0');
   const isTop1 = standing.rank === 1;
-  const isTop3 = standing.rank <= 3;
 
   return (
-    <tr className={`border-b border-slate-200 dark:border-bgmi-border/40 hover:bg-slate-100 dark:hover:bg-bgmi-dark/60 transition-colors text-xs font-semibold ${
-      isTop1 ? 'bg-amber-500/10 dark:bg-bgmi-gold/10' : ''
+    <tr className={`border-b border-slate-200 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-[#181E2C] transition-colors font-mono text-xs ${
+      isTop1 ? 'bg-amber-500/10' : ''
     }`}>
       {/* RANK */}
-      <td className="py-3.5 px-4 text-center font-display font-black text-sm">
-        <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg ${
-          isTop1
-            ? 'bg-amber-500 text-slate-950 shadow-md font-black'
-            : isTop3
-            ? 'bg-slate-200 dark:bg-bgmi-surface text-slate-900 dark:text-slate-200 border border-slate-300 dark:border-bgmi-border'
-            : 'text-slate-600 dark:text-slate-400'
-        }`}>
-          {standing.rank}
+      <td className="py-3 px-4 text-center font-broadcast font-black text-sm">
+        <span className={`px-2 py-0.5 rounded ${isTop1 ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-500 dark:text-slate-400'}`}>
+          {rankStr}
         </span>
       </td>
 
-      {/* SQUAD NAME & COLLEGE */}
-      <td className="py-3.5 px-4">
-        <Link href={`/teams/${standing.shortName || standing.registrationId || standing.teamId}`} className="flex items-center gap-3 group">
-          <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border flex items-center justify-center text-xs font-black text-bgmi-red group-hover:scale-105 transition-transform flex-shrink-0">
-            {standing.logo ? (
-              <img src={standing.logo} alt={standing.teamName} className="w-full h-full object-cover rounded-md" />
-            ) : (
-              standing.teamName?.charAt(0)
-            )}
-          </div>
-          <div>
-            <p className="font-bold text-slate-900 dark:text-white group-hover:text-bgmi-red transition-colors text-sm line-clamp-1">
-              {standing.teamName}
-            </p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">{standing.collegeName || 'NIT Roster'}</p>
-          </div>
+      {/* SQUAD NAME */}
+      <td className="py-3 px-4 font-sans">
+        <Link href={`/teams/${standing.shortName || standing.registrationId || standing.teamId}`} className="group flex items-center gap-2">
+          <span className="font-broadcast font-bold text-sm text-slate-900 dark:text-white group-hover:text-bgmi-red transition-colors uppercase">
+            {standing.teamName}
+          </span>
+          <span className="text-[10px] font-mono text-slate-400">({standing.collegeName || 'NIT'})</span>
         </Link>
       </td>
 
-      {/* PLAYED */}
-      <td className="py-3.5 px-4 text-center text-slate-700 dark:text-slate-300 font-mono">{standing.matches ?? standing.matchesPlayed ?? standing.played ?? 0}</td>
+      {/* MATCHES PLAYED */}
+      <td className="py-3 px-4 text-center font-bold text-slate-700 dark:text-slate-300">
+        {standing.matches ?? standing.matchesPlayed ?? standing.played ?? 4}
+      </td>
 
       {/* WWCD */}
-      <td className="py-3.5 px-4 text-center font-bold text-amber-600 dark:text-bgmi-gold">
-        {standing.wwcd > 0 ? `🍗 ${standing.wwcd}` : '0'}
+      <td className="py-3 px-4 text-center font-bold text-amber-500">
+        {standing.wwcd || 0}
       </td>
 
       {/* PLACEMENT PTS */}
-      <td className="py-3.5 px-4 text-center text-slate-700 dark:text-slate-300 font-mono">{standing.placementPoints || 0}</td>
+      <td className="py-3 px-4 text-center text-slate-600 dark:text-slate-400">
+        {standing.placementPoints || 0}
+      </td>
 
       {/* KILL PTS */}
-      <td className="py-3.5 px-4 text-center text-sky-600 dark:text-bgmi-cyan font-mono font-bold">{standing.killPoints || standing.kills || 0}</td>
+      <td className="py-3 px-4 text-center font-bold text-sky-400">
+        {standing.killPoints || standing.kills || 0}
+      </td>
 
-      {/* TOTAL PTS */}
-      <td className="py-3.5 px-4 text-center font-display font-black text-sm text-slate-900 dark:text-white">
+      {/* TOTAL POINTS */}
+      <td className="py-3 px-4 text-center font-broadcast font-black text-sm text-slate-900 dark:text-white">
         {standing.totalPoints !== undefined ? standing.totalPoints : standing.points || 0}
       </td>
     </tr>

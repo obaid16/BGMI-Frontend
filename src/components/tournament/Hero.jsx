@@ -3,50 +3,26 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import gsap from 'gsap';
-import { ArrowRight, ArrowDown } from 'lucide-react';
-import Button from '../common/Button';
+import { ArrowUpRight, Swords, Radio, Shield, MapPin, Users } from 'lucide-react';
 import HeroVideo from '../hero/HeroVideo';
 
 export default function Hero() {
   const heroRef = useRef(null);
-  const labelRef = useRef(null);
-  const statusRef = useRef(null);
-  const nitRef = useRef(null);
-  const bgmiRef = useRef(null);
-  const esportsRef = useRef(null);
-  const champRef = useRef(null);
-  const yearRef = useRef(null);
-  const taglineRef = useRef(null);
-  const descRef = useRef(null);
-  const buttonsRef = useRef(null);
-  const detailsRef = useRef(null);
+  const leftColRef = useRef(null);
+  const rightColRef = useRef(null);
 
-  // 12-Step GSAP Cinematic Broadcast Entrance Animation
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      tl.fromTo(labelRef.current, { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, delay: 0.2 })
-        .fromTo(statusRef.current, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.35 }, '-=0.15')
-        .fromTo(nitRef.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, '-=0.15')
-        .fromTo(bgmiRef.current, { y: 25, opacity: 0, scale: 0.98 }, { y: 0, opacity: 1, scale: 1, duration: 0.5 }, '-=0.2')
-        .fromTo(esportsRef.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45 }, '-=0.25')
-        .fromTo(champRef.current, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, '-=0.2')
-        .fromTo(yearRef.current, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.35 }, '-=0.15')
-        .fromTo(taglineRef.current, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35 }, '-=0.15')
-        .fromTo(descRef.current, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35 }, '-=0.15')
-        .fromTo(
-          buttonsRef.current?.children ? Array.from(buttonsRef.current.children) : [],
-          { y: 18, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, stagger: 0.12 },
-          '-=0.15'
-        )
-        .fromTo(
-          detailsRef.current?.children ? Array.from(detailsRef.current.children) : [],
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.35, stagger: 0.08 },
-          '-=0.15'
-        );
+      tl.fromTo(leftColRef.current?.children ? Array.from(leftColRef.current.children) : [], 
+        { y: 20, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.2 }
+      ).fromTo(rightColRef.current,
+        { scale: 0.95, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5 },
+        '-=0.3'
+      );
     }, heroRef);
 
     return () => ctx.revert();
@@ -55,156 +31,146 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[92vh] sm:min-h-screen flex flex-col justify-center pt-28 sm:pt-36 pb-12 overflow-hidden bg-[#0B0E14] text-white select-none"
+      className="relative min-h-[90vh] sm:min-h-screen flex flex-col justify-center pt-32 pb-16 overflow-hidden bg-[#0B0E14] text-white select-none"
     >
-      {/* 1. BACKGROUND VIDEO & COLOR-GRADED OVERLAYS */}
+      {/* BACKGROUND VIDEO & COMPOSITE OVERLAYS */}
       <HeroVideo />
 
-      {/* 2. MAIN CINEMATIC HERO CONTAINER */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 my-auto w-full">
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
-          {/* LEFT-SIDE EDITORIAL CONTENT */}
-          <div className="max-w-3xl space-y-5 sm:space-y-6 text-left w-full">
+          {/* LEFT EDITORIAL COLUMN (7 COLS) */}
+          <div ref={leftColRef} className="lg:col-span-7 space-y-6 text-left">
             
-            {/* HEADER TAG & REGISTRATION STATUS */}
-            <div className="flex flex-wrap items-center gap-3 text-xs tracking-wider">
-              {/* TOP SMALL LABEL */}
-              <span
-                ref={labelRef}
-                className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-300 border-l-2 border-slate-400 dark:border-slate-500 pl-2.5 py-0.5"
-              >
-                NIT ESPORTS PRESENTS
+            {/* SUBTITLE KICKER */}
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-bgmi-red border-l-2 border-bgmi-red pl-3 py-0.5">
+                NIT ESPORTS // 2026
               </span>
-
-              {/* LIVE REGISTRATION STATUS */}
-              <div
-                ref={statusRef}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded bg-white/90 dark:bg-[#121620]/90 border border-slate-300 dark:border-white/10 backdrop-blur-md shadow-sm"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bgmi-red opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-bgmi-red"></span>
-                </span>
-                <span className="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-widest text-slate-800 dark:text-slate-200">
-                  REGISTRATION OPEN
-                </span>
-              </div>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono text-[10px] font-bold uppercase tracking-wider">
+                <Radio className="w-3 h-3 animate-pulse" /> TOURNAMENT ACTIVE
+              </span>
             </div>
 
-            {/* MAIN TYPOGRAPHY TITLE STACK */}
-            <div className="space-y-0.5 sm:space-y-1">
-              
-              {/* "NIT" - SMALL / MEDIUM */}
-              <div ref={nitRef} className="overflow-hidden">
-                <span className="block font-broadcast font-bold text-xl sm:text-3xl md:text-4xl tracking-wider text-slate-600 dark:text-slate-400 uppercase leading-none">
-                  NIT
-                </span>
-              </div>
-
-              {/* "BGMI" - VERY LARGE */}
-              <div ref={bgmiRef} className="overflow-hidden">
-                <h1 className="font-broadcast font-black text-6xl sm:text-8xl md:text-9xl tracking-tighter text-slate-900 dark:text-white uppercase leading-[0.88] drop-shadow-2xl">
-                  BGMI
-                </h1>
-              </div>
-
-              {/* "ESPORTS" - LARGE BUT SLIGHTLY SMALLER THAN BGMI */}
-              <div ref={esportsRef} className="overflow-hidden">
-                <span className="block font-broadcast font-black text-4xl sm:text-6xl md:text-7xl tracking-tight text-bgmi-red uppercase leading-none">
-                  ESPORTS
-                </span>
-              </div>
-
-              {/* "CHAMPIONSHIP" & "2026" BADGE */}
-              <div className="flex flex-wrap items-center gap-3 sm:gap-4 overflow-hidden pt-1.5 sm:pt-2">
-                <div ref={champRef}>
-                  <h2 className="font-broadcast font-bold text-xl sm:text-3xl md:text-4xl tracking-tight text-slate-700 dark:text-slate-300 uppercase leading-none">
-                    CHAMPIONSHIP
-                  </h2>
-                </div>
-                <div ref={yearRef}>
-                  <span className="inline-block font-mono font-bold text-xs sm:text-base text-amber-600 dark:text-bgmi-gold px-3 py-0.5 border border-amber-500/40 dark:border-bgmi-gold/40 bg-amber-500/10 dark:bg-bgmi-gold/15 rounded uppercase tracking-widest shadow-gold-glow">
-                    2026
-                  </span>
-                </div>
-              </div>
-
+            {/* HIGH-IMPACT EDITORIAL HEADLINE STACK */}
+            <div className="space-y-1">
+              <h1 className="font-broadcast font-black text-6xl sm:text-8xl md:text-9xl text-white uppercase tracking-tighter leading-none drop-shadow-2xl">
+                BGMI
+              </h1>
+              <h2 className="font-broadcast font-black text-4xl sm:text-6xl md:text-7xl text-bgmi-red uppercase tracking-tight leading-none">
+                CHAMPIONSHIP
+              </h2>
             </div>
 
-            {/* TAGLINE & DESCRIPTION */}
-            <div className="space-y-2.5 max-w-2xl pt-1 sm:pt-2">
-              {/* TAGLINE */}
-              <p
-                ref={taglineRef}
-                className="font-broadcast font-bold text-xs sm:text-base md:text-lg text-slate-800 dark:text-slate-200 uppercase tracking-[0.15em] border-l-2 border-bgmi-red pl-3"
-              >
-                ONE COLLEGE. ONE BATTLEGROUND. ONE CHAMPION.
+            {/* EDITORIAL TAGLINE */}
+            <div className="space-y-2 max-w-xl">
+              <p className="font-broadcast font-bold text-base sm:text-xl text-slate-200 uppercase tracking-widest border-l-2 border-amber-500 pl-3">
+                IN-HOUSE COLLEGE TOURNAMENT
               </p>
-
-              {/* DESCRIPTION */}
-              <p
-                ref={descRef}
-                className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 font-normal leading-relaxed max-w-lg"
-              >
-                Compete against the best squads from our college.
+              <p className="text-xs sm:text-sm text-slate-400 font-normal leading-relaxed">
+                24 verified squads from our campus competing across custom room matches. Dominate the circle and claim ultimate glory.
               </p>
             </div>
 
-            {/* BUTTONS ROW */}
-            <div ref={buttonsRef} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-3 sm:pt-4">
-              <Link href="/register" className="w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="w-full sm:w-auto px-8">
-                  <span>REGISTER YOUR SQUAD</span>
-                  <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
-                </Button>
+            {/* ACTION BUTTONS */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+              <Link
+                href="/register"
+                className="px-8 py-3.5 bg-bgmi-red hover:bg-bgmi-red-hover text-white font-broadcast font-black text-xs uppercase tracking-wider clip-technical-btn shadow-red-glow transition-all flex items-center justify-center gap-2 active:scale-95"
+              >
+                <span>REGISTER SQUAD</span>
+                <ArrowUpRight className="w-4 h-4" />
               </Link>
-              <Link href="/matches" className="w-full sm:w-auto">
-                <Button variant="secondary" size="lg" className="w-full sm:w-auto px-8">
-                  <span>EXPLORE TOURNAMENT</span>
-                  <ArrowDown className="w-4 h-4 ml-1 transition-transform group-hover:translate-y-0.5" />
-                </Button>
+              <Link
+                href="/matches"
+                className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 font-broadcast font-bold text-xs uppercase tracking-wider clip-technical-btn transition-all flex items-center justify-center gap-2"
+              >
+                <Swords className="w-4 h-4 text-bgmi-red" />
+                <span>EXPLORE MATCHES</span>
               </Link>
             </div>
 
-            {/* SUBTLE BROADCAST METADATA */}
-            <div
-              ref={detailsRef}
-              className="flex flex-wrap items-center gap-2 sm:gap-3 pt-4 sm:pt-6 text-[10px] sm:text-xs font-mono text-slate-600 dark:text-slate-400 uppercase tracking-widest border-t border-slate-300 dark:border-white/10"
-            >
-              <span className="px-2.5 py-1 bg-slate-200/70 dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded">
-                SEASON 01 / 2026
-              </span>
-              <span className="px-2.5 py-1 bg-slate-200/70 dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded">
-                IN-HOUSE CHAMPIONSHIP
-              </span>
-              <span className="px-2.5 py-1 bg-bgmi-red/10 border border-bgmi-red/30 text-bgmi-red font-bold rounded">
-                REGISTRATION OPEN
-              </span>
+            {/* TELEMETRY METADATA STRIP */}
+            <div className="pt-4 border-t border-white/10 flex flex-wrap items-center gap-4 text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+              <span>ORGANIZER: NIT ESPORTS CLUB</span>
+              <span>•</span>
+              <span>FORMAT: TPP SQUAD BATTLE ROYALE</span>
+              <span>•</span>
+              <span className="text-amber-400 font-bold">ANTI-CHEAT MOSAC ENABLED</span>
             </div>
 
           </div>
 
-          {/* RIGHT-SIDE ATMOSPHERIC TOURNAMENT BADGE (DESKTOP) */}
-          <div className="hidden lg:flex flex-col items-end justify-center self-center max-w-xs space-y-4 text-right opacity-80">
-            <div className="p-4 rounded-xl bg-white/80 dark:bg-[#121620]/60 border border-slate-300 dark:border-white/10 backdrop-blur-md space-y-2">
-              <div className="text-[10px] font-mono text-amber-600 dark:text-bgmi-gold font-bold uppercase tracking-widest">
-                OFFICIAL COLLEGE ESPORTS
+          {/* RIGHT LIVE MATCH TELEMETRY WIDGET (5 COLS) */}
+          <div ref={rightColRef} className="lg:col-span-5">
+            <div className="bg-[#121620]/95 border-2 border-bgmi-red/60 rounded-2xl p-6 clip-tactical shadow-2xl space-y-5 relative backdrop-blur-xl">
+              <div className="absolute inset-0 bg-tactical-grid opacity-20 pointer-events-none" />
+
+              {/* WIDGET HEADER */}
+              <div className="flex items-center justify-between border-b border-white/10 pb-3 relative z-10">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-bgmi-red uppercase tracking-wider">
+                  <Radio className="w-4 h-4 animate-pulse" /> LIVE MATCH SPOTLIGHT
+                </div>
+                <span className="px-2.5 py-0.5 rounded bg-bgmi-red/20 text-bgmi-red border border-bgmi-red/40 font-mono text-[10px] font-bold uppercase">
+                  MATCH 01
+                </span>
               </div>
-              <div className="text-xs font-broadcast font-bold text-slate-800 dark:text-slate-200 uppercase">
-                BATTLEGROUNDS MOBILE INDIA
+
+              {/* MAP SPECS DISPLAY */}
+              <div className="space-y-3 relative z-10">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono text-slate-400 flex items-center gap-1.5 uppercase font-bold">
+                    <MapPin className="w-4 h-4 text-bgmi-red" /> MAP ARENA
+                  </span>
+                  <span className="font-broadcast font-black text-xl text-white uppercase">ERANGEL</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-xs font-mono">
+                  <div className="p-3 bg-[#0B0E14] rounded border border-white/10 space-y-0.5">
+                    <span className="text-[9px] text-slate-400 block uppercase">CAPACITY</span>
+                    <span className="font-bold text-white flex items-center gap-1">
+                      <Users className="w-3.5 h-3.5 text-sky-400" /> 24 SQUADS
+                    </span>
+                  </div>
+                  <div className="p-3 bg-[#0B0E14] rounded border border-white/10 space-y-0.5">
+                    <span className="text-[9px] text-slate-400 block uppercase">STAGE</span>
+                    <span className="font-bold text-amber-400 flex items-center gap-1">
+                      <Shield className="w-3.5 h-3.5 text-amber-400" /> GRAND FINALS
+                    </span>
+                  </div>
+                </div>
               </div>
-              <p className="text-[10px] text-slate-600 dark:text-slate-400 leading-snug">
-                Verified college rosters, live match brackets, standings & real-time tournament highlights.
-              </p>
+
+              {/* RADAR BEAM GRAPHIC */}
+              <div className="h-28 bg-[#0B0E14] rounded border border-bgmi-red/30 relative flex items-center justify-center p-3 overflow-hidden">
+                <div className="absolute inset-0 bg-tactical-grid opacity-30" />
+                <div className="w-20 h-20 rounded-full border border-bgmi-red/30 absolute" />
+                <div className="w-12 h-12 rounded-full border border-bgmi-red/50 absolute" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-bgmi-red/25 to-transparent animate-spin origin-center duration-3000 pointer-events-none" />
+
+                <div className="relative z-10 text-center space-y-0.5">
+                  <span className="text-[9px] font-mono text-emerald-400 font-bold uppercase tracking-widest block">
+                    ● ROOM LOBBY READY
+                  </span>
+                  <span className="text-xs font-broadcast font-bold text-white uppercase tracking-wider block">
+                    CUSTOM LOBBY CODE ACTIVE
+                  </span>
+                </div>
+              </div>
+
+              {/* ACTION FOOTER */}
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono relative z-10">
+                <span className="text-slate-400">ROOM ID DROPS @ 10:15 AM</span>
+                <Link href="/matches" className="text-bgmi-red font-bold hover:underline">
+                  LOBBY PASS →
+                </Link>
+              </div>
+
             </div>
           </div>
 
         </div>
       </div>
-
     </section>
   );
 }
-
-

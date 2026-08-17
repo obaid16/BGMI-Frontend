@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Users, Swords, Trophy, ShieldCheck } from 'lucide-react';
 
-function AnimatedCounter({ target, duration = 1500, suffix = '' }) {
+function AnimatedCounter({ target, duration = 1200 }) {
   const [value, setValue] = useState(0);
   const ref = useRef(null);
   const started = useRef(false);
@@ -31,8 +31,8 @@ function AnimatedCounter({ target, duration = 1500, suffix = '' }) {
   }, [target, duration]);
 
   return (
-    <span ref={ref} className="font-display font-black tabular-nums">
-      {value}{suffix}
+    <span ref={ref} className="font-mono font-black tabular-nums">
+      {value}
     </span>
   );
 }
@@ -43,69 +43,59 @@ export default function TournamentStats({
   totalMatches = 4,
   currentRound = 4
 }) {
-  const stats = [
-    {
-      icon: Users,
-      value: registeredSquads,
-      label: 'Registered Squads',
-      color: 'text-slate-900 dark:text-white',
-      iconColor: 'text-bgmi-red',
-      bg: 'bg-white border-slate-200 dark:bg-bgmi-surface/90 dark:border-bgmi-border hover:border-bgmi-red/50 shadow-md dark:shadow-lg',
-    },
-    {
-      icon: ShieldCheck,
-      value: verifiedPlayers,
-      label: 'Verified Players',
-      color: 'text-bgmi-red',
-      iconColor: 'text-bgmi-red',
-      bg: 'bg-white border-slate-200 dark:bg-bgmi-surface/90 dark:border-bgmi-border hover:border-bgmi-red/50 shadow-md dark:shadow-lg',
-    },
-    {
-      icon: Swords,
-      value: totalMatches,
-      label: 'Total Matches',
-      color: 'text-sky-600 dark:text-bgmi-cyan',
-      iconColor: 'text-sky-600 dark:text-bgmi-cyan',
-      bg: 'bg-white border-slate-200 dark:bg-bgmi-surface/90 dark:border-bgmi-border hover:border-bgmi-cyan/50 shadow-md dark:shadow-lg',
-    },
-    {
-      icon: Trophy,
-      value: currentRound,
-      label: 'Current Round',
-      color: 'text-amber-600 dark:text-bgmi-gold',
-      iconColor: 'text-amber-600 dark:text-bgmi-gold',
-      bg: 'bg-white border-slate-200 dark:bg-bgmi-surface/90 dark:border-bgmi-border hover:border-bgmi-gold/50 shadow-md dark:shadow-lg',
-    },
-  ];
-
   return (
-    <section className="py-4">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        {stats.map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={idx}
-              className={`relative border rounded-xl p-5 sm:p-6 clip-tactical overflow-hidden group hover:-translate-y-1 transition-all duration-300 ${stat.bg}`}
-            >
-              <div className="absolute inset-0 bg-tactical-grid opacity-20 pointer-events-none" />
-
-              <div className="relative z-10 flex flex-col items-start gap-3">
-                <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-bgmi-dark border border-slate-200 dark:border-bgmi-border flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                  <Icon className={`w-5 h-5 ${stat.iconColor}`} />
-                </div>
-                <div>
-                  <p className={`text-3xl sm:text-4xl ${stat.color}`}>
-                    <AnimatedCounter target={stat.value} />
-                  </p>
-                  <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider mt-1">
-                    {stat.label}
-                  </p>
-                </div>
-              </div>
+    <section className="w-full bg-slate-900 text-white border-y-2 border-bgmi-red py-6 my-8 font-sans shadow-2xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center divide-y md:divide-y-0 md:divide-x divide-slate-800">
+          
+          {/* TICKER 1: REGISTRATION */}
+          <div className="space-y-1 pt-4 md:pt-0 md:px-6 first:pt-0">
+            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
+              <Users className="w-3.5 h-3.5 text-bgmi-red" /> REGISTRATION
             </div>
-          );
-        })}
+            <p className="text-3xl sm:text-4xl font-broadcast font-black text-white uppercase tracking-tight flex items-baseline gap-2">
+              <AnimatedCounter target={registeredSquads} />
+              <span className="text-xs font-mono text-bgmi-red font-bold">SQUADS</span>
+            </p>
+            <p className="text-[10px] text-slate-500 font-mono uppercase">Verified Campus Teams</p>
+          </div>
+
+          {/* TICKER 2: ROSTER */}
+          <div className="space-y-1 pt-4 md:pt-0 md:px-6">
+            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> ROSTER
+            </div>
+            <p className="text-3xl sm:text-4xl font-broadcast font-black text-emerald-400 uppercase tracking-tight flex items-baseline gap-2">
+              <AnimatedCounter target={verifiedPlayers} />
+              <span className="text-xs font-mono text-slate-400 font-bold">PLAYERS</span>
+            </p>
+            <p className="text-[10px] text-slate-500 font-mono uppercase">Student IDs Checked</p>
+          </div>
+
+          {/* TICKER 3: MATCHES */}
+          <div className="space-y-1 pt-4 md:pt-0 md:px-6">
+            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
+              <Swords className="w-3.5 h-3.5 text-sky-400" /> MATCHES
+            </div>
+            <p className="text-3xl sm:text-4xl font-broadcast font-black text-sky-400 uppercase tracking-tight flex items-baseline gap-2">
+              <AnimatedCounter target={totalMatches} />
+              <span className="text-xs font-mono text-slate-400 font-bold">PLAYED</span>
+            </p>
+            <p className="text-[10px] text-slate-500 font-mono uppercase">Custom Room Lobbies</p>
+          </div>
+
+          {/* TICKER 4: ROUND */}
+          <div className="space-y-1 pt-4 md:pt-0 md:px-6">
+            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
+              <Trophy className="w-3.5 h-3.5 text-amber-400" /> STAGE ROUND
+            </div>
+            <p className="text-2xl sm:text-3xl font-broadcast font-black text-amber-400 uppercase tracking-tight">
+              GRAND FINALS
+            </p>
+            <p className="text-[10px] text-slate-500 font-mono uppercase">Stage {currentRound} Progress</p>
+          </div>
+
+        </div>
       </div>
     </section>
   );

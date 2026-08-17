@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getPlayers } from '@/services/api';
-import { Trophy, Search, Award, Medal, Zap, Flame } from 'lucide-react';
+import { Trophy, Search, Flame, Award, Zap, Shield, Target } from 'lucide-react';
 import { SkeletonGrid } from '@/components/common/Skeleton';
 
 export default function MVPLeaderboardPage() {
@@ -33,156 +33,150 @@ export default function MVPLeaderboardPage() {
       p.teamName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const topThree = filteredPlayers.slice(0, 3);
+  const topMvp = filteredPlayers[0] || null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 font-sans">
       
       {/* HEADER */}
-      <div className="border-b border-slate-200 dark:border-bgmi-border/60 pb-6 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="space-y-2">
-          <h1 className="font-display font-black text-3xl sm:text-5xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center justify-center sm:justify-start gap-3">
-            <Flame className="w-9 h-9 sm:w-11 sm:h-11 text-bgmi-red" /> MVP & Top Fraggers
+      <div className="border-b border-slate-200 dark:border-white/10 pb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 text-xs font-mono font-bold text-bgmi-red uppercase tracking-widest">
+            <Flame className="w-4 h-4" /> FRAGGER TELEMETRY
+          </div>
+          <h1 className="font-broadcast font-black text-4xl sm:text-6xl text-slate-900 dark:text-white uppercase tracking-tight">
+            MVP & TOP FRAGGERS
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl font-medium">
-            Lobby fragger leaderboards and kill statistics. The highest fraggers of Championship 2026.
+          <p className="text-xs sm:text-sm text-slate-500 font-medium">
+            Player fragger rankings, kill tallies, and overall tournament MVP standings.
           </p>
         </div>
 
         {/* SEARCH BAR */}
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
           <input
             type="text"
-            placeholder="Search Player or Squad..."
+            placeholder="SEARCH PLAYER OR SQUAD..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-bgmi-surface/90 border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-bgmi-red transition-all font-medium shadow-sm"
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-xl text-slate-900 dark:text-white text-xs font-mono font-bold uppercase focus:outline-none focus:border-bgmi-red transition-all shadow-sm"
           />
         </div>
       </div>
 
       {loading ? (
-        <SkeletonGrid count={6} />
+        <SkeletonGrid count={4} />
       ) : filteredPlayers.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-2xl p-8 clip-tactical shadow-md">
-          <Award className="w-12 h-12 text-slate-500 mx-auto mb-3" />
-          <h3 className="font-display font-bold text-lg text-slate-900 dark:text-white">No Players Found</h3>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Check back later or refine your search filters.</p>
+        <div className="text-center py-16 bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-8 clip-tactical shadow-md">
+          <Award className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+          <h3 className="font-broadcast font-bold text-xl text-slate-900 dark:text-white">NO FRAGGERS RECORDED</h3>
+          <p className="text-xs text-slate-500 mt-1 font-mono">No players matched your search filter.</p>
         </div>
       ) : (
-        <div className="space-y-8 animate-in fade-in duration-300">
+        <div className="space-y-12">
           
-          {/* TOP 3 PODIUM */}
-          {topThree.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2 max-w-4xl mx-auto items-end">
-              
-              {/* 2nd Place */}
-              {topThree[1] && (
-                <div className="bg-white dark:bg-bgmi-surface/90 border border-slate-300 dark:border-slate-500/40 rounded-2xl p-6 text-center space-y-4 order-2 md:order-1 flex flex-col justify-between relative clip-tactical shadow-lg">
-                  <div className="inline-flex items-center justify-center gap-1 px-3 py-1 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white font-display font-black text-xs uppercase tracking-wider shadow-sm mx-auto">
-                    <Medal className="w-3.5 h-3.5" /> #2 FRAGGER
+          {/* DEDICATED MVP PLAYER HERO SPOTLIGHT */}
+          {topMvp && (
+            <div className="relative bg-gradient-to-r from-bgmi-red via-rose-600 to-slate-950 text-white rounded-2xl p-8 sm:p-12 clip-tactical shadow-2xl overflow-hidden">
+              <div className="absolute inset-0 bg-tactical-grid opacity-20 pointer-events-none" />
+
+              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                {/* LEFT HERO SPECS */}
+                <div className="lg:col-span-8 space-y-6">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded bg-slate-950 text-amber-400 border border-amber-400/40 font-mono text-xs font-black uppercase tracking-widest shadow-lg">
+                    <Trophy className="w-4 h-4" /> OVERALL TOURNAMENT MVP
                   </div>
-                  <div>
-                    <h3 className="font-display font-black text-lg text-slate-900 dark:text-white truncate">{topThree[1].ign}</h3>
-                    <p className="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-semibold">{topThree[1].teamName}</p>
+
+                  <div className="space-y-1">
+                    <h2 className="font-broadcast font-black text-5xl sm:text-7xl uppercase tracking-tight text-white drop-shadow-lg">
+                      {topMvp.ign || topMvp.name}
+                    </h2>
+                    <p className="font-mono font-bold text-amber-300 text-sm tracking-wider uppercase">
+                      SQUAD: {topMvp.teamName || 'CAMPUS CONTENDER'}
+                    </p>
                   </div>
-                  <div className="bg-slate-100 dark:bg-bgmi-dark/90 py-3 rounded-xl border border-slate-200 dark:border-bgmi-border">
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Kills</p>
-                    <p className="font-display font-black text-3xl text-slate-900 dark:text-slate-200">{topThree[1].kills || 0}</p>
+
+                  <div className="grid grid-cols-3 gap-4 bg-slate-950/80 p-4 rounded-xl border border-white/10 font-mono text-center max-w-lg">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block uppercase font-bold">TOTAL KILLS</span>
+                      <span className="font-broadcast font-black text-amber-400 text-3xl sm:text-4xl flex items-center justify-center gap-1">
+                        <Flame className="w-5 h-5 text-bgmi-red" /> {topMvp.kills || 0}
+                      </span>
+                    </div>
+                    <div className="border-x border-slate-800">
+                      <span className="text-[10px] text-slate-400 block uppercase font-bold">MATCHES</span>
+                      <span className="font-broadcast font-black text-white text-3xl sm:text-4xl">
+                        {topMvp.matchesPlayed || 4}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block uppercase font-bold">K/D RATIO</span>
+                      <span className="font-broadcast font-black text-sky-400 text-3xl sm:text-4xl">
+                        {((topMvp.kills || 0) / Math.max(1, topMvp.matchesPlayed || 1)).toFixed(2)}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              )}
 
-              {/* 1st Place MVP */}
-              {topThree[0] && (
-                <div className="bg-white dark:bg-gradient-to-b dark:from-bgmi-red/20 dark:via-bgmi-surface dark:to-bgmi-dark border-2 border-amber-500 dark:border-bgmi-gold rounded-2xl p-8 text-center space-y-4 order-1 md:order-2 flex flex-col justify-between relative shadow-gold-glow clip-tactical scale-105">
-                  <div className="inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-500 dark:bg-bgmi-gold text-slate-950 font-display font-black text-xs uppercase tracking-widest shadow-gold-glow mx-auto">
-                    <Trophy className="w-4 h-4 fill-slate-950" /> OVERALL MVP
-                  </div>
-                  <div>
-                    <h3 className="font-display font-black text-2xl text-slate-900 dark:text-white truncate">{topThree[0].ign}</h3>
-                    <p className="text-xs text-amber-600 dark:text-bgmi-gold font-bold uppercase tracking-widest">{topThree[0].teamName}</p>
-                  </div>
-                  <div className="bg-slate-100 dark:bg-bgmi-dark/90 py-4 rounded-xl border border-amber-300 dark:border-bgmi-gold/40">
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Total Kills</p>
-                    <p className="font-display font-black text-5xl text-amber-600 dark:text-bgmi-gold">{topThree[0].kills || 0}</p>
+                {/* RIGHT FRAGGER EMBLEM */}
+                <div className="lg:col-span-4 flex items-center justify-center">
+                  <div className="w-40 h-40 rounded-full bg-slate-950 border-4 border-amber-400 flex items-center justify-center text-bgmi-red text-6xl shadow-2xl relative">
+                    <Target className="w-20 h-20 text-bgmi-red animate-pulse" />
                   </div>
                 </div>
-              )}
 
-              {/* 3rd Place */}
-              {topThree[2] && (
-                <div className="bg-white dark:bg-bgmi-surface/90 border border-amber-400 dark:border-amber-800/40 rounded-2xl p-6 text-center space-y-4 order-3 md:order-3 flex flex-col justify-between relative clip-tactical shadow-lg">
-                  <div className="inline-flex items-center justify-center gap-1 px-3 py-1 rounded-full bg-amber-700 text-amber-100 font-display font-black text-xs uppercase tracking-wider shadow-sm mx-auto">
-                    <Medal className="w-3.5 h-3.5" /> #3 FRAGGER
-                  </div>
-                  <div>
-                    <h3 className="font-display font-black text-lg text-slate-900 dark:text-white truncate">{topThree[2].ign}</h3>
-                    <p className="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-semibold">{topThree[2].teamName}</p>
-                  </div>
-                  <div className="bg-slate-100 dark:bg-bgmi-dark/90 py-3 rounded-xl border border-slate-200 dark:border-bgmi-border">
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">Kills</p>
-                    <p className="font-display font-black text-3xl text-amber-600 dark:text-amber-500">{topThree[2].kills || 0}</p>
-                  </div>
-                </div>
-              )}
-
+              </div>
             </div>
           )}
 
-          {/* LEADERBOARD TABLE */}
-          <div className="bg-white dark:bg-bgmi-surface/90 border border-slate-200 dark:border-bgmi-border rounded-2xl overflow-hidden clip-tactical shadow-lg dark:shadow-2xl">
-            <div className="p-4 bg-slate-100 dark:bg-bgmi-dark/80 border-b border-slate-200 dark:border-bgmi-border flex items-center justify-between">
-              <span className="font-display font-black text-xs uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                <Zap className="w-4 h-4 text-bgmi-red" /> Detailed Fragger & K/D Leaderboard
+          {/* DETAILED FRAGGER TELEMETRY TABLE */}
+          <div className="bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden clip-tactical shadow-xl">
+            <div className="p-4 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+              <span className="font-broadcast font-black text-xs uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                <Zap className="w-4 h-4 text-bgmi-red" /> ALL PLAYER FRAGGER RATINGS
               </span>
-              <span className="text-[10px] font-mono text-bgmi-gold uppercase font-bold">K/D Formula: Kills ÷ Matches</span>
+              <span className="text-[10px] font-mono text-slate-400 font-bold uppercase">SORTED BY KILL COUNT</span>
             </div>
+
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 dark:bg-bgmi-dark dark:border-bgmi-border dark:text-slate-400 font-display font-black uppercase text-[10px]">
+              <table className="w-full text-left font-mono text-xs border-collapse">
+                <thead className="bg-slate-50 dark:bg-[#0B0E14] border-b border-slate-200 dark:border-white/10 text-slate-500 font-broadcast font-black uppercase text-[10px]">
                   <tr>
-                    <th className="p-4 w-16 text-center">Rank</th>
-                    <th className="p-4">Player / IGN</th>
-                    <th className="p-4">Squad Name</th>
-                    <th className="p-4 text-center">Matches</th>
-                    <th className="p-4 text-center">Total Kills</th>
-                    <th className="p-4 text-center">K/D Ratio</th>
+                    <th className="p-4 w-16 text-center">RANK</th>
+                    <th className="p-4">PLAYER IGN</th>
+                    <th className="p-4">SQUAD</th>
+                    <th className="p-4 text-center">MATCHES</th>
+                    <th className="p-4 text-center">TOTAL KILLS</th>
+                    <th className="p-4 text-center">K/D RATIO</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-bgmi-border/40 font-mono text-slate-800 dark:text-slate-300">
+                <tbody className="divide-y divide-slate-200 dark:divide-white/5 text-slate-800 dark:text-slate-200">
                   {filteredPlayers.map((player, idx) => {
                     const pKills = player.kills || 0;
                     const pMatches = player.matchesPlayed || 1;
                     const pKd = (pKills / Math.max(1, pMatches)).toFixed(2);
+                    const rankNum = String(idx + 1).padStart(2, '0');
 
                     return (
-                      <tr
-                        key={player.id || player._id || idx}
-                        className="hover:bg-slate-50 dark:hover:bg-bgmi-dark/60 transition-colors"
-                      >
-                        <td className="p-4 text-center font-display font-black text-sm">
-                          {idx + 1 === 1 ? (
-                            <span className="text-amber-600 dark:text-bgmi-gold font-bold">★ 1</span>
-                          ) : idx + 1 === 2 ? (
-                            <span className="text-slate-700 dark:text-slate-300 font-bold">★ 2</span>
-                          ) : idx + 1 === 3 ? (
-                            <span className="text-amber-600 font-bold">★ 3</span>
+                      <tr key={player.id || player._id || idx} className="hover:bg-slate-50 dark:hover:bg-[#181E2C] transition-colors">
+                        <td className="p-4 text-center font-broadcast font-black text-sm text-slate-500">
+                          {rankNum === '01' ? (
+                            <span className="text-amber-500 font-black">#01</span>
                           ) : (
-                            idx + 1
+                            `#${rankNum}`
                           )}
                         </td>
-                        <td className="p-4 font-sans">
-                          <p className="font-bold text-slate-900 dark:text-white text-sm">{player.ign || player.name}</p>
-                          <p className="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest">{player.role}</p>
+                        <td className="p-4 font-sans font-bold text-slate-900 dark:text-white text-sm">
+                          {player.ign || player.name}
                         </td>
-                        <td className="p-4 font-sans font-bold text-slate-800 dark:text-slate-200">{player.teamName || 'N/A'}</td>
-                        <td className="p-4 text-center font-bold text-slate-400">{pMatches} M</td>
-                        <td className="p-4 text-center font-black text-bgmi-gold text-sm flex items-center justify-center gap-1">
-                          <Flame className="w-3.5 h-3.5 text-bgmi-red" /> {pKills}
+                        <td className="p-4 font-bold text-slate-600 dark:text-slate-400">{player.teamName || 'N/A'}</td>
+                        <td className="p-4 text-center text-slate-400">{pMatches}</td>
+                        <td className="p-4 text-center font-broadcast font-black text-amber-500 text-sm">
+                          🔥 {pKills}
                         </td>
-                        <td className="p-4 text-center font-black text-sky-400 text-sm">{pKd}</td>
+                        <td className="p-4 text-center font-broadcast font-black text-sky-400 text-sm">{pKd}</td>
                       </tr>
                     );
                   })}
@@ -190,7 +184,6 @@ export default function MVPLeaderboardPage() {
               </table>
             </div>
           </div>
-
 
         </div>
       )}
