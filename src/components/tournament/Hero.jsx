@@ -68,7 +68,7 @@ export default function Hero() {
                 NEXCORE INSTITUTE OF TECHNOLOGY
               </p>
               <p className="text-xs sm:text-sm text-slate-400 font-normal leading-relaxed">
-                24 verified squads from our campus competing across custom room matches. Dominate the circle and claim ultimate glory.
+                Official campus squads competing across custom room matches. Dominate the circle and claim ultimate glory.
               </p>
             </div>
 

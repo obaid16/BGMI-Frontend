@@ -49,10 +49,10 @@ export default function Navbar() {
         
         {/* BRAND IDENTITY */}
         <Link href="/" className="flex items-center gap-3 group shrink-0">
-          <div className="h-10 sm:h-11 px-3 py-1 bg-white rounded-lg border border-slate-200 dark:border-white/20 flex items-center justify-center shadow-md group-hover:border-bgmi-red/60 transition-all group-hover:scale-105">
+          <div className="h-10 sm:h-11 px-2.5 py-1 bg-white rounded-lg border border-slate-200 dark:border-white/30 flex items-center justify-center shadow-md group-hover:border-bgmi-red transition-all group-hover:scale-105">
             <img
-              src="/images/nexcore-logo-transparent.png"
-              alt="Nexcore Institute of Technology"
+              src="/images/nit-logo-icon.png"
+              alt="NIT Esports Logo"
               className="h-8 sm:h-9 w-auto object-contain"
             />
           </div>

@@ -297,12 +297,19 @@ export function getPlayerData() {
         ...p,
         teamName: team.teamName,
         teamShort: team.shortName,
-        collegeName: team.collegeName
+        collegeName: team.collegeName,
+        wwcd: team.wwcd || 0
       });
     });
   });
 
-  return allPlayers.sort((a, b) => (b.kills || 0) - (a.kills || 0));
+  // 4-Tier Official BGMI Tie-Breaker Order: Kills -> Chicken Dinners (WWCD) -> Fewer Matches -> KD Ratio
+  return allPlayers.sort((a, b) => {
+    if ((b.kills || 0) !== (a.kills || 0)) return (b.kills || 0) - (a.kills || 0);
+    if ((b.wwcd || 0) !== (a.wwcd || 0)) return (b.wwcd || 0) - (a.wwcd || 0);
+    if ((a.matchesPlayed || 1) !== (b.matchesPlayed || 1)) return (a.matchesPlayed || 1) - (b.matchesPlayed || 1);
+    return (b.kdRatio || 0) - (a.kdRatio || 0);
+  });
 }
 
 /**
@@ -375,6 +382,22 @@ export function updateCanonicalMatchResult(payload) {
     CANONICAL_MATCHES.unshift(updatedObj);
   }
 
+  // Recalculate standings and sync CANONICAL_TEAMS array
+  const updatedStandings = getStandingsData();
+  updatedStandings.forEach((st) => {
+    const t = CANONICAL_TEAMS.find(
+      (team) => team.id === st.teamId || team.teamName === st.teamName || team.shortName === st.shortName
+    );
+    if (t) {
+      t.rank = st.rank;
+      t.points = st.totalPoints || st.points;
+      t.kills = st.kills;
+      t.wwcd = st.wwcd;
+      t.matchesPlayed = st.matchesPlayed;
+    }
+  });
+
   return updatedObj;
 }
+
 

@@ -26,7 +26,6 @@ export default function StandingRow({ standing }) {
           <span className="font-broadcast font-bold text-sm text-slate-900 dark:text-white group-hover:text-bgmi-red transition-colors uppercase">
             {standing.teamName}
           </span>
-          <span className="text-[10px] font-mono text-slate-400">({standing.collegeName || 'NIT'})</span>
         </Link>
       </td>
 

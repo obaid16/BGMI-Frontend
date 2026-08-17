@@ -103,7 +103,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
               <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-bgmi-gold" /> {match.round || 'Grand Finals'}
             </span>
             <span className="flex items-center gap-1 text-sky-600 dark:text-sky-400">
-              <Users className="w-3.5 h-3.5" /> {totalSquadsCount} Squads ({totalPlayersCount} Players)
+              <Users className="w-3.5 h-3.5" /> {totalSquadsCount} / 24 Squads Registered ({totalPlayersCount} Players)
             </span>
           </div>
         </div>

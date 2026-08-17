@@ -12,12 +12,20 @@ export default function MatchesPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
 
+  const [teamsCount, setTeamsCount] = useState(4);
+
   useEffect(() => {
     async function fetchMatches() {
       setLoading(true);
-      const data = await getMatches(filter);
+      const [data, tData] = await Promise.all([
+        getMatches(filter).catch(() => []),
+        getTeams().catch(() => [])
+      ]);
       const sortedData = [...data].sort((a, b) => (a.matchNumber || 0) - (b.matchNumber || 0));
       setMatches(sortedData);
+      if (Array.isArray(tData) && tData.length > 0) {
+        setTeamsCount(tData.length);
+      }
       setLoading(false);
     }
     fetchMatches();
@@ -69,7 +77,7 @@ export default function MatchesPage() {
       ) : (
         <div className="space-y-3">
           {matches.map((match) => (
-            <MatchCard key={match.id || match.matchNumber} match={match} />
+            <MatchCard key={match.id || match.matchNumber} match={{ ...match, registeredSquadsCount: teamsCount }} />
           ))}
         </div>
       )}

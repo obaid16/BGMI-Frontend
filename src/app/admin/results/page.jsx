@@ -163,6 +163,7 @@ export default function AdminResultsPage() {
         onSubmitResult={handleSubmitResult}
         matches={matches}
         teams={teams}
+        results={results}
         editingResult={editingResult}
       />
     </div>

@@ -38,10 +38,12 @@ function AnimatedCounter({ target, duration = 1200 }) {
 }
 
 export default function TournamentStats({
-  registeredSquads = 24,
-  verifiedPlayers = 96,
+  registeredSquads = 5,
+  verifiedPlayers = 20,
   totalMatches = 4,
-  currentRound = 4
+  currentRound = 4,
+  maxSquads = 24,
+  maxPlayers = 96
 }) {
   return (
     <section className="w-full bg-slate-900 text-white border-y-2 border-bgmi-red py-6 my-8 font-sans shadow-2xl">
@@ -51,25 +53,25 @@ export default function TournamentStats({
           {/* TICKER 1: REGISTRATION */}
           <div className="space-y-1 pt-4 md:pt-0 md:px-6 first:pt-0">
             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
-              <Users className="w-3.5 h-3.5 text-bgmi-red" /> REGISTRATION
+              <Users className="w-3.5 h-3.5 text-bgmi-red" /> REGISTRATION STATUS
             </div>
             <p className="text-3xl sm:text-4xl font-broadcast font-black text-white uppercase tracking-tight flex items-baseline gap-2">
               <AnimatedCounter target={registeredSquads} />
               <span className="text-xs font-mono text-bgmi-red font-bold">SQUADS</span>
             </p>
-            <p className="text-[10px] text-slate-500 font-mono uppercase">Verified Campus Teams</p>
+            <p className="text-[10px] text-slate-400 font-mono uppercase font-bold">REGISTERED CAMPUS TEAMS</p>
           </div>
 
           {/* TICKER 2: ROSTER */}
           <div className="space-y-1 pt-4 md:pt-0 md:px-6">
             <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> ROSTER
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> PLAYER ROSTER
             </div>
             <p className="text-3xl sm:text-4xl font-broadcast font-black text-emerald-400 uppercase tracking-tight flex items-baseline gap-2">
               <AnimatedCounter target={verifiedPlayers} />
               <span className="text-xs font-mono text-slate-400 font-bold">PLAYERS</span>
             </p>
-            <p className="text-[10px] text-slate-500 font-mono uppercase">Student IDs Checked</p>
+            <p className="text-[10px] text-slate-400 font-mono uppercase font-bold">VERIFIED STUDENT PLAYERS</p>
           </div>
 
           {/* TICKER 3: MATCHES */}
@@ -79,9 +81,9 @@ export default function TournamentStats({
             </div>
             <p className="text-3xl sm:text-4xl font-broadcast font-black text-sky-400 uppercase tracking-tight flex items-baseline gap-2">
               <AnimatedCounter target={totalMatches} />
-              <span className="text-xs font-mono text-slate-400 font-bold">PLAYED</span>
+              <span className="text-xs font-mono text-slate-400 font-bold">MATCHES PLAYED</span>
             </p>
-            <p className="text-[10px] text-slate-500 font-mono uppercase">Custom Room Lobbies</p>
+            <p className="text-[10px] text-slate-400 font-mono uppercase font-bold">CUSTOM LOBBIES</p>
           </div>
 
           {/* TICKER 4: ROUND */}
@@ -92,7 +94,7 @@ export default function TournamentStats({
             <p className="text-2xl sm:text-3xl font-broadcast font-black text-amber-400 uppercase tracking-tight">
               GRAND FINALS
             </p>
-            <p className="text-[10px] text-slate-500 font-mono uppercase">Stage {currentRound} Progress</p>
+            <p className="text-[10px] text-slate-400 font-mono uppercase font-bold">Stage {currentRound} Progress</p>
           </div>
 
         </div>

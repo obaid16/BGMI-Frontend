@@ -165,7 +165,7 @@ export default function HomePage() {
           {/* HORIZONTAL MATCH STRIPIFIED SCHEDULE */}
           <div className="space-y-3">
             {matchesList.slice(0, 3).map((m) => (
-              <MatchCard key={m.id || m.matchNumber} match={m} />
+              <MatchCard key={m.id || m.matchNumber} match={{ ...m, registeredSquadsCount: teamsStats.registeredSquads }} />
             ))}
           </div>
         </section>

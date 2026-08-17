@@ -14,16 +14,16 @@ export default function Footer() {
           {/* COL 1: BRAND */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-              <div className="h-12 px-3 py-1.5 bg-white rounded-lg border border-slate-200 dark:border-white/20 flex items-center justify-center shadow-md">
+              <div className="h-12 px-3 py-1.5 bg-white rounded-lg border border-slate-200 dark:border-white/30 flex items-center justify-center shadow-md">
                 <img
-                  src="/images/nexcore-logo-transparent.png"
-                  alt="Nexcore Institute of Technology"
+                  src="/images/nit-logo-icon.png"
+                  alt="NIT Esports Logo"
                   className="h-9 w-auto object-contain"
                 />
               </div>
               <div className="flex flex-col border-l border-slate-300 dark:border-white/15 pl-3">
                 <span className="font-display font-black text-lg text-slate-900 dark:text-white uppercase tracking-wider leading-none">
-                  NIT <span className="text-bgmi-red">BGMI</span> CHAMPIONSHIP
+                  <span className="text-bgmi-red">BGMI</span> CHAMPIONSHIP
                 </span>
                 <span className="text-[9px] font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-0.5">
                   OFFICIAL CAMPUS ESPORTS 2026

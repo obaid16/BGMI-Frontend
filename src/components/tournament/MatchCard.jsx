@@ -62,7 +62,7 @@ export default function MatchCard({ match }) {
           /* UPCOMING MATCH: SHOW SQUAD CAPACITY & FORMAT (NO KILLS OR FINAL SCORES) */
           <div className="w-full flex items-center justify-between px-2 text-slate-600 dark:text-slate-300">
             <span className="flex items-center gap-1.5 font-bold uppercase text-[11px]">
-              <Users className="w-3.5 h-3.5 text-sky-400" /> 24 Registered Squads
+              <Users className="w-3.5 h-3.5 text-sky-400" /> {match.registeredSquadsCount ?? match.participatingSquads?.length ?? 4} Registered Squads
             </span>
             <span className="text-[10px] font-bold text-amber-500 uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
               TPP Squad Battle Royale
