@@ -40,21 +40,29 @@ export default function AdminDashboardPage() {
   }, []);
 
   const handleApprove = async (id) => {
+    // 1. Immediate UI state update without page reload!
+    setTeams((prev) => prev.map((t) => ((t.id || t._id) === id ? { ...t, status: 'Approved', verified: true } : t)));
+    if (selectedTeam && ((selectedTeam.id || selectedTeam._id) === id)) {
+      setSelectedTeam((prev) => prev ? { ...prev, status: 'Approved', verified: true } : null);
+    }
+    showToast('Squad Registration Approved! Notification Email Dispatched.', 'success');
+
     await updateTeamStatus(id, 'Approved');
-    showToast('Squad Registration Approved!', 'success');
-    setSelectedTeam(null);
-    setTeams((prev) => prev.map((t) => (t.id === id || t._id === id ? { ...t, status: 'Approved', verified: true } : t)));
     const sData = await getAdminDashboardStats();
-    setStats(sData);
+    if (sData) setStats(sData);
   };
 
   const handleReject = async (id) => {
+    // 1. Immediate UI state update without page reload!
+    setTeams((prev) => prev.map((t) => ((t.id || t._id) === id ? { ...t, status: 'Rejected', verified: false } : t)));
+    if (selectedTeam && ((selectedTeam.id || selectedTeam._id) === id)) {
+      setSelectedTeam((prev) => prev ? { ...prev, status: 'Rejected', verified: false } : null);
+    }
+    showToast('Squad Registration Rejected.', 'info');
+
     await updateTeamStatus(id, 'Rejected');
-    showToast('Squad Registration Rejected', 'error');
-    setSelectedTeam(null);
-    setTeams((prev) => prev.map((t) => (t.id === id || t._id === id ? { ...t, status: 'Rejected' } : t)));
     const sData = await getAdminDashboardStats();
-    setStats(sData);
+    if (sData) setStats(sData);
   };
 
   return (

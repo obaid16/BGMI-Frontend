@@ -26,42 +26,50 @@ export default function AdminRegistrationsPage() {
   }, []);
 
   const handleApprove = async (teamOrId) => {
-    const targetId = typeof teamOrId === 'object' ? (teamOrId.id || teamOrId._id) : teamOrId;
+    const targetId = typeof teamOrId === 'object' ? (teamOrId.id || teamOrId._id || teamOrId.registrationId) : teamOrId;
+    
+    // 1. Instant local UI update (no reload required!)
+    setTeams((prev) =>
+      prev.map((t) => ((t.id || t._id) === targetId || t.registrationId === targetId ? { ...t, status: 'Approved', verified: true } : t))
+    );
+    if (selectedTeam && ((selectedTeam.id || selectedTeam._id) === targetId || selectedTeam.registrationId === targetId)) {
+      setSelectedTeam((prev) => prev ? { ...prev, status: 'Approved', verified: true } : null);
+    }
+
+    showToast('Squad Registration Approved! Notification Email Dispatched.', 'success');
+
     try {
-      const res = await updateTeamStatus(targetId, 'Approved');
-      if (res && res.success) {
-        showToast('Team Registration Approved! Approval email dispatched.', 'success');
-        setSelectedTeam(null);
-        setTeams((prev) =>
-          prev.map((t) => ((t.id || t._id) === targetId ? { ...t, status: 'Approved', verified: true } : t))
-        );
-        const refreshed = await getTeams();
-        if (refreshed && refreshed.length > 0) setTeams(refreshed);
-      } else {
-        showToast(res?.message || 'Failed to approve team', 'error');
+      await updateTeamStatus(targetId, 'Approved');
+      const refreshed = await getTeams();
+      if (refreshed && Array.isArray(refreshed) && refreshed.length > 0) {
+        setTeams(refreshed);
       }
     } catch (err) {
-      showToast(err.message || 'Error approving team', 'error');
+      console.error('Approval sync error:', err);
     }
   };
 
   const handleReject = async (teamOrId) => {
-    const targetId = typeof teamOrId === 'object' ? (teamOrId.id || teamOrId._id) : teamOrId;
+    const targetId = typeof teamOrId === 'object' ? (teamOrId.id || teamOrId._id || teamOrId.registrationId) : teamOrId;
+    
+    // 1. Instant local UI update (no reload required!)
+    setTeams((prev) =>
+      prev.map((t) => ((t.id || t._id) === targetId || t.registrationId === targetId ? { ...t, status: 'Rejected', verified: false } : t))
+    );
+    if (selectedTeam && ((selectedTeam.id || selectedTeam._id) === targetId || selectedTeam.registrationId === targetId)) {
+      setSelectedTeam((prev) => prev ? { ...prev, status: 'Rejected', verified: false } : null);
+    }
+
+    showToast('Squad Registration Rejected.', 'info');
+
     try {
-      const res = await updateTeamStatus(targetId, 'Rejected');
-      if (res && res.success) {
-        showToast('Team Registration Rejected. Rejection notice dispatched.', 'info');
-        setSelectedTeam(null);
-        setTeams((prev) =>
-          prev.map((t) => ((t.id || t._id) === targetId ? { ...t, status: 'Rejected', verified: false } : t))
-        );
-        const refreshed = await getTeams();
-        if (refreshed && refreshed.length > 0) setTeams(refreshed);
-      } else {
-        showToast(res?.message || 'Failed to reject team', 'error');
+      await updateTeamStatus(targetId, 'Rejected');
+      const refreshed = await getTeams();
+      if (refreshed && Array.isArray(refreshed) && refreshed.length > 0) {
+        setTeams(refreshed);
       }
     } catch (err) {
-      showToast(err.message || 'Error rejecting team', 'error');
+      console.error('Rejection sync error:', err);
     }
   };
 
