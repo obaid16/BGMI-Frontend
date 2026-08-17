@@ -54,19 +54,34 @@ export default function AdminResultsPage() {
   };
 
   const handleSubmitResult = async (payload) => {
-    const newRes = await submitMatchResult(payload);
-    if (newRes) {
-      const targetId = newRes.id || newRes._id;
-      setResults((prev) => {
-        const exists = prev.some((r) => (r.id || r._id) === targetId);
-        if (exists) {
-          return prev.map((r) => ((r.id || r._id) === targetId ? newRes : r));
-        }
-        return [newRes, ...prev];
-      });
-      showToast('Match Results & Leaderboard Updated!', 'success');
-    } else {
-      showToast('Failed to save match results', 'error');
+    try {
+      const newRes = await submitMatchResult(payload);
+      if (newRes) {
+        setResults((prev) => {
+          const matchNum = Number(newRes.matchNumber || payload.matchNumber);
+          const targetId = newRes.id || newRes._id || newRes.matchId || payload.matchId;
+
+          const existsIndex = prev.findIndex((r) =>
+            (r.id && (r.id === targetId || r.id === payload.matchId)) ||
+            (r._id && (r._id === targetId || r._id === payload.matchId)) ||
+            (r.matchId && (r.matchId === targetId || r.matchId === payload.matchId)) ||
+            Number(r.matchNumber) === matchNum
+          );
+
+          if (existsIndex !== -1) {
+            const updated = [...prev];
+            updated[existsIndex] = { ...updated[existsIndex], ...newRes };
+            return updated;
+          }
+          return [newRes, ...prev];
+        });
+        showToast('Match Results & Leaderboard Updated!', 'success');
+      } else {
+        showToast('Failed to save match results', 'error');
+      }
+    } catch (err) {
+      console.error('handleSubmitResult error:', err);
+      showToast('Error saving match result', 'error');
     }
     setEditingResult(null);
   };
@@ -111,7 +126,11 @@ export default function AdminResultsPage() {
                   <td className="p-4 whitespace-nowrap font-bold text-amber-600 dark:text-bgmi-gold">{res.winner?.teamName}</td>
                   <td className="p-4 whitespace-nowrap text-sky-600 dark:text-bgmi-cyan font-bold">{res.winner?.kills} Kills</td>
                   <td className="p-4 whitespace-nowrap font-bold text-slate-900 dark:text-white">{res.winner?.totalPoints} PTS</td>
-                  <td className="p-4 whitespace-nowrap text-slate-700 dark:text-slate-300">{res.mvp?.name || 'Aditya Verma'}</td>
+                  <td className="p-4 whitespace-nowrap text-slate-700 dark:text-slate-300 font-medium">
+                    {res.mvp?.ign && res.mvp?.name && res.mvp.ign !== res.mvp.name
+                      ? `${res.mvp.ign} (${res.mvp.name})`
+                      : (res.mvp?.ign || res.mvp?.name || 'N/A')}
+                  </td>
                   <td className="p-4 whitespace-nowrap text-center">
                     <Badge variant="green" size="sm">
                       <CheckCircle2 className="w-3 h-3 mr-1 inline" /> Published Live

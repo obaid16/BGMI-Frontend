@@ -36,22 +36,28 @@ export default function HomePage() {
     async function loadHomeData() {
       try {
         setLoading(true);
-        const [matches, standings, results, media, anns, teams] = await Promise.all([
-          getMatches(),
-          getStandings(),
-          getResults(),
-          getMedia('All', 'Published'),
-          getAnnouncements(),
-          getTeams()
+        const [matchesRes, standingsRes, resultsRes, mediaRes, annsRes, teamsRes] = await Promise.all([
+          getMatches().catch(() => []),
+          getStandings().catch(() => []),
+          getResults().catch(() => []),
+          getMedia('All', 'Published').catch(() => []),
+          getAnnouncements ? getAnnouncements().catch(() => []) : Promise.resolve([]),
+          getTeams().catch(() => [])
         ]);
 
-        const registered = teams && teams.length > 0 ? teams.length : 24;
-        const verified = teams && teams.length > 0
+        const matches = Array.isArray(matchesRes) && matchesRes.length > 0 ? matchesRes : [];
+        const standings = Array.isArray(standingsRes) && standingsRes.length > 0 ? standingsRes : [];
+        const results = Array.isArray(resultsRes) && resultsRes.length > 0 ? resultsRes : [];
+        const media = Array.isArray(mediaRes) ? mediaRes : [];
+        const teams = Array.isArray(teamsRes) ? teamsRes : [];
+
+        const registered = teams.length > 0 ? teams.length : 24;
+        const verified = teams.length > 0
           ? teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0)
           : 96;
-        const totMatches = matches && matches.length > 0 ? matches.length : 12;
-        const currRound = matches && matches.length > 0
-          ? (matches.filter((m) => m.status === 'Completed' || m.status === 'Live').length || 1)
+        const totMatches = matches.length > 0 ? matches.length : 12;
+        const currRound = matches.length > 0
+          ? (matches.filter((m) => m && (m.status === 'Completed' || m.status === 'Live')).length || 1)
           : 4;
 
         setTeamsStats({
@@ -62,18 +68,19 @@ export default function HomePage() {
         });
 
         setMatchesList(matches);
-        setNextMatch(matches.find((m) => m.status === 'Live' || m.status === 'Upcoming') || matches[0]);
+        setNextMatch(matches.find((m) => m && (m.status === 'Live' || m.status === 'Upcoming')) || matches[0] || null);
         setTopStandings(standings.slice(0, 5));
         setRecentResults(results.slice(0, 3));
-        const publishedMediaOnly = (media || []).filter((item) => item.status === 'Published' || item.verified === true);
+
+        const publishedMediaOnly = media.filter((item) => item && (item.status === 'Published' || item.verified === true));
         setMediaItems(publishedMediaOnly.slice(0, 4));
 
-        const isTournamentComplete = matches.length > 0 && !matches.some((m) => m.status === 'Live' || m.status === 'Upcoming');
+        const isTournamentComplete = matches.length > 0 && !matches.some((m) => m && (m.status === 'Live' || m.status === 'Upcoming'));
         setIsComplete(isTournamentComplete);
 
         if (isTournamentComplete && standings.length > 0) {
           const topTeam = standings[0];
-          const fullTeamDetails = await getTeamById(topTeam.teamId);
+          const fullTeamDetails = await getTeamById(topTeam.teamId).catch(() => null);
           if (fullTeamDetails) {
             setChampionTeam({
               ...topTeam,

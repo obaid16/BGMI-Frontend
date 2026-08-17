@@ -16,17 +16,40 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
   // Sync state when modal opens or editingResult changes
   React.useEffect(() => {
     if (editingResult) {
-      if (editingResult.matchId) setSelectedMatchId(editingResult.matchId);
-      if (editingResult.winner?.teamId) setSelectedTeamId(editingResult.winner.teamId);
+      const matchIdToSet = editingResult.matchId || editingResult.id || editingResult._id;
+      if (matchIdToSet) setSelectedMatchId(matchIdToSet);
+
+      const targetWinnerName =
+        typeof editingResult.winner === 'string'
+          ? editingResult.winner
+          : editingResult.winner?.teamName || editingResult.winner?.name;
+
+      const targetTeam = teams.find(
+        (t) =>
+          (t.id || t._id) === editingResult.winner?.teamId ||
+          t.name === targetWinnerName ||
+          t.teamName === targetWinnerName
+      );
+
+      if (targetTeam) {
+        setSelectedTeamId(targetTeam.id || targetTeam._id);
+      } else if (editingResult.winner?.teamId) {
+        setSelectedTeamId(editingResult.winner.teamId);
+      }
+
       if (editingResult.leaderboard?.[0]?.rank) setPlacementRank(editingResult.leaderboard[0].rank);
       if (editingResult.winner?.kills !== undefined) setKills(editingResult.winner.kills);
-      if (editingResult.mvp?.name) setMvpPlayerName(editingResult.mvp.name);
-      if (editingResult.mvp?.kills !== undefined) setMvpKills(editingResult.mvp.kills);
-    } else {
-      if (matches.length > 0 && !matches.some((m) => (m.id || m._id) === selectedMatchId)) {
+      setMvpPlayerName(editingResult.mvp?.ign || editingResult.mvp?.name || '');
+      setMvpKills(editingResult.mvp?.kills !== undefined ? editingResult.mvp.kills : '');
+    } else if (isOpen) {
+      setMvpPlayerName('');
+      setMvpKills('');
+      setPlacementRank(1);
+      setKills(12);
+      if (matches.length > 0) {
         setSelectedMatchId(matches[0].id || matches[0]._id);
       }
-      if (teams.length > 0 && !teams.some((t) => (t.id || t._id) === selectedTeamId)) {
+      if (teams.length > 0) {
         setSelectedTeamId(teams[0].id || teams[0]._id);
       }
     }
@@ -46,9 +69,19 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
 
   const totalPoints = placementPts + killPts;
 
+  const selectedTeam = teams.find((t) => (t.id || t._id) === selectedTeamId) || teams[0];
+  const squadPlayers = selectedTeam?.players || [];
+  const allRegisteredPlayers = teams.flatMap((t) =>
+    (t.players || []).map((p) => ({
+      ...p,
+      teamName: t.name,
+    }))
+  );
+  const displayPlayersList = squadPlayers.length > 0 ? squadPlayers : allRegisteredPlayers;
+
   const handleSave = (publish = false) => {
-    const selectedTeam = teams.find((t) => t.id === selectedTeamId) || teams[0];
-    const selectedMatch = matches.find((m) => m.id === selectedMatchId) || matches[0];
+    const selectedMatch = matches.find((m) => (m.id || m._id) === selectedMatchId) || matches[0];
+    const finalMvpName = mvpPlayerName.trim() ? mvpPlayerName.trim() : (selectedTeam?.captainName || selectedTeam?.name || 'MVP Player');
 
     const resultPayload = {
       matchId: selectedMatchId,
@@ -56,17 +89,23 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
       round: selectedMatch?.round || 'Semifinal',
       map: selectedMatch?.map || 'Erangel',
       winner: {
-        teamId: selectedTeam?.id,
-        teamName: selectedTeam?.name || 'IIT Bombay Titans',
+        teamId: selectedTeam?.id || selectedTeam?._id,
+        teamName: selectedTeam?.name || 'Team Winner',
         kills: killPts,
         placementPoints: placementPts,
         totalPoints,
       },
+      mvp: {
+        name: finalMvpName,
+        ign: finalMvpName,
+        team: selectedTeam?.name || 'Team Winner',
+        kills: parseInt(mvpKills, 10) || 0,
+      },
       leaderboard: [
         {
           rank: parseInt(placementRank, 10),
-          team: selectedTeam?.name || 'IIT Bombay Titans',
-          teamId: selectedTeam?.id,
+          team: selectedTeam?.name || 'Team Winner',
+          teamId: selectedTeam?.id || selectedTeam?._id,
           placementPts,
           kills: killPts,
           killPts,
@@ -96,7 +135,7 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
               className="w-full p-2.5 bg-bgmi-dark border border-bgmi-border rounded-lg text-white font-bold"
             >
               {matches.map((m) => (
-                <option key={m.id} value={m.id}>
+                <option key={m.id || m._id} value={m.id || m._id}>
                   Match #{m.matchNumber} - {m.round} ({m.map})
                 </option>
               ))}
@@ -107,12 +146,23 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
             <label className="font-bold text-slate-300 uppercase">Select Squad / Team</label>
             <select
               value={selectedTeamId}
-              onChange={(e) => setSelectedTeamId(e.target.value)}
+              onChange={(e) => {
+                const newTeamId = e.target.value;
+                setSelectedTeamId(newTeamId);
+                const targetTeam = teams.find((t) => (t.id || t._id) === newTeamId);
+                if (targetTeam && targetTeam.players && targetTeam.players.length > 0) {
+                  setMvpPlayerName(targetTeam.players[0].ign || targetTeam.players[0].name || '');
+                } else if (targetTeam) {
+                  setMvpPlayerName(targetTeam.captainIgn || targetTeam.captainName || '');
+                } else {
+                  setMvpPlayerName('');
+                }
+              }}
               className="w-full p-2.5 bg-bgmi-dark border border-bgmi-border rounded-lg text-white font-bold"
             >
               {teams.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name} ({t.college})
+                <option key={t.id || t._id} value={t.id || t._id}>
+                  {t.name} ({t.college || t.collegeName || 'NIT'})
                 </option>
               ))}
             </select>
@@ -154,27 +204,75 @@ export default function ResultEntryModal({ isOpen, onClose, onSubmitResult, matc
             <span className="text-[10px] text-slate-400 font-mono">PLAYER STATS</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="space-y-3">
+            {/* Player Selection Dropdown */}
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Player IGN / Name</label>
-              <input
-                type="text"
-                placeholder="e.g. Jonathan_OP / Player_1"
-                value={mvpPlayerName}
-                onChange={(e) => setMvpPlayerName(e.target.value)}
-                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-white font-bold"
-              />
+              <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center justify-between">
+                <span>Select Registered Player (Dropdown)</span>
+                {selectedTeam?.name && (
+                  <span className="text-bgmi-gold font-mono text-[9px]">{selectedTeam.name} Roster</span>
+                )}
+              </label>
+              <select
+                value={
+                  displayPlayersList.find(
+                    (p) =>
+                      (p.ign && mvpPlayerName.includes(p.ign)) ||
+                      (p.name && mvpPlayerName.includes(p.name)) ||
+                      p.ign === mvpPlayerName ||
+                      p.name === mvpPlayerName
+                  )?.ign ||
+                  displayPlayersList.find(
+                    (p) =>
+                      (p.ign && mvpPlayerName.includes(p.ign)) ||
+                      (p.name && mvpPlayerName.includes(p.name)) ||
+                      p.ign === mvpPlayerName ||
+                      p.name === mvpPlayerName
+                  )?.name ||
+                  ''
+                }
+                onChange={(e) => {
+                  const selectedVal = e.target.value;
+                  setMvpPlayerName(selectedVal);
+                }}
+                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-white font-bold text-xs focus:outline-none focus:border-bgmi-gold"
+              >
+                <option value="">-- Choose Player from Roster --</option>
+                {displayPlayersList.map((p, idx) => {
+                  const val = p.ign || p.name;
+                  const labelText = p.ign ? `${p.ign} (${p.name})` : p.name;
+                  return (
+                    <option key={p.id || p._id || idx} value={val}>
+                      {labelText} {p.teamName ? `— ${p.teamName}` : ''}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Kills</label>
-              <input
-                type="number"
-                min="0"
-                placeholder="e.g. 7"
-                value={mvpKills}
-                onChange={(e) => setMvpKills(e.target.value)}
-                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-bgmi-gold text-center font-bold font-mono"
-              />
+
+            {/* Custom Input & Kills */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Player IGN / Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Jonathan_OP / Tamanna Ansari"
+                  value={mvpPlayerName}
+                  onChange={(e) => setMvpPlayerName(e.target.value)}
+                  className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-white font-bold"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Kills</label>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="e.g. 7"
+                  value={mvpKills}
+                  onChange={(e) => setMvpKills(e.target.value)}
+                  className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-bgmi-gold text-center font-bold font-mono"
+                />
+              </div>
             </div>
           </div>
         </div>

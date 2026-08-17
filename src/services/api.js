@@ -3,7 +3,8 @@ import {
   CANONICAL_MATCHES,
   getStandingsData,
   getResultsData,
-  getPlayerData
+  getPlayerData,
+  updateCanonicalMatchResult
 } from '../data/tournamentData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
@@ -282,11 +283,20 @@ export async function getResultById(id) {
 }
 
 export async function submitMatchResult(resultData) {
-  const res = await fetchAPI('/results', {
-    method: 'POST',
-    body: JSON.stringify(resultData),
-  });
-  return res.data;
+  try {
+    const res = await fetchAPI('/results', {
+      method: 'POST',
+      body: JSON.stringify(resultData),
+    });
+    if (res && res.data) {
+      updateCanonicalMatchResult(res.data);
+      return res.data;
+    }
+  } catch (err) {
+    console.warn('submitMatchResult API failed, applying fallback in-memory update:', err);
+  }
+
+  return updateCanonicalMatchResult(resultData);
 }
 
 export async function deleteMatchResult(id) {

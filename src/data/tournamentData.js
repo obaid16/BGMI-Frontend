@@ -173,21 +173,21 @@ export const CANONICAL_MATCHES = [
     status: 'Completed',
     teamsCount: 24,
     winner: {
-      teamName: 'GodLike Esports',
-      shortName: 'GODL',
+      teamName: 'Axions',
+      shortName: 'AXN',
       kills: 12,
       points: 22
     },
     mvp: {
-      name: 'Obaid Shaikh',
-      ign: 'OBAID (IGL)',
-      kills: 4,
-      teamName: 'GodLike Esports'
+      name: 'Kratos',
+      ign: 'AXN-Kratos',
+      kills: 7,
+      teamName: 'Axions'
     },
     totalKills: 33,
     leaderboard: [
-      { rank: 1, team: 'GodLike Esports', kills: 12, placementPoints: 10, killPoints: 12, totalPoints: 22 },
-      { rank: 2, team: 'Axions', kills: 8, placementPoints: 8, killPoints: 8, totalPoints: 16 },
+      { rank: 1, team: 'Axions', kills: 12, placementPoints: 10, killPoints: 12, totalPoints: 22 },
+      { rank: 2, team: 'GodLike Esports', kills: 8, placementPoints: 8, killPoints: 8, totalPoints: 16 },
       { rank: 3, team: '401 Unauthorized', kills: 6, placementPoints: 5, killPoints: 6, totalPoints: 11 },
       { rank: 4, team: 'Elite Warriors', kills: 5, placementPoints: 3, killPoints: 5, totalPoints: 8 },
       { rank: 5, team: 'FARZ Esports', kills: 2, placementPoints: 1, killPoints: 2, totalPoints: 3 }
@@ -326,3 +326,55 @@ export function getTournamentMVPData() {
 export function getResultsData() {
   return CANONICAL_MATCHES.filter((m) => m.status === 'Completed');
 }
+
+/**
+ * Updates or adds a completed match result in canonical in-memory state
+ */
+export function updateCanonicalMatchResult(payload) {
+  if (!payload) return null;
+
+  const matchNum = Number(payload.matchNumber);
+  const targetMatch = CANONICAL_MATCHES.find(
+    (m) =>
+      String(m.id) === String(payload.matchId) ||
+      String(m._id) === String(payload.matchId) ||
+      Number(m.matchNumber) === matchNum
+  );
+
+  const updatedObj = {
+    id: payload.matchId || targetMatch?.id || `match-${matchNum || 1}`,
+    _id: payload._id || payload.id || targetMatch?._id || targetMatch?.id,
+    matchId: payload.matchId || targetMatch?.matchId || targetMatch?.id,
+    matchNumber: matchNum || targetMatch?.matchNumber || 1,
+    title: `Match #${matchNum || 1} / ${payload.map || 'Erangel'}`,
+    round: payload.round || targetMatch?.round || 'Semifinal',
+    map: payload.map || targetMatch?.map || 'Erangel',
+    date: payload.date || targetMatch?.date || '2026-09-02',
+    time: payload.time || targetMatch?.time || '10:00 AM',
+    status: 'Completed',
+    teamsCount: 24,
+    winner: {
+      teamName: payload.winner?.teamName || 'Winner Squad',
+      shortName: (payload.winner?.teamName || 'WIN').substring(0, 4).toUpperCase(),
+      kills: payload.winner?.kills || 0,
+      points: payload.winner?.totalPoints || 0
+    },
+    mvp: {
+      name: payload.mvp?.name || payload.mvp?.ign || 'MVP Player',
+      ign: payload.mvp?.ign || payload.mvp?.name || 'MVP',
+      kills: payload.mvp?.kills || 0,
+      teamName: payload.mvp?.team || payload.winner?.teamName || 'Winner Squad'
+    },
+    totalKills: payload.winner?.kills || 0,
+    leaderboard: payload.leaderboard || []
+  };
+
+  if (targetMatch) {
+    Object.assign(targetMatch, updatedObj);
+  } else {
+    CANONICAL_MATCHES.unshift(updatedObj);
+  }
+
+  return updatedObj;
+}
+

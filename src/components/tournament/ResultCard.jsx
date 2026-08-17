@@ -9,9 +9,9 @@ export default function ResultCard({ result }) {
   if (!result) return null;
 
   const matchNum = String(result.matchNumber || 1).padStart(2, '0');
-  const winnerName = result.winner?.teamName || result.winner?.name || result.winnerTeam || 'CHAMPION SQUAD';
+  const winnerName = (typeof result.winner === 'string' ? result.winner : result.winner?.teamName || result.winner?.name) || result.winnerTeam || 'CHAMPION SQUAD';
   const winnerKills = result.winner?.kills !== undefined ? result.winner.kills : (result.totalKills || 14);
-  const mvpName = result.mvp?.name || result.mvpName || 'Top Fragger';
+  const mvpName = (typeof result.mvp === 'string' ? result.mvp : result.mvp?.ign || result.mvp?.name) || result.mvpName || 'Top Fragger';
   const mvpKills = result.mvp?.kills !== undefined ? result.mvp.kills : 5;
 
   return (

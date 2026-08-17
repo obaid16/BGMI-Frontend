@@ -11,10 +11,17 @@ export default function MatchCard({ match }) {
   const isUpcoming = match.status === 'Upcoming';
   const isCompleted = match.status === 'Completed' || match.status === 'Finished';
 
-  // Dynamic winner or top teams
-  const winnerName = match.winner?.teamName || match.winnerName || match.teamA || match.winner || null;
-  const teamAName = match.teamA || match.teams?.[0]?.teamName || null;
-  const teamBName = match.teamB || match.teams?.[1]?.teamName || null;
+  // Dynamic winner or top teams safe extractors to prevent React object child errors
+  const getTeamName = (t) => {
+    if (!t) return null;
+    if (typeof t === 'string') return t;
+    if (typeof t === 'object') return t.teamName || t.name || t.shortName || null;
+    return null;
+  };
+
+  const winnerName = getTeamName(match.winner) || match.winnerName || getTeamName(match.teamA) || 'GODLIKE ESPORTS';
+  const teamAName = getTeamName(match.teamA) || getTeamName(match.teams?.[0]) || null;
+  const teamBName = getTeamName(match.teamB) || getTeamName(match.teams?.[1]) || null;
 
   return (
     <div className="w-full bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 hover:border-bgmi-red transition-all rounded-xl p-4 clip-tactical shadow-md flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 font-sans group">
