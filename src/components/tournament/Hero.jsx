@@ -31,7 +31,7 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[90vh] sm:min-h-screen flex flex-col justify-center pt-32 pb-16 overflow-hidden bg-[#0B0E14] text-white select-none"
+      className="relative min-h-[90vh] sm:min-h-screen flex flex-col justify-center pt-24 sm:pt-28 pb-16 overflow-hidden bg-[#0B0E14] text-white select-none"
     >
       {/* BACKGROUND VIDEO & COMPOSITE OVERLAYS */}
       <HeroVideo />

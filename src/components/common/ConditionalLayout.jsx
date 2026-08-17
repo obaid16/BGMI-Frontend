@@ -20,7 +20,7 @@ export default function ConditionalLayout({ children }) {
   return (
     <>
       <Navbar />
-      <main className={`flex-1 w-full ${isHome ? 'pt-0' : 'pt-28 sm:pt-36'}`}>
+      <main className={`flex-1 w-full ${isHome ? 'pt-0' : 'pt-20 sm:pt-24'}`}>
         {children}
       </main>
       <Footer />
