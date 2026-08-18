@@ -400,4 +400,55 @@ export function updateCanonicalMatchResult(payload) {
   return updatedObj;
 }
 
+/**
+ * Deletes a match result from canonical in-memory state and recalculates team standings
+ */
+export function deleteCanonicalMatchResult(targetId) {
+  const matchNum = Number(targetId);
+  const index = CANONICAL_MATCHES.findIndex(
+    (m) =>
+      String(m.id) === String(targetId) ||
+      String(m._id) === String(targetId) ||
+      String(m.matchId) === String(targetId) ||
+      (matchNum && Number(m.matchNumber) === matchNum)
+  );
+
+  if (index !== -1) {
+    const target = CANONICAL_MATCHES[index];
+    target.status = 'Upcoming';
+    delete target.winner;
+    delete target.mvp;
+    delete target.leaderboard;
+    CANONICAL_MATCHES.splice(index, 1);
+
+    // Recalculate standings and sync CANONICAL_TEAMS array
+    const updatedStandings = getStandingsData();
+    updatedStandings.forEach((st) => {
+      const t = CANONICAL_TEAMS.find(
+        (team) => team.id === st.teamId || team.teamName === st.teamName || team.shortName === st.shortName
+      );
+      if (t) {
+        t.rank = st.rank;
+        t.points = st.totalPoints || st.points;
+        t.kills = st.kills;
+        t.wwcd = st.wwcd;
+        t.matchesPlayed = st.matchesPlayed;
+      }
+    });
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Clears all canonical demo data from memory
+ */
+export function clearCanonicalData() {
+  CANONICAL_MATCHES.length = 0;
+  CANONICAL_TEAMS.length = 0;
+  return true;
+}
+
+
 

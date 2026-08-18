@@ -5,9 +5,9 @@ import Link from 'next/link';
 import AdminStatCard from '@/components/admin/AdminStatCard';
 import RegistrationModal from '@/components/admin/RegistrationModal';
 import Badge from '@/components/common/Badge';
-import { getTeams, getAdminDashboardStats, updateTeamStatus } from '@/services/api';
+import { getTeams, getAdminDashboardStats, updateTeamStatus, clearAllDemoData } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Users, ShieldCheck, Clock, Swords, Trophy, Video, ArrowRight } from 'lucide-react';
+import { Users, ShieldCheck, Clock, Swords, Trophy, Video, ArrowRight, Trash2 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const { showToast } = useToast();
@@ -174,6 +174,38 @@ export default function AdminDashboardPage() {
                 <span>→</span>
               </div>
             </Link>
+
+            <button
+              onClick={async () => {
+                if (window.confirm('⚠️ WARNING: Delete ALL demo data (teams, matches, scorecards, media)?')) {
+                  const res = await clearAllDemoData();
+                  if (res && (res.success || res.status === 200)) {
+                    setTeams([]);
+                    setStats({
+                      totalTeams: 0,
+                      approvedTeams: 0,
+                      pendingRegistrations: 0,
+                      totalPlayers: 0,
+                      upcomingMatches: 0,
+                      liveMatches: 0,
+                      completedMatches: 0,
+                      pendingProofs: 0,
+                    });
+                    showToast('All demo data cleared successfully!', 'success');
+                  } else {
+                    showToast('Failed to clear demo data', 'error');
+                  }
+                }
+              }}
+              className="w-full text-left block"
+            >
+              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded hover:border-red-500 transition-colors flex items-center justify-between text-xs font-bold text-red-600 dark:text-red-400">
+                <span className="flex items-center gap-2">
+                  <Trash2 className="w-4 h-4 text-red-500" /> Clear All Demo Data
+                </span>
+                <span>🗑️</span>
+              </div>
+            </button>
           </div>
 
         </div>

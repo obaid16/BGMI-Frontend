@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import ResultEntryModal from '@/components/admin/ResultEntryModal';
 import Button from '@/components/common/Button';
 import Badge from '@/components/common/Badge';
-import { getResults, getMatches, getTeams, submitMatchResult, deleteMatchResult } from '@/services/api';
+import { getResults, getMatches, getTeams, submitMatchResult, deleteMatchResult, clearAllDemoData } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Trophy, Plus, CheckCircle2, Calculator, Edit3, Trash2 } from 'lucide-react';
+import { Trophy, Plus, CheckCircle2, Calculator, Edit3, Trash2, AlertTriangle } from 'lucide-react';
 
 export default function AdminResultsPage() {
   const { showToast } = useToast();
@@ -41,14 +41,36 @@ export default function AdminResultsPage() {
   };
 
   const handleDelete = async (resItem) => {
-    const targetId = resItem.id || resItem._id;
+    const targetId = resItem.id || resItem._id || resItem.matchId || resItem.matchNumber;
     if (window.confirm(`Are you sure you want to delete match #${resItem.matchNumber} scorecard?`)) {
       const res = await deleteMatchResult(targetId);
-      if (res && res.success) {
-        setResults((prev) => prev.filter((r) => (r.id || r._id) !== targetId));
+      if (res && (res.success || res.status === 200)) {
+        setResults((prev) =>
+          prev.filter(
+            (r) =>
+              (r.id ? r.id !== targetId : true) &&
+              (r._id ? r._id !== targetId : true) &&
+              (r.matchId ? r.matchId !== targetId : true) &&
+              Number(r.matchNumber) !== Number(resItem.matchNumber)
+          )
+        );
         showToast('Match Scorecard Deleted Successfully!', 'info');
       } else {
         showToast('Failed to delete scorecard', 'error');
+      }
+    }
+  };
+
+  const handleClearAllDemoData = async () => {
+    if (window.confirm('⚠️ CRITICAL WARNING: Are you sure you want to delete ALL demo data across teams, matches, scorecards, announcements, and media proof gallery?')) {
+      const res = await clearAllDemoData();
+      if (res && (res.success || res.status === 200)) {
+        setResults([]);
+        setMatches([]);
+        setTeams([]);
+        showToast('All demo data deleted successfully!', 'success');
+      } else {
+        showToast('Failed to delete demo data', 'error');
       }
     }
   };
@@ -98,9 +120,15 @@ export default function AdminResultsPage() {
           <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Enter placement rank and kills with live points preview.</p>
         </div>
 
-        <Button variant="primary" size="md" icon={Plus} onClick={handleOpenNew}>
-          Enter New Match Scorecard
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button variant="danger" size="md" icon={Trash2} onClick={handleClearAllDemoData}>
+            Delete All Demo Data
+          </Button>
+
+          <Button variant="primary" size="md" icon={Plus} onClick={handleOpenNew}>
+            Enter New Match Scorecard
+          </Button>
+        </div>
       </div>
 
       {/* PUBLISHED RESULTS LIST WITH HORIZONTAL SCROLL */}

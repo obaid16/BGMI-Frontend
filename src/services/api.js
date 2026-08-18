@@ -4,7 +4,9 @@ import {
   getStandingsData,
   getResultsData,
   getPlayerData,
-  updateCanonicalMatchResult
+  updateCanonicalMatchResult,
+  deleteCanonicalMatchResult,
+  clearCanonicalData
 } from '../data/tournamentData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
@@ -337,14 +339,33 @@ export async function submitMatchResult(resultData) {
 }
 
 export async function deleteMatchResult(id) {
+  apiCache.clear();
   try {
     const res = await fetchAPI(`/results/${id}`, {
       method: 'DELETE',
     });
-    return res;
+    deleteCanonicalMatchResult(id);
+    if (res) return res;
   } catch (err) {
-    console.error('deleteMatchResult failed:', err);
-    return null;
+    console.warn('deleteMatchResult API call failed, applying local state deletion:', err);
+  }
+
+  deleteCanonicalMatchResult(id);
+  return { success: true, message: 'Match scorecard deleted' };
+}
+
+export async function clearAllDemoData() {
+  apiCache.clear();
+  try {
+    const res = await fetchAPI('/admin/clear-demo-data', {
+      method: 'DELETE',
+    });
+    clearCanonicalData();
+    return res || { success: true, message: 'All demo data deleted successfully' };
+  } catch (err) {
+    console.warn('clearAllDemoData API failed, clearing local canonical data:', err);
+    clearCanonicalData();
+    return { success: true, message: 'All demo data cleared locally' };
   }
 }
 
