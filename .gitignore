@@ -9,14 +9,10 @@ out/
 build/
 dist/
 
-# Local environment variables & examples
+# Local Environment Secret Files (IGNORED - Never committed to Git)
 .env
-.env*
-.env.example
-.env*.example
-.env.example.*
-*.env
 .env.local
+.env.*.local
 .env.development
 .env.development.local
 .env.test
@@ -25,6 +21,11 @@ dist/
 .env.production.local
 .env.staging
 .env.vault
+*.env
+
+# Allow environment template file in Git
+!.env.example
+!.env.*.example
 
 # Vercel deployment cache
 .vercel
