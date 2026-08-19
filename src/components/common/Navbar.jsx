@@ -43,24 +43,24 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#0B0E14]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 shadow-sm">
+    <header className={`sticky top-0 w-full bg-white/95 dark:bg-[#0B0E14]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 shadow-sm transition-all ${mobileMenuOpen ? 'z-[90]' : 'z-30'}`}>
       {/* MAIN EDITORIAL NAVIGATION BAR */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
         
         {/* BRAND IDENTITY */}
-        <Link href="/" className="flex items-center gap-3 group shrink-0">
-          <div className="h-10 sm:h-11 px-2.5 py-1 bg-white rounded-lg border border-slate-200 dark:border-white/30 flex items-center justify-center shadow-md group-hover:border-bgmi-red transition-all group-hover:scale-105">
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+          <div className="h-9 sm:h-11 px-2 sm:px-2.5 py-1 bg-white rounded-lg border border-slate-200 dark:border-white/30 flex items-center justify-center shadow-md group-hover:border-bgmi-red transition-all group-hover:scale-105">
             <img
               src="/images/nit-logo-icon.png"
               alt="NIT Esports Logo"
-              className="h-8 sm:h-9 w-auto object-contain"
+              className="h-7 sm:h-9 w-auto object-contain"
             />
           </div>
-          <div className="flex flex-col border-l border-slate-300 dark:border-white/15 pl-3">
-            <span className="font-broadcast font-black text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider leading-tight">
+          <div className="flex flex-col border-l border-slate-300 dark:border-white/15 pl-2 sm:pl-3">
+            <span className="font-broadcast font-black text-[10px] sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider leading-tight">
               BGMI <span className="text-bgmi-red">CHAMPIONSHIP</span>
             </span>
-            <span className="text-[8px] sm:text-[9px] font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-0.5">
+            <span className="text-[7px] sm:text-[9px] font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-0.5">
               OFFICIAL 2026
             </span>
           </div>
@@ -102,7 +102,7 @@ export default function Navbar() {
         </div>
 
         {/* MOBILE HAMBURGER TOGGLE */}
-        <div className="flex lg:hidden items-center gap-3">
+        <div className="flex lg:hidden items-center gap-2 sm:gap-3">
           <ThemeToggle className="scale-90" />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -117,10 +117,11 @@ export default function Navbar() {
 
       {/* MOBILE FULLSCREEN NAVIGATION MATRIX */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-16 bg-white dark:bg-[#0B0E14] z-50 p-6 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-top-4 duration-200">
+        <div className="lg:hidden fixed inset-x-0 top-16 sm:top-20 bottom-0 bg-white dark:bg-[#0B0E14] z-[90] p-6 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200 border-t border-slate-200 dark:border-white/10 shadow-2xl">
           <div className="space-y-4">
-            <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-200 dark:border-white/10 pb-2">
-              TOURNAMENT SECTIONS
+            <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-200 dark:border-white/10 pb-2 flex items-center justify-between">
+              <span>TOURNAMENT SECTIONS</span>
+              <span className="text-[9px] text-bgmi-red font-bold">NAV MATRIX</span>
             </div>
             <div className="grid grid-cols-1 gap-2">
               {navLinks.map((link) => {
@@ -130,10 +131,10 @@ export default function Navbar() {
                     key={link.name}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`p-3.5 text-sm font-broadcast font-bold uppercase tracking-wider flex items-center justify-between border transition-all ${
+                    className={`p-3.5 text-xs sm:text-sm font-broadcast font-bold uppercase tracking-wider flex items-center justify-between rounded-xl border transition-all ${
                       active
-                        ? 'bg-bgmi-red text-white border-bgmi-red shadow-red-glow'
-                        : 'bg-slate-50 dark:bg-slate-900/80 text-slate-900 dark:text-slate-200 border-slate-200 dark:border-white/10'
+                        ? 'bg-bgmi-red text-white border-bgmi-red shadow-red-glow font-black'
+                        : 'bg-slate-50 dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-white/10 hover:border-bgmi-red/50'
                     }`}
                   >
                     <span>{link.name}</span>
@@ -144,11 +145,11 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-200 dark:border-white/10 space-y-3">
+          <div className="pt-6 border-t border-slate-200 dark:border-white/10 space-y-3 mt-6">
             <Link
               href="/register"
               onClick={() => setMobileMenuOpen(false)}
-              className="block w-full py-3 text-center bg-bgmi-red text-white font-broadcast font-black text-sm uppercase tracking-wider clip-technical-btn shadow-red-glow"
+              className="block w-full py-3.5 text-center bg-bgmi-red hover:bg-bgmi-red-hover text-white font-broadcast font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl shadow-red-glow transition-all active:scale-95"
             >
               REGISTER SQUAD →
             </Link>
