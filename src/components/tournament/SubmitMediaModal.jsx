@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Upload, Video, Image as ImageIcon, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import Button from '@/components/common/Button';
 import { submitMedia } from '@/services/api';
 
 export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     type: 'Screenshots',
@@ -21,7 +23,34 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
   const [error, setError] = useState('');
   const [submittedSuccess, setSubmittedSuccess] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  // Handle ESC key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !mounted) return null;
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -44,8 +73,8 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
     e.preventDefault();
     setError('');
 
-    if (!formData.title || !formData.team || !formData.player) {
-      setError('Please fill in Title, Team Name, and Player/IGL Name.');
+    if (!formData.team || !formData.player) {
+      setError('Please fill in Team Name and Player/IGL Name.');
       return;
     }
 
@@ -57,8 +86,10 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
     try {
       setSubmitting(true);
 
+      const generatedTitle = `${formData.team} - ${formData.player} (${formData.type === 'POV' ? 'POV Video' : 'Screenshot'}) - ${formData.match}`;
+
       const submissionData = new FormData();
-      submissionData.append('title', formData.title);
+      submissionData.append('title', formData.title || generatedTitle);
       submissionData.append('type', formData.type);
       submissionData.append('team', formData.team);
       submissionData.append('player', formData.player);
@@ -107,9 +138,19 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="bg-bgmi-dark border border-bgmi-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl clip-tactical relative">
+  const modalContent = (
+    <div className="fixed inset-0 w-screen h-screen z-[100] flex items-center justify-center p-4 overflow-y-auto">
+      {/* Viewport Backdrop */}
+      <div 
+        className="fixed inset-0 w-full h-full bg-black/85 backdrop-blur-md transition-opacity duration-200 z-[100]" 
+        onClick={onClose}
+      />
+
+      {/* Modal Dialog */}
+      <div 
+        className="relative w-full max-w-lg bg-bgmi-dark border border-bgmi-border rounded-2xl overflow-hidden shadow-2xl clip-tactical z-[101] my-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* MODAL HEADER */}
         <div className="px-6 py-4 border-b border-bgmi-border flex items-center justify-between bg-bgmi-surface/60">
@@ -121,6 +162,7 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
           </div>
           <button
             onClick={onClose}
+            aria-label="Close modal"
             className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-bgmi-surface transition-colors"
           >
             <X className="w-5 h-5" />
@@ -162,10 +204,7 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
                     className="w-full bg-bgmi-surface border border-bgmi-border rounded-lg px-3 py-2 text-xs text-white focus:border-bgmi-gold focus:outline-none"
                   >
                     <option value="Screenshots">In-Game Screenshot</option>
-                    <option value="Results">Referee Scorecard</option>
                     <option value="POV">Player POV Video</option>
-                    <option value="Team Photos">Team Photo</option>
-                    <option value="Player Photos">Player Photo</option>
                   </select>
                 </div>
 
@@ -187,21 +226,6 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
                     <option value="Media Day">Media Day / General</option>
                   </select>
                 </div>
-              </div>
-
-              {/* TITLE */}
-              <div>
-                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                  Title / Description *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Match #06 Final Circle 1v3 Clutch Scorecard"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full bg-bgmi-surface border border-bgmi-border rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:border-bgmi-gold focus:outline-none"
-                  required
-                />
               </div>
 
               {/* TEAM & PLAYER */}
@@ -237,7 +261,7 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
               {/* FILE UPLOAD DRAG & DROP */}
               <div>
                 <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                  Upload Screenshot Image *
+                  {formData.type === 'POV' ? 'Upload POV Media / Thumbnail File *' : 'Upload Screenshot Image *'}
                 </label>
                 <div className="relative border-2 border-dashed border-bgmi-border hover:border-bgmi-gold/50 rounded-xl p-4 text-center bg-bgmi-surface/30 transition-colors">
                   <input
@@ -261,7 +285,7 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
                     <div className="space-y-1 py-2">
                       <Upload className="w-8 h-8 text-bgmi-cyan mx-auto opacity-80" />
                       <p className="text-xs text-slate-300 font-medium">
-                        Click to select or drag & drop post-match screenshot
+                        {formData.type === 'POV' ? 'Click to select or drag & drop POV file/screenshot' : 'Click to select or drag & drop post-match screenshot'}
                       </p>
                       <p className="text-[10px] text-slate-500">Supports PNG, JPG, WEBP (Max 10MB)</p>
                     </div>
@@ -297,7 +321,7 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
                     </span>
                   ) : (
                     <span className="flex items-center gap-1.5">
-                      <Upload className="w-4 h-4" /> Submit Screenshot
+                      <Upload className="w-4 h-4" /> {formData.type === 'POV' ? 'Submit POV Video' : 'Submit Screenshot'}
                     </span>
                   )}
                 </Button>
@@ -310,4 +334,6 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }

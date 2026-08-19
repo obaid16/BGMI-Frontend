@@ -30,7 +30,7 @@ export default function MediaPage() {
     fetchMedia();
   }, [filter]);
 
-  const categories = ['All', 'POV', 'Screenshots', 'Results'];
+  const categories = ['All', 'Screenshots', 'POV'];
 
   // Extract unique player names from media list for quick filter options
   const uniquePlayers = useMemo(() => {

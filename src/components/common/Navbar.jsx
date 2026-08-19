@@ -22,7 +22,7 @@ export default function Navbar() {
     };
   }, [mobileMenuOpen]);
 
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+  if ((pathname.startsWith('/admin') && pathname !== '/admin/login') || pathname === '/media/submit') {
     return null;
   }
 
@@ -43,9 +43,9 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full font-sans border-b border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[#0B0E14]/95 backdrop-blur-md">
+    <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#0B0E14]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 shadow-sm">
       {/* MAIN EDITORIAL NAVIGATION BAR */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
         
         {/* BRAND IDENTITY */}
         <Link href="/" className="flex items-center gap-3 group shrink-0">
@@ -56,8 +56,8 @@ export default function Navbar() {
               className="h-8 sm:h-9 w-auto object-contain"
             />
           </div>
-          <div className="hidden sm:flex flex-col border-l border-slate-300 dark:border-white/15 pl-3">
-            <span className="font-broadcast font-black text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider leading-none">
+          <div className="flex flex-col border-l border-slate-300 dark:border-white/15 pl-3">
+            <span className="font-broadcast font-black text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider leading-tight">
               BGMI <span className="text-bgmi-red">CHAMPIONSHIP</span>
             </span>
             <span className="text-[8px] sm:text-[9px] font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-0.5">
@@ -74,7 +74,7 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`px-3 py-1.5 text-xs font-broadcast font-bold tracking-wider transition-all relative ${
+                className={`px-3 py-2 text-xs font-broadcast font-bold tracking-wider transition-all relative whitespace-nowrap ${
                   active
                     ? 'text-bgmi-red font-black'
                     : 'text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
@@ -94,7 +94,7 @@ export default function Navbar() {
           <ThemeToggle />
           <Link
             href="/register"
-            className="px-5 py-2 bg-bgmi-red hover:bg-bgmi-red-hover text-white font-broadcast font-black text-xs uppercase tracking-wider clip-technical-btn shadow-red-glow transition-all flex items-center gap-1.5 active:scale-95"
+            className="px-5 py-2.5 bg-bgmi-red hover:bg-bgmi-red-hover text-white font-broadcast font-black text-xs uppercase tracking-wider clip-technical-btn shadow-red-glow transition-all flex items-center gap-1.5 active:scale-95"
           >
             <span>REGISTER SQUAD</span>
             <ArrowUpRight className="w-4 h-4" />
@@ -106,7 +106,7 @@ export default function Navbar() {
           <ThemeToggle className="scale-90" />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded focus:outline-none"
+            className="p-2 text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-lg focus:outline-none"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6 text-bgmi-red" /> : <Menu className="w-6 h-6" />}

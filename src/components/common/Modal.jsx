@@ -1,9 +1,16 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 export default function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-2xl' }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
@@ -18,12 +25,19 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+  const modalContent = (
+    <div className="fixed inset-0 w-screen h-screen z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {/* Viewport Backdrop */}
+      <div 
+        className="fixed inset-0 w-full h-full bg-black/85 backdrop-blur-md transition-opacity duration-200 z-[100]" 
+        onClick={onClose}
+      />
+
+      {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxWidth} bg-bgmi-surface border border-bgmi-border rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 clip-tactical my-auto`}
+        className={`relative w-full ${maxWidth} bg-bgmi-surface border border-bgmi-border rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 clip-tactical my-auto z-[101]`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -45,4 +59,6 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }

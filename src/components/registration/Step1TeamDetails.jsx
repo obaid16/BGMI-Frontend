@@ -125,32 +125,36 @@ export default function Step1TeamDetails({ formData, updateFormData, onNext }) {
                 </button>
               </div>
             ) : (
-              <div className="space-y-3 py-2">
-                <div className="w-10 h-10 mx-auto rounded-full bg-slate-200 dark:bg-bgmi-surface flex items-center justify-center text-bgmi-red">
-                  <Upload className="w-5 h-5" />
+              <div className="space-y-3 py-1">
+                {/* Full-box Clickable File Overlay */}
+                <div className="relative group cursor-pointer p-4 rounded-lg hover:bg-bgmi-red/5 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    title="Click to upload team logo"
+                  />
+                  <div className="w-10 h-10 mx-auto rounded-full bg-slate-200 dark:bg-bgmi-surface flex items-center justify-center text-bgmi-red group-hover:scale-110 transition-transform">
+                    <Upload className="w-5 h-5" />
+                  </div>
+                  <div className="mt-2">
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      Drag & Drop your team logo here, or <span className="text-bgmi-red underline">browse file</span>
+                    </p>
+                    <p className="text-[10px] text-slate-500 mt-0.5">Supports PNG, JPG, WEBP or paste URL below</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                    Drag & Drop your team logo here, or{' '}
-                    <label className="text-bgmi-red hover:underline cursor-pointer">
-                      browse file
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
-                        className="hidden"
-                      />
-                    </label>
-                  </p>
-                  <p className="text-[10px] text-slate-500 mt-0.5">Supports PNG, JPG, WEBP or paste URL below</p>
+
+                <div className="relative z-20">
+                  <input
+                    type="text"
+                    placeholder="Or paste image URL (e.g. https://domain.com/logo.png)"
+                    value={formData.teamLogo || ''}
+                    onChange={(e) => updateFormData({ teamLogo: e.target.value })}
+                    className="w-full px-3 py-2 bg-white dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red"
+                  />
                 </div>
-                <input
-                  type="text"
-                  placeholder="Or paste image URL (e.g. https://domain.com/logo.png)"
-                  value={formData.teamLogo || ''}
-                  onChange={(e) => updateFormData({ teamLogo: e.target.value })}
-                  className="w-full px-3 py-2 bg-white dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red"
-                />
               </div>
             )}
           </div>

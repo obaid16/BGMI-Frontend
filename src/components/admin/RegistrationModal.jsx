@@ -51,6 +51,8 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
               <thead className="bg-bgmi-dark text-slate-400 uppercase font-bold text-[10px]">
                 <tr>
                   <th className="p-2.5">Player IGN / Name</th>
+                  <th className="p-2.5">BGMI Character ID</th>
+                  <th className="p-2.5">Substitute ID</th>
                   <th className="p-2.5">Role</th>
                   <th className="p-2.5 text-center">Status</th>
                 </tr>
@@ -59,8 +61,14 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
                 {team.players?.map((p, idx) => (
                   <tr key={idx} className="hover:bg-bgmi-dark/40">
                     <td className="p-2.5">
-                      <p className="font-bold text-white">{p.ign}</p>
+                      <p className="font-bold text-white">{p.ign || p.name}</p>
                       <p className="text-slate-400 text-[10px]">{p.name}</p>
+                    </td>
+                    <td className="p-2.5 font-mono font-bold text-bgmi-cyan">
+                      {p.bgmiId || 'N/A'}
+                    </td>
+                    <td className="p-2.5 font-mono font-bold text-amber-500">
+                      {p.substituteId || p.subId || 'N/A'}
                     </td>
                     <td className="p-2.5"><Badge variant="default" size="sm">{p.role}</Badge></td>
                     <td className="p-2.5 text-center">

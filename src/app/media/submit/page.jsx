@@ -67,7 +67,7 @@ export default function SubmitScreenshotPage() {
       showToast('Please upload a screenshot file', 'error');
       return;
     }
-    if (!selectedTeam || !selectedPlayer || !selectedMatch || !title) {
+    if (!selectedTeam || !selectedPlayer || !selectedMatch) {
       showToast('Please fill in all details', 'error');
       return;
     }
@@ -75,8 +75,10 @@ export default function SubmitScreenshotPage() {
     try {
       setSubmitting(true);
       
+      const autoTitle = `${selectedTeam} - ${selectedPlayer} (${type === 'POV' ? 'POV' : 'Screenshot'}) - ${selectedMatch}`;
+
       const formData = new FormData();
-      formData.append('title', title);
+      formData.append('title', autoTitle);
       formData.append('type', type);
       formData.append('team', selectedTeam);
       formData.append('player', selectedPlayer);
@@ -112,7 +114,7 @@ export default function SubmitScreenshotPage() {
       {/* HEADER */}
       <div className="border-b border-bgmi-border/60 pb-4 space-y-2">
         <h1 className="font-display font-black text-2xl sm:text-3xl text-white uppercase tracking-wide flex items-center gap-2">
-          <Camera className="w-6 h-6 text-bgmi-cyan" /> Submit Match Screenshot
+          <Camera className="w-6 h-6 text-bgmi-cyan" /> Submit Match Screenshot / POV
         </h1>
         <p className="text-xs text-slate-400">
           Upload match scoreboards, win results, or highlight screenshots for verified scoreboard compilation.
@@ -127,19 +129,6 @@ export default function SubmitScreenshotPage() {
       ) : (
         <form onSubmit={handleSubmit} className="bg-bgmi-surface border border-bgmi-border rounded-2xl p-6 sm:p-8 clip-tactical shadow-2xl space-y-5 text-xs">
           
-          {/* TITLE */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300">Screenshot Title / Label</label>
-            <input
-              type="text"
-              required
-              placeholder="e.g. Match 1 WWCD Screen - 15 Kills"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2.5 bg-bgmi-dark border border-bgmi-border rounded-xl text-white focus:outline-none focus:border-bgmi-cyan transition-colors"
-            />
-          </div>
-
           {/* TYPE SELECT */}
           <div className="space-y-1">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-300">Media Type</label>
@@ -148,8 +137,8 @@ export default function SubmitScreenshotPage() {
               onChange={(e) => setType(e.target.value)}
               className="w-full px-4 py-2.5 bg-bgmi-dark border border-bgmi-border rounded-xl text-white focus:outline-none focus:border-bgmi-cyan transition-colors cursor-pointer font-bold"
             >
-              <option value="Screenshots">Screenshot (Scorecard / WWCD Proof)</option>
-              <option value="POV">POV Video Link / Clip highlight</option>
+              <option value="Screenshots">In-Game Screenshot</option>
+              <option value="POV">Player POV Video</option>
             </select>
           </div>
 

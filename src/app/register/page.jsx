@@ -23,10 +23,11 @@ export default function RegisterPage() {
     captainPhone: '',
     captainEmail: '',
     players: [
-      { name: '', ign: '', bgmiId: '', role: 'IGL', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
-      { name: '', ign: '', bgmiId: '', role: 'Assaulter', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
-      { name: '', ign: '', bgmiId: '', role: 'Entry Fragger', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
-      { name: '', ign: '', bgmiId: '', role: 'Support', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
+      { name: '', ign: '', bgmiId: '', substituteId: '', role: 'IGL', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
+      { name: '', ign: '', bgmiId: '', substituteId: '', role: 'Assaulter', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
+      { name: '', ign: '', bgmiId: '', substituteId: '', role: 'Entry Fragger', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
+      { name: '', ign: '', bgmiId: '', substituteId: '', role: 'Support', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
+      { name: '', ign: '', bgmiId: '', substituteId: '', role: 'Substitute', photo: '', studentProof: '', isSub: true, verificationStatus: 'Pending Verification' },
     ],
   });
 
@@ -73,6 +74,7 @@ export default function RegisterPage() {
         { name: '', ign: '', bgmiId: '', role: 'Assaulter', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
         { name: '', ign: '', bgmiId: '', role: 'Entry Fragger', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
         { name: '', ign: '', bgmiId: '', role: 'Support', photo: '', studentProof: '', isSub: false, verificationStatus: 'Pending Verification' },
+        { name: '', ign: '', bgmiId: '', role: 'Substitute', photo: '', studentProof: '', isSub: true, verificationStatus: 'Pending Verification' },
       ],
     });
     setSubmittedRegId('');

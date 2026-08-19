@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Crosshair, Shield, Award, ExternalLink, Flame } from 'lucide-react';
+import { Crosshair, Award, ExternalLink, Flame } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -34,9 +34,6 @@ export default function Footer() {
               Official NIT BGMI Esports Championship 2026 organized by Nexcore Institute of Technology. An exclusive tournament platform for campus squads to compete, survive, and claim ultimate victory.
             </p>
             <div className="flex flex-wrap items-center gap-2 pt-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-bgmi-red bg-bgmi-red/10 px-2.5 py-1 rounded border border-bgmi-red/30">
-                <Shield className="w-3.5 h-3.5" /> Anti-Cheat Verified
-              </span>
               <span className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-bgmi-gold bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/30">
                 <Award className="w-3.5 h-3.5" /> Nexcore Campus Event
               </span>
@@ -62,7 +59,6 @@ export default function Footer() {
               <li><Link href="/register" className="hover:text-bgmi-red transition-colors text-bgmi-red font-bold flex items-center gap-1"><Flame className="w-3.5 h-3.5 text-bgmi-red" /> Register Squad</Link></li>
               <li><Link href="/media" className="hover:text-bgmi-red transition-colors">POV Clips & Media</Link></li>
               <li><Link href="/rules" className="hover:text-bgmi-red transition-colors">Official Rulebook</Link></li>
-              <li><Link href="/admin/login" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors text-slate-500">Admin Portal</Link></li>
             </ul>
           </div>
 

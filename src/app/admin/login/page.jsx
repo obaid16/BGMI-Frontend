@@ -33,12 +33,12 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12 bg-[#0a0b0e] bg-tactical-grid select-none">
-      <div className="w-full max-w-md bg-[#12141c] border border-white/15 rounded-lg p-8 clip-tactical space-y-6 shadow-2xl">
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12 bg-[#0a0b0e] select-none">
+      <div className="w-full max-w-md bg-[#12141c] border border-white/10 rounded-xl p-8 space-y-6 shadow-2xl">
         
         {/* BRANDING HEADER */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-slate-900 border border-white/15 rounded p-0.5 clip-tactical flex items-center justify-center text-white mx-auto">
+          <div className="w-12 h-12 bg-slate-900 border border-white/15 rounded-lg p-0.5 flex items-center justify-center text-white mx-auto shadow-md">
             <Crosshair className="w-6 h-6 text-bgmi-red" />
           </div>
           <h1 className="font-broadcast font-bold text-2xl text-white uppercase tracking-wider">
