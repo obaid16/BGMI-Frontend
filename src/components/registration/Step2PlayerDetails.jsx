@@ -152,67 +152,6 @@ export default function Step2PlayerDetails({ formData, updateFormData, onNext, o
         </div>
       </div>
 
-      {/* SUBSTITUTE PLAYER SECTION */}
-      <div className="pt-4 border-t border-slate-200 dark:border-bgmi-border/60 space-y-4">
-        <div className="flex items-center justify-between">
-          <h4 className="text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-bgmi-gold flex items-center gap-1.5">
-            <ShieldAlert className="w-4 h-4 text-amber-500" /> Dedicated 5th Substitute Player Details (Optional)
-          </h4>
-          <span className="text-[10px] font-mono text-slate-500 uppercase bg-slate-100 dark:bg-bgmi-dark px-2 py-0.5 rounded border border-slate-200 dark:border-bgmi-border">
-            Substitute Roster
-          </span>
-        </div>
-
-        <div className="p-5 rounded-xl border border-amber-500/30 bg-amber-500/5 dark:bg-bgmi-surface/80 clip-tactical space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Substitute Full Name */}
-            <div className="space-y-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                Substitute Full Name
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Substitute Name"
-                value={subPlayer.name || ''}
-                onChange={(e) => handlePlayerChange(4, 'name', e.target.value)}
-                className="w-full px-3.5 py-2 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-amber-500 transition-colors"
-              />
-            </div>
-
-            {/* Substitute In-Game Name */}
-            <div className="space-y-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                Substitute In-Game Name (IGN)
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Sub_Mortal"
-                value={subPlayer.ign || ''}
-                onChange={(e) => handlePlayerChange(4, 'ign', e.target.value)}
-                className="w-full px-3.5 py-2 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-mono font-bold focus:outline-none focus:border-amber-500 transition-colors"
-              />
-            </div>
-
-            {/* Substitute Player ID */}
-            <div className="space-y-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                Substitute BGMI Player ID
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. 5987654321"
-                value={subPlayer.bgmiId || subPlayer.substituteId || ''}
-                onChange={(e) => {
-                  handlePlayerChange(4, 'bgmiId', e.target.value);
-                  handlePlayerChange(4, 'substituteId', e.target.value);
-                }}
-                className="w-full px-3.5 py-2 bg-slate-100 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-xl text-slate-900 dark:text-white text-xs font-mono font-bold focus:outline-none focus:border-amber-500 transition-colors"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="pt-6 border-t border-slate-200 dark:border-bgmi-border/60 flex items-center justify-between">
         <Button type="button" variant="outline" size="md" onClick={onPrev}>
           ← Back to Squad Info
