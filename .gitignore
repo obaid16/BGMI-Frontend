@@ -7,13 +7,24 @@ node_modules/
 .next/
 out/
 build/
+dist/
 
-# Local environment variables
+# Local environment variables & examples
 .env
+.env*
+.env.example
+.env*.example
+.env.example.*
+*.env
 .env.local
+.env.development
 .env.development.local
+.env.test
 .env.test.local
+.env.production
 .env.production.local
+.env.staging
+.env.vault
 
 # Vercel deployment cache
 .vercel
@@ -22,7 +33,10 @@ build/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
-# OS metadata
+# OS & Editor metadata
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
