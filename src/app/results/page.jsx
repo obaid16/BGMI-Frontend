@@ -31,20 +31,19 @@ export default function ResultsPage() {
     }, 0);
 
     // Find top fragger across results
-    let topFraggerName = 'YASH (IGL)';
+    let topFraggerName = 'MVP Player';
     let topFraggerKills = 0;
 
     results.forEach((r) => {
       if (r.mvp && r.mvp.kills > topFraggerKills) {
         topFraggerKills = r.mvp.kills;
-        topFraggerName = r.mvp.name;
+        topFraggerName = r.mvp.ign || r.mvp.name || 'MVP Player';
       }
     });
 
-    // Fallback if no MVP is set
     if (topFraggerKills === 0 && results.length > 0) {
-      topFraggerName = results[0].mvp?.name || 'YASH (IGL)';
-      topFraggerKills = results[0].mvp?.kills || 8;
+      topFraggerName = results[0].mvp?.ign || results[0].mvp?.name || 'MVP Player';
+      topFraggerKills = results[0].mvp?.kills || 0;
     }
 
     return {

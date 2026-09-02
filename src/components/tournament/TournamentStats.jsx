@@ -38,10 +38,10 @@ function AnimatedCounter({ target, duration = 1200 }) {
 }
 
 export default function TournamentStats({
-  registeredSquads = 5,
-  verifiedPlayers = 20,
-  totalMatches = 4,
-  currentRound = 4,
+  registeredSquads = 0,
+  verifiedPlayers = 0,
+  totalMatches = 0,
+  currentRound = 0,
   maxSquads = 24,
   maxPlayers = 96
 }) {

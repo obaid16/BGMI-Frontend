@@ -26,10 +26,10 @@ export default function HomePage() {
   const [championTeam, setChampionTeam] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
   const [teamsStats, setTeamsStats] = useState({
-    registeredSquads: 24,
-    verifiedPlayers: 96,
-    totalMatches: 12,
-    currentRound: 4
+    registeredSquads: 0,
+    verifiedPlayers: 0,
+    totalMatches: 0,
+    currentRound: 0
   });
 
   useEffect(() => {
@@ -45,20 +45,18 @@ export default function HomePage() {
           getTeams().catch(() => [])
         ]);
 
-        const matches = Array.isArray(matchesRes) && matchesRes.length > 0 ? matchesRes : [];
-        const standings = Array.isArray(standingsRes) && standingsRes.length > 0 ? standingsRes : [];
-        const results = Array.isArray(resultsRes) && resultsRes.length > 0 ? resultsRes : [];
+        const matches = Array.isArray(matchesRes) ? matchesRes : [];
+        const standings = Array.isArray(standingsRes) ? standingsRes : [];
+        const results = Array.isArray(resultsRes) ? resultsRes : [];
         const media = Array.isArray(mediaRes) ? mediaRes : [];
         const teams = Array.isArray(teamsRes) ? teamsRes : [];
 
-        const registered = teams.length > 0 ? teams.length : 24;
-        const verified = teams.length > 0
-          ? teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0)
-          : 96;
-        const totMatches = matches.length > 0 ? matches.length : 12;
+        const registered = teams.length;
+        const verified = teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0);
+        const totMatches = matches.length;
         const currRound = matches.length > 0
           ? (matches.filter((m) => m && (m.status === 'Completed' || m.status === 'Live')).length || 1)
-          : 4;
+          : 0;
 
         setTeamsStats({
           registeredSquads: registered,
@@ -103,7 +101,7 @@ export default function HomePage() {
     <div className="space-y-16 pb-20 overflow-x-hidden font-sans">
       
       {/* 1. ASYMMETRIC HERO SECTION */}
-      <Hero />
+      <Hero nextMatch={nextMatch} registeredSquads={teamsStats.registeredSquads} />
 
       {/* 2. BROADCAST TELEMETRY TICKER STRIP (EDGE TO EDGE) */}
       <TournamentStats
@@ -163,11 +161,19 @@ export default function HomePage() {
           </div>
 
           {/* HORIZONTAL MATCH STRIPIFIED SCHEDULE */}
-          <div className="space-y-3">
-            {matchesList.slice(0, 3).map((m) => (
-              <MatchCard key={m.id || m.matchNumber} match={{ ...m, registeredSquadsCount: teamsStats.registeredSquads }} />
-            ))}
-          </div>
+          {matchesList.length > 0 ? (
+            <div className="space-y-3">
+              {matchesList.slice(0, 3).map((m) => (
+                <MatchCard key={m.id || m.matchNumber} match={{ ...m, registeredSquadsCount: teamsStats.registeredSquads }} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-8 text-center space-y-2 font-mono">
+              <Swords className="w-10 h-10 text-slate-400 mx-auto" />
+              <h3 className="font-broadcast font-black text-lg text-slate-900 dark:text-white uppercase">NO MATCHES SCHEDULED YET</h3>
+              <p className="text-xs text-slate-500">Live custom lobbies will appear here once configured by tournament referees.</p>
+            </div>
+          )}
         </section>
 
         {/* 5. TOP 3 PODIUM & SCOREBOARD TABLE */}
@@ -190,37 +196,47 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* PODIUM ARENA */}
-          <Top3Leaderboard standings={topStandings} />
+          {topStandings.length > 0 ? (
+            <>
+              {/* PODIUM ARENA */}
+              <Top3Leaderboard standings={topStandings} />
 
-          {/* DESKTOP SCOREBOARD TABLE */}
-          <div className="hidden md:block overflow-x-auto bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl shadow-xl clip-tactical">
-            <table className="w-full text-left border-collapse font-mono text-xs">
-              <thead className="bg-slate-900 text-white font-broadcast font-black uppercase text-xs">
-                <tr>
-                  <th className="py-3 px-4 text-center">RANK</th>
-                  <th className="py-3 px-4">SQUAD NAME</th>
-                  <th className="py-3 px-4 text-center">PLAYED</th>
-                  <th className="py-3 px-4 text-center">WWCD</th>
-                  <th className="py-3 px-4 text-center">PLACEMENT</th>
-                  <th className="py-3 px-4 text-center">KILLS</th>
-                  <th className="py-3 px-4 text-center">TOTAL PTS</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-white/5">
+              {/* DESKTOP SCOREBOARD TABLE */}
+              <div className="hidden md:block overflow-x-auto bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl shadow-xl clip-tactical">
+                <table className="w-full text-left border-collapse font-mono text-xs">
+                  <thead className="bg-slate-900 text-white font-broadcast font-black uppercase text-xs">
+                    <tr>
+                      <th className="py-3 px-4 text-center">RANK</th>
+                      <th className="py-3 px-4">SQUAD NAME</th>
+                      <th className="py-3 px-4 text-center">PLAYED</th>
+                      <th className="py-3 px-4 text-center">WWCD</th>
+                      <th className="py-3 px-4 text-center">PLACEMENT</th>
+                      <th className="py-3 px-4 text-center">KILLS</th>
+                      <th className="py-3 px-4 text-center">TOTAL PTS</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 dark:divide-white/5">
+                    {topStandings.map((standing) => (
+                      <StandingRow key={standing.teamId || standing.rank} standing={standing} />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* MOBILE RANKING CARDS */}
+              <div className="md:hidden space-y-3">
                 {topStandings.map((standing) => (
-                  <StandingRow key={standing.teamId || standing.rank} standing={standing} />
+                  <RankingCard key={standing.teamId || standing.rank} standing={standing} />
                 ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* MOBILE RANKING CARDS */}
-          <div className="md:hidden space-y-3">
-            {topStandings.map((standing) => (
-              <RankingCard key={standing.teamId || standing.rank} standing={standing} />
-            ))}
-          </div>
+              </div>
+            </>
+          ) : (
+            <div className="bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-8 text-center space-y-2 font-mono">
+              <Trophy className="w-10 h-10 text-amber-500 mx-auto" />
+              <h3 className="font-broadcast font-black text-lg text-slate-900 dark:text-white uppercase">NO STANDINGS RECORDED YET</h3>
+              <p className="text-xs text-slate-500">Official tournament rankings will populate automatically as match scorecards are submitted.</p>
+            </div>
+          )}
         </section>
 
         {/* 6. MASONRY MEDIA GALLERY */}
@@ -243,11 +259,19 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {mediaItems.map((item) => (
-              <MediaCard key={item.id} item={item} onClick={(selected) => setSelectedMedia(selected)} />
-            ))}
-          </div>
+          {mediaItems.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {mediaItems.map((item) => (
+                <MediaCard key={item.id} item={item} onClick={(selected) => setSelectedMedia(selected)} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-8 text-center space-y-2 font-mono">
+              <Video className="w-10 h-10 text-sky-400 mx-auto" />
+              <h3 className="font-broadcast font-black text-lg text-slate-900 dark:text-white uppercase">NO MEDIA PUBLISHED YET</h3>
+              <p className="text-xs text-slate-500">Player POVs and stream highlights uploaded during matches will appear here.</p>
+            </div>
+          )}
         </section>
 
       </div>

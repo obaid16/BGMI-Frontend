@@ -10,9 +10,9 @@ export default function ResultCard({ result }) {
 
   const matchNum = String(result.matchNumber || 1).padStart(2, '0');
   const winnerName = (typeof result.winner === 'string' ? result.winner : result.winner?.teamName || result.winner?.name) || result.winnerTeam || 'CHAMPION SQUAD';
-  const winnerKills = result.winner?.kills !== undefined ? result.winner.kills : (result.totalKills || 14);
-  const mvpName = (typeof result.mvp === 'string' ? result.mvp : result.mvp?.ign || result.mvp?.name) || result.mvpName || 'Top Fragger';
-  const mvpKills = result.mvp?.kills !== undefined ? result.mvp.kills : 5;
+  const winnerKills = result.winner?.kills !== undefined ? result.winner.kills : (result.totalKills || 0);
+  const mvpName = (typeof result.mvp === 'string' ? result.mvp : result.mvp?.ign || result.mvp?.name) || result.mvpName || 'MVP Player';
+  const mvpKills = result.mvp?.kills !== undefined ? result.mvp.kills : 0;
 
   return (
     <div className="bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 hover:border-bgmi-red transition-all duration-200 rounded-xl p-5 clip-tactical group shadow-md hover:shadow-xl flex flex-col justify-between font-sans space-y-4">

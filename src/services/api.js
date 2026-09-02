@@ -118,7 +118,7 @@ export async function getTeams(filter = 'All', searchQuery = '') {
     }
 
     const res = await fetchAPI(url);
-    let teams = res.data && res.data.length > 0 ? res.data : CANONICAL_TEAMS;
+    let teams = Array.isArray(res.data) ? res.data : [];
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
@@ -136,8 +136,8 @@ export async function getTeams(filter = 'All', searchQuery = '') {
 
     return teams;
   } catch (err) {
-    console.error('getTeams failed, returning canonical fallback:', err);
-    return CANONICAL_TEAMS;
+    console.error('getTeams failed:', err);
+    return [];
   }
 }
 
@@ -148,7 +148,7 @@ export async function getTeamById(id) {
   } catch (err) {
     console.error('getTeamById failed:', err);
   }
-  return CANONICAL_TEAMS.find((t) => t.id === id || t.shortName === id || t.registrationId === id) || CANONICAL_TEAMS[0];
+  return null;
 }
 
 export async function registerTeam(registrationData) {
@@ -223,17 +223,14 @@ export async function getMatches(filter = 'All') {
       url += `?status=${filter}`;
     }
     const res = await fetchAPI(url);
-    const data = res.data && res.data.length > 0 ? res.data : CANONICAL_MATCHES;
+    const data = Array.isArray(res.data) ? res.data : [];
     if (filter !== 'All') {
       return data.filter((m) => m.status === filter);
     }
     return data;
   } catch (err) {
     console.error('getMatches failed:', err);
-    if (filter !== 'All') {
-      return CANONICAL_MATCHES.filter((m) => m.status === filter);
-    }
-    return CANONICAL_MATCHES;
+    return [];
   }
 }
 
@@ -244,7 +241,7 @@ export async function getMatchById(id) {
   } catch (err) {
     console.error('getMatchById failed:', err);
   }
-  return CANONICAL_MATCHES.find((m) => String(m.id) === String(id) || String(m.matchNumber) === String(id)) || CANONICAL_MATCHES[0];
+  return null;
 }
 
 export async function createMatch(matchData) {
@@ -275,11 +272,11 @@ export async function updateMatch(matchId, matchData) {
 export async function getStandings() {
   try {
     const res = await fetchAPI('/standings');
-    if (res.data && res.data.length > 0) return res.data;
+    if (Array.isArray(res.data)) return res.data;
   } catch (err) {
     console.error('getStandings failed:', err);
   }
-  return getStandingsData();
+  return [];
 }
 
 export async function getScoringRules() {
@@ -304,11 +301,11 @@ export async function getScoringRules() {
 export async function getResults() {
   try {
     const res = await fetchAPI('/results');
-    if (res.data && res.data.length > 0) return res.data;
+    if (Array.isArray(res.data)) return res.data;
   } catch (err) {
     console.error('getResults failed:', err);
   }
-  return getResultsData();
+  return [];
 }
 
 export async function getResultById(id) {
@@ -318,7 +315,7 @@ export async function getResultById(id) {
   } catch (err) {
     console.error('getResultById failed:', err);
   }
-  return getResultsData().find((r) => String(r.id) === String(id) || String(r.matchNumber) === String(id)) || getResultsData()[0];
+  return null;
 }
 
 export async function submitMatchResult(resultData) {
@@ -478,17 +475,17 @@ export async function getTournament() {
     const res = await fetchAPI('/tournament');
     if (res.data) return res.data;
   } catch (err) {
-    console.warn('getTournament failed, using fallback:', err);
+    console.warn('getTournament failed:', err);
   }
   return {
     tournamentName: 'NIT BGMI Esports Championship 2026',
     status: 'Active',
-    registeredSquads: CANONICAL_TEAMS.length || 24,
-    verifiedPlayers: getPlayerData().length || 96,
-    totalMatches: CANONICAL_MATCHES.length || 12,
-    matchesPlayed: getResultsData().length || 2,
-    currentRound: 3,
-    nextMatch: CANONICAL_MATCHES.find(m => m.status === 'Live' || m.status === 'Upcoming') || CANONICAL_MATCHES[0]
+    registeredSquads: 0,
+    verifiedPlayers: 0,
+    totalMatches: 0,
+    matchesPlayed: 0,
+    currentRound: 0,
+    nextMatch: null
   };
 }
 
@@ -496,11 +493,11 @@ export async function getTournament() {
 export async function getPlayers() {
   try {
     const res = await fetchAPI('/players');
-    if (res.data && res.data.length > 0) return res.data;
+    if (Array.isArray(res.data)) return res.data;
   } catch (err) {
     console.warn('getPlayers failed:', err);
   }
-  return getPlayerData();
+  return [];
 }
 
 export async function getPlayerStats() {
@@ -510,14 +507,18 @@ export async function getPlayerStats() {
 export async function getMVP() {
   try {
     const res = await fetchAPI('/mvp');
-    if (res.data && res.data.topMvp) return res.data;
+    if (res && res.data) {
+      return {
+        topMvp: res.data.topMvp || null,
+        players: Array.isArray(res.data.players) ? res.data.players : []
+      };
+    }
   } catch (err) {
     console.warn('getMVP failed:', err);
   }
-  const players = getPlayerData();
   return {
-    topMvp: players[0] || null,
-    players
+    topMvp: null,
+    players: []
   };
 }
 

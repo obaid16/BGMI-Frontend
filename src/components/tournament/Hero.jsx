@@ -6,7 +6,7 @@ import gsap from 'gsap';
 import { ArrowUpRight, Swords, Radio, Shield, MapPin, Users } from 'lucide-react';
 import HeroVideo from '../hero/HeroVideo';
 
-export default function Hero() {
+export default function Hero({ nextMatch = null, registeredSquads = 0 }) {
   const heroRef = useRef(null);
   const leftColRef = useRef(null);
   const rightColRef = useRef(null);
@@ -27,6 +27,8 @@ export default function Hero() {
 
     return () => ctx.revert();
   }, []);
+
+  const matchNum = nextMatch ? String(nextMatch.matchNumber || 1).padStart(2, '0') : null;
 
   return (
     <section
@@ -108,44 +110,82 @@ export default function Hero() {
               {/* CARD HEADER */}
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold text-bgmi-red uppercase tracking-wider">
-                  <Radio className="w-3.5 h-3.5 animate-pulse" /> NEXT MATCH SPOTLIGHT
+                  <Radio className="w-3.5 h-3.5 animate-pulse" /> {nextMatch ? 'NEXT MATCH SPOTLIGHT' : 'TOURNAMENT RADAR'}
                 </div>
-                <span className="px-2.5 py-0.5 rounded bg-bgmi-red/20 text-bgmi-red font-mono text-[10px] font-bold uppercase">
-                  MATCH 01
-                </span>
+                {nextMatch ? (
+                  <span className="px-2.5 py-0.5 rounded bg-bgmi-red/20 text-bgmi-red font-mono text-[10px] font-bold uppercase">
+                    MATCH #{matchNum}
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-mono text-[10px] font-bold uppercase">
+                    LIVE REGISTRATIONS
+                  </span>
+                )}
               </div>
 
               {/* MAP & MATCH SPECS */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] font-mono text-slate-400 block uppercase">BATTLEGROUND MAP</span>
-                    <span className="font-broadcast font-black text-2xl text-white uppercase">ERANGEL</span>
+              {nextMatch ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-mono text-slate-400 block uppercase">BATTLEGROUND MAP</span>
+                      <span className="font-broadcast font-black text-2xl text-white uppercase">{nextMatch.map || 'ERANGEL'}</span>
+                    </div>
+                    <span className="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded text-xs font-mono font-bold uppercase">
+                      {nextMatch.round || 'GRAND FINALS'}
+                    </span>
                   </div>
-                  <span className="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded text-xs font-mono font-bold uppercase">
-                    GRAND FINALS
-                  </span>
-                </div>
 
-                <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                  <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
-                    <span className="text-[10px] text-slate-400 block uppercase mb-0.5">MODE</span>
-                    <span className="font-bold text-white">TPP SQUAD (4v4)</span>
+                  <div className="grid grid-cols-2 gap-3 text-xs font-mono">
+                    <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
+                      <span className="text-[10px] text-slate-400 block uppercase mb-0.5">MODE</span>
+                      <span className="font-bold text-white">TPP SQUAD (4v4)</span>
+                    </div>
+                    <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
+                      <span className="text-[10px] text-slate-400 block uppercase mb-0.5">STATUS</span>
+                      <span className="font-bold text-slate-200 uppercase">{nextMatch.status || 'Upcoming'}</span>
+                    </div>
                   </div>
-                  <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
-                    <span className="text-[10px] text-slate-400 block uppercase mb-0.5">CAPACITY</span>
-                    <span className="font-bold text-slate-200">24 SQUADS (96 PLAYERS)</span>
-                  </div>
-                </div>
 
-                <div className="p-3 bg-[#0B0E14] rounded-lg border border-amber-500/30 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-                    <span className="text-xs font-broadcast font-bold text-white uppercase">CUSTOM ROOM PREPARED</span>
+                  <div className="p-3 bg-[#0B0E14] rounded-lg border border-amber-500/30 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+                      <span className="text-xs font-broadcast font-bold text-white uppercase">{nextMatch.title || 'MATCH LOBBY'}</span>
+                    </div>
+                    <span className="text-xs font-mono font-bold text-amber-400">{nextMatch.time || nextMatch.date || 'TBA'}</span>
                   </div>
-                  <span className="text-xs font-mono font-bold text-amber-400">10:15 AM</span>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-mono text-slate-400 block uppercase">CURRENT STAGE</span>
+                      <span className="font-broadcast font-black text-2xl text-white uppercase">SQUAD REGISTRATION</span>
+                    </div>
+                    <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded text-xs font-mono font-bold uppercase">
+                      OPEN FOR ENTRY
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-xs font-mono">
+                    <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
+                      <span className="text-[10px] text-slate-400 block uppercase mb-0.5">REGISTERED SQUADS</span>
+                      <span className="font-bold text-amber-400 text-lg">{registeredSquads} SQUADS</span>
+                    </div>
+                    <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
+                      <span className="text-[10px] text-slate-400 block uppercase mb-0.5">FORMAT</span>
+                      <span className="font-bold text-slate-200">TPP SQUAD 4v4</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-[#0B0E14] rounded-lg border border-bgmi-red/30 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-bgmi-red animate-pulse" />
+                      <span className="text-xs font-broadcast font-bold text-white uppercase">AWAITING NEXT SCHEDULED LOBBY</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* CARD FOOTER CTA */}
               <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono">
