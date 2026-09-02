@@ -102,8 +102,8 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
             <span className="flex items-center gap-1">
               <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-bgmi-gold" /> {match.round || 'Grand Finals'}
             </span>
-            <span className="flex items-center gap-1 text-sky-600 dark:text-sky-400">
-              <Users className="w-3.5 h-3.5" /> {totalSquadsCount} / 24 Squads Registered ({totalPlayersCount} Players)
+            <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-bold">
+              <Users className="w-3.5 h-3.5 text-bgmi-red" /> {totalSquadsCount} / 24 Squads Registered ({totalPlayersCount} Players)
             </span>
           </div>
         </div>
@@ -120,7 +120,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
               
               {/* Map Badge Info */}
               <div className="relative z-20 text-center space-y-1">
-                <span className="text-[10px] font-mono font-bold tracking-widest text-emerald-400 uppercase block bg-slate-950/80 px-2 py-0.5 rounded border border-emerald-500/30 w-max mx-auto">
+                <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 uppercase block bg-slate-950/80 px-2 py-0.5 rounded border border-amber-500/30 w-max mx-auto">
                   LIVE ARENA MAP
                 </span>
                 <span className="text-xl font-broadcast font-black text-white uppercase tracking-wider block">
@@ -151,7 +151,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
                 </div>
                 <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
                   <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">CAPACITY</span>
-                  <span className="font-bold text-sky-600 dark:text-sky-400">{totalSquadsCount} SQUADS</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{totalSquadsCount} SQUADS</span>
                 </div>
                 <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
                   <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">ROOM CODE</span>
@@ -204,7 +204,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
 
             <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-500 dark:text-slate-400">
               <span>Points System: WWCD = 10 PTS • Kill = 1 PT</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-bold">ANTI-CHEAT MOSAC ENABLED</span>
+              <span className="text-bgmi-red font-bold">ANTI-CHEAT MOSAC ENABLED</span>
             </div>
           </div>
 

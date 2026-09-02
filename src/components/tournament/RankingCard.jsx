@@ -55,7 +55,7 @@ export default function RankingCard({ standing }) {
         </div>
         <div>
           <span className="text-[9px] text-slate-500 uppercase font-bold block">Kills</span>
-          <span className="font-bold text-sky-600 dark:text-bgmi-cyan">{standing.killPoints || standing.kills || 0}</span>
+          <span className="font-bold text-bgmi-red">{standing.killPoints || standing.kills || 0}</span>
         </div>
       </div>
     </div>

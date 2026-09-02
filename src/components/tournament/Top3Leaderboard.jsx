@@ -56,7 +56,7 @@ export default function Top3Leaderboard({ standings = [] }) {
               <div className="w-[1px] h-8 bg-slate-800" />
               <div className="px-3">
                 <span className="text-[9px] text-slate-400 block uppercase font-bold">KILLS</span>
-                <span className="font-broadcast font-black text-sky-400 text-xl">{first.kills || first.killPoints || 0}</span>
+                <span className="font-broadcast font-black text-bgmi-red text-xl">{first.kills || first.killPoints || 0}</span>
               </div>
               <div className="w-[1px] h-8 bg-slate-800" />
               <div className="px-3">

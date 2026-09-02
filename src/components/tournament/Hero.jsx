@@ -47,7 +47,7 @@ export default function Hero() {
               <span className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-bgmi-red border-l-2 border-bgmi-red pl-3 py-0.5">
                 NEXCORE ESPORTS // 2026
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono text-[10px] font-bold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-bgmi-red/15 text-bgmi-red border border-bgmi-red/40 font-mono text-[10px] font-bold uppercase tracking-wider">
                 <Radio className="w-3 h-3 animate-pulse" /> TOURNAMENT ACTIVE
               </span>
             </div>
@@ -134,13 +134,13 @@ export default function Hero() {
                   </div>
                   <div className="p-3 bg-[#0B0E14] rounded-lg border border-white/10">
                     <span className="text-[10px] text-slate-400 block uppercase mb-0.5">CAPACITY</span>
-                    <span className="font-bold text-sky-400">24 SQUADS (96 PLAYERS)</span>
+                    <span className="font-bold text-slate-200">24 SQUADS (96 PLAYERS)</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-[#0B0E14] rounded-lg border border-emerald-500/30 flex items-center justify-between">
+                <div className="p-3 bg-[#0B0E14] rounded-lg border border-amber-500/30 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
                     <span className="text-xs font-broadcast font-bold text-white uppercase">CUSTOM ROOM PREPARED</span>
                   </div>
                   <span className="text-xs font-mono font-bold text-amber-400">10:15 AM</span>

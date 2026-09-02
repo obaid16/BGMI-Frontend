@@ -17,7 +17,7 @@ module.exports = {
           border: '#1E2638',
           'border-bright': '#2C364F',
           
-          // Primary Accents
+          // Primary Accents (Strict 2-Color Red & Gold System)
           red: '#E5383B',
           'red-hover': '#C52225',
           'red-glow': 'rgba(229, 56, 59, 0.35)',
@@ -25,8 +25,6 @@ module.exports = {
           'gold-hover': '#B89320',
           'gold-muted': '#C5A059',
           'gold-glow': 'rgba(212, 175, 55, 0.25)',
-          cyan: '#00f0ff',
-          green: '#10b981',
           muted: '#94A3B8',
           dim: '#64748B',
           text: '#F8F9FA',

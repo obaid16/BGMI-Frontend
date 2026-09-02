@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import MatchCard from '@/components/tournament/MatchCard';
 import EmptyState from '@/components/common/EmptyState';
 import { SkeletonGrid } from '@/components/common/Skeleton';
-import { getMatches } from '@/services/api';
+import { getMatches, getTeams } from '@/services/api';
 import { Swords, Filter } from 'lucide-react';
 
 export default function MatchesPage() {
@@ -42,7 +42,7 @@ export default function MatchesPage() {
         <h1 className="font-broadcast font-black text-3xl sm:text-5xl text-slate-900 dark:text-white uppercase tracking-tight">
           MATCH LOBBY SCHEDULE
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 font-medium max-w-2xl">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium max-w-2xl">
           Tournament map rotations, live scoreboards, custom room launches, and referee credentials.
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function MatchesPage() {
             className={`px-5 py-2 text-xs font-broadcast font-bold uppercase tracking-wider rounded-lg border transition-all whitespace-nowrap ${
               filter === f
                 ? 'bg-bgmi-red text-white border-bgmi-red shadow-red-glow'
-                : 'bg-slate-100 dark:bg-[#121620] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-bgmi-red/40'
+                : 'bg-white dark:bg-[#121620] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-bgmi-red/40 hover:text-slate-900 dark:hover:text-white shadow-sm'
             }`}
           >
             {f}

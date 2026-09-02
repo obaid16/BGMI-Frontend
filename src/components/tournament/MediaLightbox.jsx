@@ -44,10 +44,10 @@ export default function MediaLightbox({ item, isOpen, onClose }) {
             {item.player && <p className="text-slate-600 dark:text-slate-400">Player: <span className="text-amber-600 dark:text-bgmi-gold font-bold">{item.player}</span></p>}
           </div>
           <div>
-            <p className="text-slate-600 dark:text-slate-400">Match: <span className="text-sky-600 dark:text-bgmi-cyan font-bold">{item.match || 'Match #01'}</span></p>
+            <p className="text-slate-600 dark:text-slate-400">Match: <span className="text-bgmi-red font-bold">{item.match || 'Match #01'}</span></p>
             <p className="text-slate-600 dark:text-slate-400">Date: <span className="text-slate-900 dark:text-white font-bold">{item.date}</span></p>
           </div>
-          <Badge variant="green" size="sm">
+          <Badge variant="gold" size="sm">
             Referee Verified Proof
           </Badge>
         </div>

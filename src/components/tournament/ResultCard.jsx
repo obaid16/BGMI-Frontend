@@ -23,7 +23,7 @@ export default function ResultCard({ result }) {
           <span className="font-broadcast font-black text-sm px-2.5 py-0.5 bg-slate-900 text-white rounded border border-bgmi-red/40">
             MATCH #{matchNum}
           </span>
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold uppercase rounded">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold uppercase rounded">
             <CheckCircle2 className="w-3 h-3" /> COMPLETED
           </span>
         </div>
@@ -39,7 +39,7 @@ export default function ResultCard({ result }) {
             🍗
           </div>
           <div>
-            <span className="text-[9px] font-mono font-black uppercase text-amber-600 dark:text-amber-400 tracking-wider block">
+            <span className="text-[9px] font-mono font-black uppercase text-amber-700 dark:text-amber-400 tracking-wider block">
               ★ WWCD VICTOR
             </span>
             <h3 className="font-broadcast font-black text-lg sm:text-xl text-slate-900 dark:text-white uppercase tracking-tight line-clamp-1 group-hover:text-bgmi-red transition-colors">
@@ -49,8 +49,8 @@ export default function ResultCard({ result }) {
         </div>
 
         <div className="text-right shrink-0">
-          <span className="font-broadcast font-black text-lg text-sky-600 dark:text-sky-400 flex items-center justify-end gap-1">
-            <Flame className="w-4 h-4 text-sky-600 dark:text-sky-400" /> {winnerKills}
+          <span className="font-broadcast font-black text-lg text-bgmi-red flex items-center justify-end gap-1">
+            <Flame className="w-4 h-4 text-bgmi-red" /> {winnerKills}
           </span>
           <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">
             MATCH KILLS

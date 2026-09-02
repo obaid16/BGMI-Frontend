@@ -39,11 +39,11 @@ export default function MatchCard({ match }) {
                 ● LIVE
               </span>
             ) : isUpcoming ? (
-              <span className="px-2 py-0.5 bg-sky-500/20 text-sky-400 border border-sky-500/30 text-[9px] font-mono font-bold uppercase rounded">
+              <span className="px-2 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 text-[9px] font-mono font-bold uppercase rounded">
                 UPCOMING
               </span>
             ) : (
-              <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[9px] font-mono font-bold uppercase rounded">
+              <span className="px-2 py-0.5 bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30 text-[9px] font-mono font-bold uppercase rounded">
                 COMPLETED
               </span>
             )}
@@ -60,11 +60,11 @@ export default function MatchCard({ match }) {
         
         {isUpcoming ? (
           /* UPCOMING MATCH: SHOW SQUAD CAPACITY & FORMAT (NO KILLS OR FINAL SCORES) */
-          <div className="w-full flex items-center justify-between px-2 text-slate-600 dark:text-slate-300">
+          <div className="w-full flex items-center justify-between px-2 text-slate-700 dark:text-slate-300">
             <span className="flex items-center gap-1.5 font-bold uppercase text-[11px]">
-              <Users className="w-3.5 h-3.5 text-sky-400" /> {match.registeredSquadsCount ?? match.participatingSquads?.length ?? 4} Registered Squads
+              <Users className="w-3.5 h-3.5 text-bgmi-red" /> {match.registeredSquadsCount ?? match.participatingSquads?.length ?? 4} Registered Squads
             </span>
-            <span className="text-[10px] font-bold text-amber-500 uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+            <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
               TPP Squad Battle Royale
             </span>
           </div>
@@ -84,7 +84,7 @@ export default function MatchCard({ match }) {
             <span className="font-broadcast font-black text-bgmi-red text-xs px-2 animate-pulse">VS</span>
             <div className="flex items-center gap-2">
               {match.killsB !== undefined && (
-                <span className="px-2 py-0.5 bg-sky-500/10 text-sky-400 font-black text-[11px] rounded">
+                <span className="px-2 py-0.5 bg-amber-500/15 text-amber-700 dark:text-amber-400 font-black text-[11px] rounded">
                   {match.killsB} KILLS
                 </span>
               )}
@@ -97,16 +97,16 @@ export default function MatchCard({ match }) {
           /* COMPLETED MATCH: SHOW WINNER SQUAD & SCORE SUMMARY */
           <div className="w-full flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
+              <Trophy className="w-4 h-4 text-amber-500 shrink-0" />
               <div>
-                <span className="text-[9px] text-slate-400 block uppercase font-bold">WWCD VICTOR</span>
+                <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase font-bold">WWCD VICTOR</span>
                 <span className="font-broadcast font-black text-slate-900 dark:text-white uppercase text-sm truncate max-w-[140px] block">
                   {winnerName || 'GODLIKE ESPORTS'}
                 </span>
               </div>
             </div>
             <div className="text-right">
-              <span className="px-2.5 py-1 bg-amber-500/10 text-amber-400 font-black text-xs rounded border border-amber-500/20 block">
+              <span className="px-2.5 py-1 bg-amber-500/10 text-amber-700 dark:text-amber-400 font-black text-xs rounded border border-amber-500/20 block">
                 {match.totalKills || match.kills || 18} KILLS
               </span>
             </div>

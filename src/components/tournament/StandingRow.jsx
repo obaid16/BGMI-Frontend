@@ -45,7 +45,7 @@ export default function StandingRow({ standing }) {
       </td>
 
       {/* KILL PTS */}
-      <td className="py-3 px-4 text-center font-bold text-sky-400">
+      <td className="py-3 px-4 text-center font-bold text-bgmi-red">
         {standing.killPoints || standing.kills || 0}
       </td>
 

@@ -10,13 +10,13 @@ export default function Badge({ children, variant = 'default', size = 'md', clas
   };
 
   const variants = {
-    default: 'bg-bgmi-border/60 text-slate-300 border border-bgmi-border',
-    live: 'bg-bgmi-red/20 text-bgmi-red border border-bgmi-red/40 animate-pulse-fast shadow-red-glow',
-    gold: 'bg-bgmi-gold/15 text-bgmi-gold border border-bgmi-gold/40 shadow-gold-glow',
-    cyan: 'bg-bgmi-cyan/15 text-bgmi-cyan border border-bgmi-cyan/40 shadow-cyan-glow',
-    green: 'bg-bgmi-green/15 text-bgmi-green border border-bgmi-green/40',
-    pending: 'bg-amber-500/20 text-amber-400 border border-amber-500/30',
-    rejected: 'bg-rose-500/20 text-rose-400 border border-rose-500/30',
+    default: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700',
+    live: 'bg-bgmi-red/15 text-bgmi-red border border-bgmi-red/40 animate-pulse-fast shadow-red-glow font-black',
+    gold: 'bg-amber-500/15 text-amber-700 dark:text-bgmi-gold border border-amber-500/40 shadow-gold-glow font-bold',
+    cyan: 'bg-amber-500/15 text-amber-700 dark:text-bgmi-gold border border-amber-500/40 shadow-gold-glow font-bold',
+    green: 'bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700',
+    pending: 'bg-amber-500/15 text-amber-800 dark:text-amber-400 border border-amber-500/30',
+    rejected: 'bg-bgmi-red/15 text-bgmi-red border border-bgmi-red/30',
   };
 
   return (
@@ -25,3 +25,4 @@ export default function Badge({ children, variant = 'default', size = 'md', clas
     </span>
   );
 }
+

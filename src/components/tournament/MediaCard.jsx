@@ -33,7 +33,7 @@ export default function MediaCard({ item, onClick }) {
 
           {/* Type Badge */}
           <div className="absolute top-3 left-3 z-10">
-            <Badge variant={isVideo ? 'live' : 'cyan'} size="sm">
+            <Badge variant={isVideo ? 'live' : 'gold'} size="sm">
               {isVideo ? <Video className="w-3 h-3 mr-1 inline" /> : <Image className="w-3 h-3 mr-1 inline" />}
               {item.type || 'Screenshot'}
             </Badge>
@@ -65,7 +65,7 @@ export default function MediaCard({ item, onClick }) {
             </div>
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-500 block">Match</span>
-              <span className="text-sky-600 dark:text-bgmi-cyan font-bold line-clamp-1">{item.match || 'Match #01'}</span>
+              <span className="text-bgmi-red font-bold line-clamp-1">{item.match || 'Match #01'}</span>
             </div>
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-500 block">Player</span>
@@ -74,7 +74,7 @@ export default function MediaCard({ item, onClick }) {
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-500 block">Referee Check</span>
               {item.verified ? (
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                <span className="text-amber-700 dark:text-amber-400 font-bold flex items-center gap-0.5">
                   <ShieldCheck className="w-3 h-3" /> Verified
                 </span>
               ) : (

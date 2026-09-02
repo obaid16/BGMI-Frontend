@@ -18,7 +18,7 @@ export default function TeamCard({ team }) {
           <span className="font-mono font-black text-xs px-2.5 py-0.5 bg-slate-900 text-amber-400 rounded">
             RANK #{rankStr}
           </span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 font-bold uppercase">
+          <span className="inline-flex items-center gap-1 text-[10px] font-mono text-amber-700 dark:text-amber-400 font-bold uppercase">
             <ShieldCheck className="w-3.5 h-3.5" /> VERIFIED ROSTER
           </span>
         </div>
@@ -45,7 +45,7 @@ export default function TeamCard({ team }) {
 
           {/* 4-SLOT ROSTER CHIPS */}
           <div className="space-y-1.5 pt-2">
-            <span className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-widest block">
+            <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest block">
               SQUAD ROSTER (4 STARTERS)
             </span>
             <div className="grid grid-cols-4 gap-1.5 font-mono text-[10px]">
@@ -61,8 +61,8 @@ export default function TeamCard({ team }) {
         {/* METRICS & ACTION FOOTER */}
         <div className="pt-4 mt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between font-mono text-xs">
           <div className="flex items-center gap-3">
-            <span>🍗 <strong className="text-amber-500">{team.wwcd || 0}</strong></span>
-            <span><Flame className="w-3 h-3 text-sky-400 inline" /> <strong className="text-sky-400">{team.kills || team.killPoints || 0}</strong></span>
+            <span>🍗 <strong className="text-amber-600 dark:text-amber-400">{team.wwcd || 0}</strong></span>
+            <span><Flame className="w-3 h-3 text-bgmi-red inline" /> <strong className="text-bgmi-red">{team.kills || team.killPoints || 0}</strong></span>
             <span>PTS: <strong className="text-slate-900 dark:text-white font-black">{team.totalPoints !== undefined ? team.totalPoints : team.points || 0}</strong></span>
           </div>
 
