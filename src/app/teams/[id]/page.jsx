@@ -52,63 +52,66 @@ export default function TeamDetailPage() {
       </Link>
 
       {/* TEAM BANNER & HERO CARD */}
-      <div className="relative overflow-hidden bg-white dark:bg-bgmi-surface/90 border border-slate-200 dark:border-bgmi-border rounded-2xl clip-tactical shadow-2xl">
-        <div className="h-48 w-full relative">
-          <img src={team.banner || team.logo} alt={team.teamName || team.name} className="w-full h-full object-cover opacity-25" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-bgmi-surface via-transparent to-transparent" />
+      <div className="relative overflow-hidden bg-slate-900 border border-slate-200 dark:border-bgmi-border rounded-2xl clip-tactical shadow-2xl">
+        {/* BIGGER HERO IMAGE CONTAINER */}
+        <div className="absolute inset-0 w-full h-full">
+          <img
+            src={team.logo || team.banner}
+            alt={team.teamName || team.name}
+            className="w-full h-full object-cover object-center scale-105 filter blur-[0.5px] brightness-75 transition-transform duration-700 hover:scale-100"
+          />
+          {/* Gradients to keep typography and stats razor-sharp & legible */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0E14] via-[#0B0E14]/80 to-[#0B0E14]/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0E14] via-[#0B0E14]/70 to-transparent" />
         </div>
 
-        <div className="p-6 sm:p-8 -mt-20 relative z-10 flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
-          <div className="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-100 dark:bg-bgmi-dark border-2 border-bgmi-red p-2 shadow-red-glow flex items-center justify-center flex-shrink-0">
-              {team.logo ? (
-                <img src={team.logo} alt={team.teamName || team.name} className="w-full h-full object-cover rounded-xl" />
-              ) : (
-                <span className="font-display font-black text-3xl text-bgmi-red">{(team.teamName || team.name)?.charAt(0)}</span>
+        {/* HERO CONTENT */}
+        <div className="relative z-10 p-6 sm:p-10 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 min-h-[220px]">
+          <div className="space-y-3 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
+              <span className="font-display font-black text-sm text-amber-600 dark:text-bgmi-gold bg-amber-500/15 dark:bg-bgmi-gold/15 px-3 py-1 rounded border border-amber-500/40 dark:border-bgmi-gold/40 backdrop-blur-sm">
+                RANK #{team.rank || 1}
+              </span>
+              {(team.status === 'Approved' || team.verified) && (
+                <Badge variant="green" size="sm">
+                  <ShieldCheck className="w-3.5 h-3.5 mr-1 inline" /> Verified
+                </Badge>
               )}
             </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-center md:justify-start gap-3">
-                <span className="font-display font-black text-sm text-amber-600 dark:text-bgmi-gold bg-amber-500/10 dark:bg-bgmi-gold/10 px-2.5 py-0.5 rounded border border-amber-500/30 dark:border-bgmi-gold/30">
-                  RANK #{team.rank || 1}
-                </span>
-                {(team.status === 'Approved' || team.verified) && (
-                  <Badge variant="green" size="sm">
-                    <ShieldCheck className="w-3.5 h-3.5 mr-1 inline" /> Verified
-                  </Badge>
-                )}
-              </div>
-              <h1 className="font-display font-black text-3xl sm:text-4xl text-slate-900 dark:text-white uppercase tracking-tight">
-                {team.teamName || team.name}
-              </h1>
-              <p className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400">Captain: {team.captainName || team.captain?.name || 'N/A'}</p>
-            </div>
+            <h1 className="font-display font-black text-3xl sm:text-5xl text-white uppercase tracking-tight drop-shadow-md">
+              {team.teamName || team.name}
+            </h1>
+
+            <p className="text-xs sm:text-sm font-semibold text-slate-300 flex items-center justify-center md:justify-start gap-2">
+              <span>Captain:</span>
+              <span className="text-white font-bold">{team.captainName || team.captain?.name || 'N/A'}</span>
+            </p>
           </div>
 
           {/* TEAM QUICK STATS */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-slate-100 dark:bg-bgmi-dark/90 rounded-xl border border-slate-200 dark:border-bgmi-border text-center w-full md:w-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-[#0B0E14]/90 backdrop-blur-md rounded-xl border border-white/10 text-center w-full md:w-auto shadow-xl">
             <div className="px-2">
-              <p className="text-[10px] text-slate-600 dark:text-slate-400 font-bold uppercase">Matches</p>
-              <p className="font-display font-black text-xl text-slate-900 dark:text-white flex items-center justify-center gap-1">
+              <p className="text-[10px] text-slate-400 font-bold uppercase">Matches</p>
+              <p className="font-display font-black text-xl text-white flex items-center justify-center gap-1">
                 <Swords className="w-4 h-4 text-bgmi-red" /> {team.matchesPlayed || team.matches || 4}
               </p>
             </div>
-            <div className="border-l border-slate-200 dark:border-bgmi-border/60 px-2">
-              <p className="text-[10px] text-slate-600 dark:text-slate-400 font-bold uppercase">WWCD</p>
-              <p className="font-display font-black text-xl text-amber-600 dark:text-bgmi-gold flex items-center justify-center gap-1">
+            <div className="border-l border-white/10 px-2">
+              <p className="text-[10px] text-slate-400 font-bold uppercase">WWCD</p>
+              <p className="font-display font-black text-xl text-amber-500 flex items-center justify-center gap-1">
                 🍗 {team.wwcd || 0}
               </p>
             </div>
-            <div className="border-l border-slate-200 dark:border-bgmi-border/60 px-2">
-              <p className="text-[10px] text-slate-600 dark:text-slate-400 font-bold uppercase">Kills</p>
-              <p className="font-display font-black text-xl text-sky-600 dark:text-bgmi-cyan flex items-center justify-center gap-1">
-                <Flame className="w-4 h-4 text-sky-600 dark:text-bgmi-cyan" /> {team.kills || team.killPoints || 0}
+            <div className="border-l border-white/10 px-2">
+              <p className="text-[10px] text-slate-400 font-bold uppercase">Kills</p>
+              <p className="font-display font-black text-xl text-sky-400 flex items-center justify-center gap-1">
+                <Flame className="w-4 h-4 text-sky-400" /> {team.kills || team.killPoints || 0}
               </p>
             </div>
-            <div className="border-l border-slate-200 dark:border-bgmi-border/60 px-2">
-              <p className="text-[10px] text-slate-600 dark:text-slate-400 font-bold uppercase">Total Pts</p>
-              <p className="font-display font-black text-xl text-slate-900 dark:text-white">{team.totalPoints !== undefined ? team.totalPoints : team.points || 0}</p>
+            <div className="border-l border-white/10 px-2">
+              <p className="text-[10px] text-slate-400 font-bold uppercase">Total Pts</p>
+              <p className="font-display font-black text-xl text-white">{team.totalPoints !== undefined ? team.totalPoints : team.points || 0}</p>
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
-import { getTeams, verifyPlayerStatus, deletePlayer, updatePlayer } from '@/services/api';
+import { getTeams, verifyPlayerStatus, deletePlayer, updatePlayer, bulkDeletePlayers } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { UserCheck, Search, Trash2, Edit3, Flame, Award, Check, X } from 'lucide-react';
 
@@ -13,6 +13,8 @@ export default function AdminPlayersPage() {
   const [allPlayers, setAllPlayers] = useState([]);
   const [squadFilter, setSquadFilter] = useState('');
   const [deletingId, setDeletingId] = useState(null);
+  const [selectedPlayerIds, setSelectedPlayerIds] = useState([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
   // Edit Player Modal state
   const [editingPlayer, setEditingPlayer] = useState(null);
@@ -109,6 +111,7 @@ export default function AdminPlayersPage() {
         setDeletingId(playerId);
         const res = await deletePlayer(playerId);
         if (res) {
+          setSelectedPlayerIds((prev) => prev.filter((id) => id !== playerId));
           setAllPlayers((prev) => prev.filter((p) => (p.id || p._id) !== playerId));
           showToast('Player removed from roster successfully', 'success');
         } else {
@@ -122,6 +125,50 @@ export default function AdminPlayersPage() {
     }
   };
 
+  const filteredPlayers = allPlayers.filter((player) =>
+    player.teamName?.toLowerCase().includes(squadFilter.toLowerCase()) ||
+    player.ign?.toLowerCase().includes(squadFilter.toLowerCase()) ||
+    player.name?.toLowerCase().includes(squadFilter.toLowerCase())
+  );
+
+  const toggleSelectPlayer = (id) => {
+    setSelectedPlayerIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    const currentFilteredIds = filteredPlayers.map((p) => p.id || p._id);
+    const allSelected = currentFilteredIds.length > 0 && currentFilteredIds.every((id) => selectedPlayerIds.includes(id));
+    if (allSelected) {
+      setSelectedPlayerIds((prev) => prev.filter((id) => !currentFilteredIds.includes(id)));
+    } else {
+      setSelectedPlayerIds((prev) => Array.from(new Set([...prev, ...currentFilteredIds])));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedPlayerIds.length === 0) return;
+    const count = selectedPlayerIds.length;
+    if (window.confirm(`⚠️ Are you sure you want to permanently delete ${count} selected players from the roster?`)) {
+      try {
+        setIsBulkDeleting(true);
+        const toDelete = [...selectedPlayerIds];
+        setAllPlayers((prev) => prev.filter((p) => !toDelete.includes(p.id || p._id)));
+        setSelectedPlayerIds([]);
+        await bulkDeletePlayers(toDelete);
+        showToast(`Successfully deleted ${count} players!`, 'success');
+      } catch (err) {
+        console.error('Bulk delete players error:', err);
+        showToast('Failed to bulk delete players', 'error');
+      } finally {
+        setIsBulkDeleting(false);
+      }
+    }
+  };
+
+  const isAllFilteredSelected = filteredPlayers.length > 0 && filteredPlayers.every((p) => selectedPlayerIds.includes(p.id || p._id));
+
   return (
     <div className="space-y-6 max-w-full overflow-hidden">
       
@@ -134,7 +181,7 @@ export default function AdminPlayersPage() {
       </div>
 
       {/* FILTER CONTROLS */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-bgmi-surface/40 p-4 rounded-xl border border-slate-200 dark:border-bgmi-border/40 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-bgmi-surface/40 p-4 rounded-xl border border-slate-200 dark:border-bgmi-border/40 shadow-sm">
         <div className="relative w-full sm:w-72">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <Search className="h-4 w-4 text-slate-400" />
@@ -157,11 +204,54 @@ export default function AdminPlayersPage() {
         )}
       </div>
 
+      {/* BULK ACTION BAR */}
+      {selectedPlayerIds.length > 0 && (
+        <div className="bg-rose-500/10 border-2 border-rose-500/40 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in duration-200">
+          <div className="flex items-center gap-3">
+            <span className="px-2.5 py-1 bg-rose-500 text-white font-mono font-black text-xs rounded-lg">
+              {selectedPlayerIds.length}
+            </span>
+            <span className="text-xs font-bold text-slate-900 dark:text-white">
+              {selectedPlayerIds.length === 1 ? '1 Player Selected' : `${selectedPlayerIds.length} Players Selected`}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setSelectedPlayerIds([])}
+              disabled={isBulkDeleting}
+            >
+              Cancel Selection
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              icon={Trash2}
+              onClick={handleBulkDelete}
+              disabled={isBulkDeleting}
+            >
+              {isBulkDeleting ? 'Deleting...' : `Bulk Delete (${selectedPlayerIds.length})`}
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* PLAYERS TABLE WITH HORIZONTAL SCROLL */}
       <div className="bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-xl overflow-x-auto clip-tactical shadow-md dark:shadow-xl transition-colors duration-200">
-        <table className="w-full text-left text-xs border-collapse min-w-[900px]">
+        <table className="w-full text-left text-xs border-collapse min-w-[950px]">
           <thead className="bg-slate-100 dark:bg-bgmi-dark text-slate-700 dark:text-slate-400 font-display font-bold uppercase text-[10px] border-b border-slate-200 dark:border-bgmi-border">
             <tr>
+              <th className="p-4 w-12 text-center">
+                <input
+                  type="checkbox"
+                  checked={isAllFilteredSelected}
+                  onChange={toggleSelectAll}
+                  aria-label="Select all players"
+                  className="w-4 h-4 rounded border-slate-300 dark:border-bgmi-border text-bgmi-red focus:ring-bgmi-red cursor-pointer accent-red-600"
+                />
+              </th>
               <th className="p-4 whitespace-nowrap min-w-[180px]">Player & IGN</th>
               <th className="p-4 whitespace-nowrap min-w-[140px]">Squad</th>
               <th className="p-4 whitespace-nowrap min-w-[100px]">Role</th>
@@ -173,100 +263,111 @@ export default function AdminPlayersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200 dark:divide-bgmi-border/40">
-            {allPlayers
-              .filter((player) =>
-                player.teamName?.toLowerCase().includes(squadFilter.toLowerCase()) ||
-                player.ign?.toLowerCase().includes(squadFilter.toLowerCase()) ||
-                player.name?.toLowerCase().includes(squadFilter.toLowerCase())
-              )
-              .map((player) => {
-                const pId = player.id || player._id;
-                const isVerified = player.verificationStatus === 'Verified' || player.verified;
-                const isRejected = player.verificationStatus === 'Rejected';
-                const statusLabel = player.verificationStatus || (player.verified ? 'Verified' : 'Pending Verification');
-                const pKills = player.kills || 0;
-                const pMatches = player.matchesPlayed || 1;
-                const pKd = player.kdRatio || (pKills / Math.max(1, pMatches));
-                
-                return (
-                  <tr key={pId} className="hover:bg-slate-50 dark:hover:bg-bgmi-dark/40 transition-colors">
-                    <td className="p-4 whitespace-nowrap">
-                      <p className="font-bold text-slate-900 dark:text-white text-sm">{player.ign}</p>
-                      <p className="text-slate-500 dark:text-slate-400 text-[11px]">{player.name}</p>
-                    </td>
-                    <td className="p-4 whitespace-nowrap">
-                      <p className="font-bold text-slate-900 dark:text-white">{player.teamName}</p>
-                    </td>
-                    <td className="p-4 whitespace-nowrap"><Badge variant="default" size="sm">{player.role || 'Player'}</Badge></td>
-                    
-                    {/* MATCHES PLAYED COLUMN */}
-                    <td className="p-4 whitespace-nowrap text-center font-mono font-bold text-slate-600 dark:text-slate-300">
-                      {pMatches} M
-                    </td>
+            {filteredPlayers.map((player) => {
+              const pId = player.id || player._id;
+              const isSelected = selectedPlayerIds.includes(pId);
+              const isVerified = player.verificationStatus === 'Verified' || player.verified;
+              const isRejected = player.verificationStatus === 'Rejected';
+              const statusLabel = player.verificationStatus || (player.verified ? 'Verified' : 'Pending Verification');
+              const pKills = player.kills || 0;
+              const pMatches = player.matchesPlayed || 1;
+              const pKd = player.kdRatio || (pKills / Math.max(1, pMatches));
+              
+              return (
+                <tr
+                  key={pId}
+                  className={`transition-colors ${
+                    isSelected
+                      ? 'bg-rose-500/10 dark:bg-rose-500/15'
+                      : 'hover:bg-slate-50 dark:hover:bg-bgmi-dark/40'
+                  }`}
+                >
+                  <td className="p-4 text-center">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelectPlayer(pId)}
+                      aria-label={`Select ${player.ign}`}
+                      className="w-4 h-4 rounded border-slate-300 dark:border-bgmi-border text-bgmi-red focus:ring-bgmi-red cursor-pointer accent-red-600"
+                    />
+                  </td>
+                  <td className="p-4 whitespace-nowrap">
+                    <p className="font-bold text-slate-900 dark:text-white text-sm">{player.ign}</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-[11px]">{player.name}</p>
+                  </td>
+                  <td className="p-4 whitespace-nowrap">
+                    <p className="font-bold text-slate-900 dark:text-white">{player.teamName}</p>
+                  </td>
+                  <td className="p-4 whitespace-nowrap"><Badge variant="default" size="sm">{player.role || 'Player'}</Badge></td>
+                  
+                  {/* MATCHES PLAYED COLUMN */}
+                  <td className="p-4 whitespace-nowrap text-center font-mono font-bold text-slate-600 dark:text-slate-300">
+                    {pMatches} M
+                  </td>
 
-                    {/* KILLS COLUMN */}
-                    <td className="p-4 whitespace-nowrap text-center">
-                      <span className="font-mono font-bold text-amber-600 dark:text-bgmi-gold text-sm inline-flex items-center justify-center gap-1">
-                        <Flame className="w-3.5 h-3.5 text-bgmi-red" /> {pKills}
-                      </span>
-                    </td>
+                  {/* KILLS COLUMN */}
+                  <td className="p-4 whitespace-nowrap text-center">
+                    <span className="font-mono font-bold text-amber-600 dark:text-bgmi-gold text-sm inline-flex items-center justify-center gap-1">
+                      <Flame className="w-3.5 h-3.5 text-bgmi-red" /> {pKills}
+                    </span>
+                  </td>
 
-                    {/* AUTO-CALCULATED K/D RATIO COLUMN */}
-                    <td className="p-4 whitespace-nowrap text-center font-mono font-bold text-sky-600 dark:text-sky-400">
-                      {pKd.toFixed(2)}
-                    </td>
+                  {/* AUTO-CALCULATED K/D RATIO COLUMN */}
+                  <td className="p-4 whitespace-nowrap text-center font-mono font-bold text-sky-600 dark:text-sky-400">
+                    {pKd.toFixed(2)}
+                  </td>
 
-                    <td className="p-4 whitespace-nowrap">
-                      <Badge variant={isVerified ? 'green' : isRejected ? 'rejected' : 'pending'} size="sm">
-                        {statusLabel}
-                      </Badge>
-                    </td>
+                  <td className="p-4 whitespace-nowrap">
+                    <Badge variant={isVerified ? 'green' : isRejected ? 'rejected' : 'pending'} size="sm">
+                      {statusLabel}
+                    </Badge>
+                  </td>
 
-                    <td className="p-4 whitespace-nowrap text-right">
-                      <div className="flex items-center justify-end gap-1.5">
+                  <td className="p-4 whitespace-nowrap text-right">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={Edit3}
+                        onClick={() => handleOpenEdit(player)}
+                      >
+                        Edit
+                      </Button>
+                      {!isVerified && (
                         <Button
-                          variant="secondary"
+                          variant="primary"
                           size="sm"
-                          icon={Edit3}
-                          onClick={() => handleOpenEdit(player)}
+                          icon={Check}
+                          onClick={() => handleUpdateStatus(pId, 'Verified')}
                         >
-                          Edit
+                          Verify
                         </Button>
-                        {!isVerified && (
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            icon={Check}
-                            onClick={() => handleUpdateStatus(pId, 'Verified')}
-                          >
-                            Verify
-                          </Button>
-                        )}
-                        {!isRejected && (
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            icon={X}
-                            onClick={() => handleUpdateStatus(pId, 'Rejected')}
-                          >
-                            Reject
-                          </Button>
-                        )}
-                        <button
-                          onClick={() => handleDeletePlayer(pId)}
-                          disabled={deletingId === pId}
-                          className={`inline-flex items-center justify-center p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors ${
-                            deletingId === pId ? 'opacity-40 cursor-not-allowed' : ''
-                          }`}
-                          title="Delete Player"
+                      )}
+                      {!isRejected && (
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          icon={X}
+                          onClick={() => handleUpdateStatus(pId, 'Rejected')}
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                          Reject
+                        </Button>
+                      )}
+                      <button
+                        onClick={() => handleDeletePlayer(pId)}
+                        disabled={deletingId === pId}
+                        className={`inline-flex items-center justify-center p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors ${
+                          deletingId === pId ? 'opacity-40 cursor-not-allowed' : ''
+                        }`}
+                        title="Delete Player"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

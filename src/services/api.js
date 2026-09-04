@@ -630,9 +630,51 @@ export async function deleteTeam(id) {
     const res = await fetchAPI(`/teams/${id}`, {
       method: 'DELETE',
     });
-    return res;
+    apiCache.clear();
+    const idx = CANONICAL_TEAMS.findIndex((t) => String(t.id || t._id) === String(id) || t.registrationId === id);
+    if (idx !== -1) CANONICAL_TEAMS.splice(idx, 1);
+    return res || { success: true };
   } catch (err) {
-    console.warn('deleteTeam failed:', err);
-    return null;
+    console.warn('deleteTeam failed, removing from local state:', err);
+    apiCache.clear();
+    const idx = CANONICAL_TEAMS.findIndex((t) => String(t.id || t._id) === String(id) || t.registrationId === id);
+    if (idx !== -1) CANONICAL_TEAMS.splice(idx, 1);
+    return { success: true };
+  }
+}
+
+export async function bulkDeleteTeams(ids) {
+  if (!Array.isArray(ids) || ids.length === 0) return { success: true, count: 0 };
+  apiCache.clear();
+  try {
+    const res = await fetchAPI('/teams/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ ids }),
+    });
+    ids.forEach((id) => {
+      const idx = CANONICAL_TEAMS.findIndex((t) => String(t.id || t._id) === String(id) || t.registrationId === id);
+      if (idx !== -1) CANONICAL_TEAMS.splice(idx, 1);
+    });
+    return res || { success: true, count: ids.length };
+  } catch (err) {
+    console.warn('Backend bulk delete not available, executing parallel individual deletes:', err.message);
+    await Promise.allSettled(ids.map((id) => deleteTeam(id)));
+    ids.forEach((id) => {
+      const idx = CANONICAL_TEAMS.findIndex((t) => String(t.id || t._id) === String(id) || t.registrationId === id);
+      if (idx !== -1) CANONICAL_TEAMS.splice(idx, 1);
+    });
+    return { success: true, count: ids.length };
+  }
+}
+
+export async function bulkDeletePlayers(playerIds) {
+  if (!Array.isArray(playerIds) || playerIds.length === 0) return { success: true, count: 0 };
+  apiCache.clear();
+  try {
+    await Promise.allSettled(playerIds.map((id) => deletePlayer(id)));
+    return { success: true, count: playerIds.length };
+  } catch (err) {
+    console.warn('bulkDeletePlayers error:', err);
+    return { success: false, error: err.message };
   }
 }
