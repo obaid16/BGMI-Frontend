@@ -98,12 +98,6 @@ export default function Navbar() {
             >
               <span>Register</span>
             </Link>
-            <Link
-              href="/admin/login"
-              className="px-5 py-2 bg-white dark:bg-[#121620] hover:bg-[#FAF8F5] dark:hover:bg-[#181E2C] text-slate-850 dark:text-slate-200 border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-full shadow-sm transition-all active:scale-95"
-            >
-              <span>Login</span>
-            </Link>
           </div>
 
           {/* MOBILE HAMBURGER TOGGLE */}
@@ -158,13 +152,6 @@ export default function Navbar() {
               className="block w-full py-3.5 text-center bg-slate-950 dark:bg-bgmi-red text-white font-display font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl shadow-editorial transition-all active:scale-95"
             >
               Register Squad →
-            </Link>
-            <Link
-              href="/admin/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block w-full py-3 text-center bg-white dark:bg-[#121620] hover:bg-[#FAF8F5] dark:hover:bg-[#181E2C] text-slate-800 dark:text-slate-200 border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-sm transition-all active:scale-95"
-            >
-              Referee / Admin Console
             </Link>
           </div>
         </div>

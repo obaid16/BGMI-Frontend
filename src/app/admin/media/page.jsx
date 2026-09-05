@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import MediaLightbox from '@/components/tournament/MediaLightbox';
-import { getMedia, updateMediaStatus, deleteMedia, getMediaImageUrl, DEFAULT_GAMING_IMAGE } from '@/services/api';
+import { getMedia, updateMediaStatus, deleteMedia, bulkDeleteMedia, getMediaImageUrl, DEFAULT_GAMING_IMAGE } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { Video, Globe, Check, X, Eye, Search, UserCheck, Trash2 } from 'lucide-react';
 
@@ -16,6 +16,8 @@ export default function AdminMediaPage() {
   const [selectedPlayer, setSelectedPlayer] = useState('All Players');
   const [selectedItem, setSelectedItem] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedMedia, setSelectedMedia] = useState([]);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   async function loadData() {
     try {
@@ -66,6 +68,7 @@ export default function AdminMediaPage() {
         const res = await deleteMedia(targetId);
         if (res && res.success) {
           setMediaList((prev) => prev.filter((m) => (m.id || m._id) !== targetId));
+          setSelectedMedia((prev) => prev.filter((id) => id !== targetId));
           showToast('Media proof deleted permanently!', 'info');
         } else {
           showToast('Failed to delete media', 'error');
@@ -106,6 +109,45 @@ export default function AdminMediaPage() {
       return matchesStatus && matchesSearch && matchesSelectedPlayer;
     });
   }, [mediaList, statusFilter, playerSearch, selectedPlayer]);
+
+  const allFilteredSelected = filteredMedia.length > 0 && filteredMedia.every((m) => selectedMedia.includes(m.id || m._id));
+
+  const toggleSelectAll = () => {
+    if (allFilteredSelected) {
+      const filteredIds = new Set(filteredMedia.map((m) => m.id || m._id));
+      setSelectedMedia((prev) => prev.filter((id) => !filteredIds.has(id)));
+    } else {
+      const newIds = new Set([...selectedMedia, ...filteredMedia.map((m) => m.id || m._id)]);
+      setSelectedMedia(Array.from(newIds));
+    }
+  };
+
+  const toggleSelectMedia = (id) => {
+    setSelectedMedia((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedMedia.length === 0) return;
+    if (window.confirm(`Are you sure you want to permanently delete all ${selectedMedia.length} selected media proof(s)?`)) {
+      try {
+        setBulkDeleting(true);
+        const res = await bulkDeleteMedia(selectedMedia);
+        if (res && res.success) {
+          setMediaList((prev) => prev.filter((m) => !selectedMedia.includes(m.id || m._id)));
+          showToast(`Successfully deleted ${selectedMedia.length} media proof(s)`, 'success');
+          setSelectedMedia([]);
+        } else {
+          showToast('Failed to bulk delete media proofs', 'error');
+        }
+      } catch (err) {
+        showToast(err.message || 'Error bulk deleting media', 'error');
+      } finally {
+        setBulkDeleting(false);
+      }
+    }
+  };
 
   return (
     <div className="space-y-6 max-w-full overflow-hidden font-sans">
@@ -196,6 +238,33 @@ export default function AdminMediaPage() {
 
       </div>
 
+      {/* BULK ACTION BAR */}
+      {selectedMedia.length > 0 && (
+        <div className="bg-red-500/10 dark:bg-red-950/30 border border-red-500/30 rounded-2xl p-3.5 px-5 flex items-center justify-between gap-4 shadow-editorial-sm animate-fadeIn">
+          <div className="flex items-center gap-3 text-xs font-mono font-bold text-red-700 dark:text-red-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+            <span>{selectedMedia.length} of {mediaList.length} submission(s) selected</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSelectedMedia([])}
+              className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors underline underline-offset-2"
+            >
+              Deselect All
+            </button>
+            <Button
+              variant="danger"
+              size="sm"
+              icon={Trash2}
+              onClick={handleBulkDelete}
+              disabled={bulkDeleting}
+            >
+              {bulkDeleting ? 'Deleting...' : `Delete Selected (${selectedMedia.length})`}
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* MEDIA TABLE CONTAINER */}
       <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl shadow-editorial-sm overflow-hidden">
         {loading ? (
@@ -209,6 +278,15 @@ export default function AdminMediaPage() {
             <table className="w-full text-left text-xs border-collapse min-w-[1050px]">
               <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
                 <tr>
+                  <th className="p-4 w-12 text-center">
+                    <input
+                      type="checkbox"
+                      checked={allFilteredSelected}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded text-bgmi-red accent-bgmi-red cursor-pointer"
+                      title="Select all filtered media"
+                    />
+                  </th>
                   <th className="p-4 whitespace-nowrap min-w-[200px]">Media Preview &amp; Title</th>
                   <th className="p-4 whitespace-nowrap min-w-[100px]">Type</th>
                   <th className="p-4 whitespace-nowrap min-w-[150px]">Team / Player</th>
@@ -221,9 +299,25 @@ export default function AdminMediaPage() {
               {filteredMedia.map((m) => {
                 const mId = m.id || m._id;
                 const previewImg = getMediaImageUrl(m);
+                const isSelected = selectedMedia.includes(mId);
 
                 return (
-                  <tr key={mId} className="hover:bg-slate-50 dark:hover:bg-[#1A2131] transition-colors">
+                  <tr
+                    key={mId}
+                    className={`transition-colors ${
+                      isSelected
+                        ? 'bg-red-50/60 dark:bg-red-950/20'
+                        : 'hover:bg-slate-50 dark:hover:bg-[#1A2131]'
+                    }`}
+                  >
+                    <td className="p-4 text-center">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelectMedia(mId)}
+                        className="w-4 h-4 rounded text-bgmi-red accent-bgmi-red cursor-pointer"
+                      />
+                    </td>
                     <td className="p-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <img

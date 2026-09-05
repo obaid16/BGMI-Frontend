@@ -4,15 +4,18 @@ import React, { useState, useEffect } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
-import { getMatches, createMatch, updateMatchStatus, updateMatch } from '@/services/api';
+import { getMatches, createMatch, updateMatchStatus, updateMatch, deleteMatch, bulkDeleteMatches } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Swords, Plus, Radio, CheckCircle2, Clock, Edit2 } from 'lucide-react';
+import { Swords, Plus, Radio, CheckCircle2, Clock, Edit2, Trash2 } from 'lucide-react';
 
 export default function AdminMatchesPage() {
   const { showToast } = useToast();
   const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMatch, setEditingMatch] = useState(null);
+  const [selectedMatches, setSelectedMatches] = useState([]);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   // New/Edit match state
   const [round, setRound] = useState('Semifinal');
@@ -22,13 +25,35 @@ export default function AdminMatchesPage() {
   const [roomId, setRoomId] = useState('');
   const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    async function loadData() {
+  async function loadData() {
+    try {
+      setLoading(true);
       const data = await getMatches();
       setMatches(data);
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     loadData();
   }, []);
+
+  const allSelected = matches.length > 0 && selectedMatches.length === matches.length;
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedMatches([]);
+    } else {
+      setSelectedMatches(matches.map((m) => m.id || m._id));
+    }
+  };
+
+  const toggleSelectMatch = (id) => {
+    setSelectedMatches((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
   const handleCreateClick = () => {
     setEditingMatch(null);
@@ -74,8 +99,47 @@ export default function AdminMatchesPage() {
   const handleStatusToggle = async (matchId, currentStatus) => {
     const nextStatus = currentStatus === 'Upcoming' ? 'Live' : currentStatus === 'Live' ? 'Completed' : 'Upcoming';
     await updateMatchStatus(matchId, nextStatus);
-    setMatches((prev) => prev.map((m) => (m.id === matchId ? { ...m, status: nextStatus } : m)));
+    setMatches((prev) => prev.map((m) => ((m.id || m._id) === matchId ? { ...m, status: nextStatus } : m)));
     showToast(`Match status updated to ${nextStatus}`, 'info');
+  };
+
+  const handleDeleteMatch = async (match) => {
+    const targetId = match.id || match._id;
+    if (window.confirm(`Are you sure you want to delete Match #${match.matchNumber}?`)) {
+      try {
+        const res = await deleteMatch(targetId);
+        if (res && res.success) {
+          setMatches((prev) => prev.filter((m) => (m.id || m._id) !== targetId));
+          setSelectedMatches((prev) => prev.filter((id) => id !== targetId));
+          showToast(`Match #${match.matchNumber} deleted successfully`, 'info');
+        } else {
+          showToast('Failed to delete match', 'error');
+        }
+      } catch (err) {
+        showToast(err.message || 'Error deleting match', 'error');
+      }
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedMatches.length === 0) return;
+    if (window.confirm(`Are you sure you want to permanently delete all ${selectedMatches.length} selected match(es)?`)) {
+      try {
+        setBulkDeleting(true);
+        const res = await bulkDeleteMatches(selectedMatches);
+        if (res && res.success) {
+          setMatches((prev) => prev.filter((m) => !selectedMatches.includes(m.id || m._id)));
+          showToast(`Successfully deleted ${selectedMatches.length} match(es)`, 'success');
+          setSelectedMatches([]);
+        } else {
+          showToast('Failed to bulk delete matches', 'error');
+        }
+      } catch (err) {
+        showToast(err.message || 'Error bulk deleting matches', 'error');
+      } finally {
+        setBulkDeleting(false);
+      }
+    }
   };
 
   return (
@@ -92,77 +156,157 @@ export default function AdminMatchesPage() {
             Custom Match Lobby Manager
           </h1>
           <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
-            Schedule custom matches, publish Room ID &amp; Passwords, and change live status.
+            Schedule custom matches, publish Room ID &amp; Passwords, and manage live match rosters.
           </p>
         </div>
 
-        <Button variant="primary" size="md" icon={Plus} onClick={handleCreateClick}>
-          Create New Match
-        </Button>
+        <div className="flex items-center gap-2.5">
+          <Button variant="primary" size="md" icon={Plus} onClick={handleCreateClick}>
+            Create New Match
+          </Button>
+        </div>
       </div>
+
+      {/* BULK ACTION BAR */}
+      {selectedMatches.length > 0 && (
+        <div className="bg-red-500/10 dark:bg-red-950/30 border border-red-500/30 rounded-2xl p-3.5 px-5 flex items-center justify-between gap-4 shadow-editorial-sm animate-fadeIn">
+          <div className="flex items-center gap-3 text-xs font-mono font-bold text-red-700 dark:text-red-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+            <span>{selectedMatches.length} of {matches.length} match(es) selected</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSelectedMatches([])}
+              className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors underline underline-offset-2"
+            >
+              Deselect All
+            </button>
+            <Button
+              variant="danger"
+              size="sm"
+              icon={Trash2}
+              onClick={handleBulkDelete}
+              disabled={bulkDeleting}
+            >
+              {bulkDeleting ? 'Deleting...' : `Delete Selected (${selectedMatches.length})`}
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* MATCHES TABLE WITH EDITORIAL CONTAINER */}
       <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl shadow-editorial-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse min-w-[850px]">
-            <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
-              <tr>
-                <th className="p-4 whitespace-nowrap">Match Number</th>
-                <th className="p-4 whitespace-nowrap">Stage Round</th>
-                <th className="p-4 whitespace-nowrap">Map</th>
-                <th className="p-4 whitespace-nowrap">Room ID &amp; Pass</th>
-                <th className="p-4 whitespace-nowrap">Schedule Time</th>
-                <th className="p-4 whitespace-nowrap">Status</th>
-                <th className="p-4 whitespace-nowrap text-right min-w-[240px]">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
-              {matches.map((m) => (
-                <tr key={m.id || m._id} className="hover:bg-slate-50/70 dark:hover:bg-[#181E2C]/50 transition-colors">
-                  <td className="p-4 whitespace-nowrap font-display font-bold text-slate-900 dark:text-white text-sm">Match #{m.matchNumber}</td>
-                  <td className="p-4 whitespace-nowrap text-amber-600 dark:text-bgmi-gold font-bold">{m.round}</td>
-                  <td className="p-4 whitespace-nowrap text-sky-600 dark:text-sky-400 font-bold uppercase">{m.map}</td>
-                  <td className="p-4 whitespace-nowrap font-mono">
-                    {m.roomId ? (
-                      <div className="flex items-center gap-2 text-xs">
-                        <span className="text-amber-600 dark:text-bgmi-gold font-bold">ID: {m.roomId}</span>
-                        <span className="text-slate-400">|</span>
-                        <span className="text-sky-600 dark:text-sky-400 font-bold">PASS: {m.password || 'N/A'}</span>
-                      </div>
-                    ) : (
-                      <span className="text-slate-400 italic">Not set yet</span>
-                    )}
-                  </td>
-                  <td className="p-4 whitespace-nowrap text-slate-700 dark:text-slate-300 font-medium">{m.date} @ {m.time}</td>
-                  <td className="p-4 whitespace-nowrap">
-                    <Badge variant={m.status === 'Live' ? 'live' : m.status === 'Completed' ? 'green' : 'gold'} size="sm">
-                      {m.status}
-                    </Badge>
-                  </td>
-                  <td className="p-4 whitespace-nowrap text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        icon={Edit2}
-                        onClick={() => handleEditClick(m)}
-                      >
-                        Edit Room Code
-                      </Button>
-                      <Button
-                        variant={m.status === 'Upcoming' ? 'danger' : m.status === 'Live' ? 'primary' : 'outline'}
-                        size="sm"
-                        onClick={() => handleStatusToggle(m.id || m._id, m.status)}
-                      >
-                        {m.status === 'Upcoming' ? '● Launch LIVE' : m.status === 'Live' ? 'Finish Match' : 'Reopen Match'}
-                      </Button>
-                    </div>
-                  </td>
+        {loading ? (
+          <div className="py-16 text-center text-xs font-mono text-slate-400">Loading match lobbies...</div>
+        ) : matches.length === 0 ? (
+          <div className="py-16 text-center space-y-3 px-4">
+            <div className="w-12 h-12 mx-auto rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+              <Swords className="w-6 h-6 text-bgmi-gold" />
+            </div>
+            <p className="font-display font-black text-sm text-slate-900 dark:text-white uppercase tracking-wider">No Matches Scheduled Yet</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+              All matches data has been cleared. Click &ldquo;Create New Match&rdquo; above to set up and publish custom lobby credentials for the tournament.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse min-w-[950px]">
+              <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
+                <tr>
+                  <th className="p-4 w-12 text-center">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded text-bgmi-red accent-bgmi-red cursor-pointer"
+                      title="Select all matches"
+                    />
+                  </th>
+                  <th className="p-4 whitespace-nowrap">Match Number</th>
+                  <th className="p-4 whitespace-nowrap">Stage Round</th>
+                  <th className="p-4 whitespace-nowrap">Map</th>
+                  <th className="p-4 whitespace-nowrap">Room ID &amp; Pass</th>
+                  <th className="p-4 whitespace-nowrap">Schedule Time</th>
+                  <th className="p-4 whitespace-nowrap">Status</th>
+                  <th className="p-4 whitespace-nowrap text-right min-w-[300px]">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
+                {matches.map((m) => {
+                  const mId = m.id || m._id;
+                  const isSelected = selectedMatches.includes(mId);
+
+                  return (
+                    <tr
+                      key={mId}
+                      className={`transition-colors ${
+                        isSelected
+                          ? 'bg-red-50/60 dark:bg-red-950/20'
+                          : 'hover:bg-slate-50/70 dark:hover:bg-[#181E2C]/50'
+                      }`}
+                    >
+                      <td className="p-4 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectMatch(mId)}
+                          className="w-4 h-4 rounded text-bgmi-red accent-bgmi-red cursor-pointer"
+                        />
+                      </td>
+                      <td className="p-4 whitespace-nowrap font-display font-bold text-slate-900 dark:text-white text-sm">Match #{m.matchNumber}</td>
+                      <td className="p-4 whitespace-nowrap text-amber-600 dark:text-bgmi-gold font-bold">{m.round}</td>
+                      <td className="p-4 whitespace-nowrap text-sky-600 dark:text-sky-400 font-bold uppercase">{m.map}</td>
+                      <td className="p-4 whitespace-nowrap font-mono">
+                        {m.roomId ? (
+                          <div className="flex items-center gap-2 text-xs">
+                            <span className="text-amber-600 dark:text-bgmi-gold font-bold">ID: {m.roomId}</span>
+                            <span className="text-slate-400">|</span>
+                            <span className="text-sky-600 dark:text-sky-400 font-bold">PASS: {m.password || 'N/A'}</span>
+                          </div>
+                        ) : (
+                          <span className="text-slate-400 italic">Not set yet</span>
+                        )}
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-slate-700 dark:text-slate-300 font-medium">{m.date} @ {m.time}</td>
+                      <td className="p-4 whitespace-nowrap">
+                        <Badge variant={m.status === 'Live' ? 'live' : m.status === 'Completed' ? 'green' : 'gold'} size="sm">
+                          {m.status}
+                        </Badge>
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            icon={Edit2}
+                            onClick={() => handleEditClick(m)}
+                          >
+                            Edit Room
+                          </Button>
+                          <Button
+                            variant={m.status === 'Upcoming' ? 'danger' : m.status === 'Live' ? 'primary' : 'outline'}
+                            size="sm"
+                            onClick={() => handleStatusToggle(mId, m.status)}
+                          >
+                            {m.status === 'Upcoming' ? '● Launch LIVE' : m.status === 'Live' ? 'Finish Match' : 'Reopen Match'}
+                          </Button>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            icon={Trash2}
+                            onClick={() => handleDeleteMatch(m)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* CREATE/EDIT MATCH MODAL */}

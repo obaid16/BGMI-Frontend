@@ -22,7 +22,7 @@ export default function Footer() {
               </div>
               <div className="flex flex-col border-l border-[#E7E3DA] dark:border-[#1E2638] pl-3">
                 <span className="font-display font-black text-base text-slate-900 dark:text-white uppercase tracking-wider leading-none">
-                  BGMI <span className="text-bgmi-red">PORTAL</span>
+                  BGMI <span className="text-bgmi-red">ESPORTS</span>
                 </span>
                 <span className="text-[9px] font-mono font-bold text-bgmi-gold dark:text-amber-400 uppercase tracking-widest mt-0.5">
                   NEXCORE INSTITUTE OF TECHNOLOGY
@@ -53,12 +53,11 @@ export default function Footer() {
 
           {/* COL 3: REGISTRATION & MEDIA */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold font-display uppercase tracking-widest text-slate-900 dark:text-white">Portal</h4>
+            <h4 className="text-xs font-bold font-display uppercase tracking-widest text-slate-900 dark:text-white">Registration & Media</h4>
             <ul className="space-y-2 text-xs">
               <li><Link href="/register" className="hover:text-bgmi-red transition-colors text-bgmi-red font-bold flex items-center gap-1"><Flame className="w-3.5 h-3.5 text-bgmi-red" /> Register Squad</Link></li>
               <li><Link href="/media" className="hover:text-bgmi-red transition-colors">POV Clips & Screenshots</Link></li>
               <li><Link href="/rules" className="hover:text-bgmi-red transition-colors">Official Rulebook</Link></li>
-              <li><Link href="/admin/login" className="hover:text-bgmi-red transition-colors">Admin Login</Link></li>
             </ul>
           </div>
 

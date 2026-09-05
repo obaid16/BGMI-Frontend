@@ -287,6 +287,33 @@ export async function updateMatch(matchId, matchData) {
   return res.data;
 }
 
+export async function deleteMatch(matchId) {
+  try {
+    const res = await fetchAPI(`/matches/${matchId}`, {
+      method: 'DELETE',
+    });
+    apiCache.clear();
+    return { success: res?.success !== false };
+  } catch (err) {
+    console.error('deleteMatch failed:', err);
+    return { success: false, message: err.message };
+  }
+}
+
+export async function bulkDeleteMatches(ids) {
+  try {
+    const res = await fetchAPI('/matches/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ ids }),
+    });
+    apiCache.clear();
+    return { success: res?.success !== false, deletedCount: res?.deletedCount || ids.length };
+  } catch (err) {
+    console.error('bulkDeleteMatches failed:', err);
+    return { success: false, message: err.message };
+  }
+}
+
 // ==================== STANDINGS API ====================
 export async function getStandings() {
   try {
@@ -445,9 +472,24 @@ export async function deleteMedia(mediaId) {
     const res = await fetchAPI(`/media/${mediaId}`, {
       method: 'DELETE',
     });
-    return { success: res.success };
+    apiCache.clear();
+    return { success: res?.success !== false };
   } catch (err) {
     console.error('deleteMedia failed:', err);
+    return { success: false, message: err.message };
+  }
+}
+
+export async function bulkDeleteMedia(ids) {
+  try {
+    const res = await fetchAPI('/media/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ ids }),
+    });
+    apiCache.clear();
+    return { success: res?.success !== false, deletedCount: res?.deletedCount || ids.length };
+  } catch (err) {
+    console.error('bulkDeleteMedia failed:', err);
     return { success: false, message: err.message };
   }
 }
