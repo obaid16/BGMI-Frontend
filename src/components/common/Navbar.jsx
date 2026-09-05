@@ -88,15 +88,20 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* RIGHT CONTROLS & CTA */}
-        <div className="hidden lg:flex items-center gap-3">
+        {/* RIGHT CONTROLS & CTA (AS IN REFERENCE HEADER) */}
+        <div className="hidden lg:flex items-center gap-2.5">
           <ThemeToggle />
           <Link
             href="/register"
-            className="px-5 py-2.5 bg-slate-950 hover:bg-slate-800 dark:bg-bgmi-red dark:hover:bg-bgmi-red-hover text-white font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-editorial hover:shadow-editorial-lg transition-all flex items-center gap-1.5 active:scale-95"
+            className="px-5 py-2 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-display font-bold text-xs uppercase tracking-wider rounded-full shadow-sm transition-all active:scale-95"
           >
-            <span>Register Squad</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <span>Register</span>
+          </Link>
+          <Link
+            href="/admin/login"
+            className="px-5 py-2 bg-white dark:bg-[#121620] hover:bg-[#FAF8F5] dark:hover:bg-[#181E2C] text-slate-850 dark:text-slate-200 border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-full shadow-sm transition-all active:scale-95"
+          >
+            <span>Login</span>
           </Link>
         </div>
 

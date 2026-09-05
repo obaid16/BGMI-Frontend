@@ -1,41 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Users, Swords, Trophy, ShieldCheck } from 'lucide-react';
-
-function AnimatedCounter({ target, duration = 1000 }) {
-  const [value, setValue] = useState(0);
-  const ref = useRef(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const startTime = performance.now();
-          const animate = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setValue(Math.floor(eased * target));
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-          requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [target, duration]);
-
-  return (
-    <span ref={ref} className="font-mono font-black tabular-nums">
-      {value}
-    </span>
-  );
-}
+import React from 'react';
+import Link from 'next/link';
+import { Users, Swords, Trophy, Award, FileText, BarChart3, Users2, Medal } from 'lucide-react';
 
 export default function TournamentStats({
   registeredSquads = 0,
@@ -44,62 +11,147 @@ export default function TournamentStats({
   currentRound = 0,
 }) {
   return (
-    <section className="w-full py-4 font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl p-6 sm:p-8 shadow-editorial-sm">
+    <section className="w-full py-2 font-sans space-y-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+        
+        {/* ROW 1: 4-COLUMN AUTHENTIC TELEMETRY STATS STRIP */}
+        <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl p-6 sm:p-7 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
           
-          {/* STAT 1: SQUADS */}
-          <div className="space-y-1.5 p-2">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-              <Users className="w-4 h-4 text-bgmi-red" />
-              <span>Registered Squads</span>
+          {/* STAT 1: REGISTERED SQUADS */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shrink-0">
+              <Users2 className="w-5 h-5 text-[#C5A059]" />
             </div>
-            <p className="text-3xl sm:text-4xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-baseline gap-1.5">
-              <AnimatedCounter target={registeredSquads} />
-              <span className="text-xs font-mono text-bgmi-red font-bold">TEAMS</span>
-            </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Verified campus entries</p>
+            <div>
+              <span className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white block leading-tight">
+                {registeredSquads}
+              </span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Registered Squads
+              </span>
+            </div>
           </div>
 
-          {/* STAT 2: PLAYERS */}
-          <div className="space-y-1.5 p-2">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-              <ShieldCheck className="w-4 h-4 text-amber-500" />
-              <span>Player Roster</span>
+          {/* STAT 2: VERIFIED ATHLETES */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shrink-0">
+              <Users className="w-5 h-5 text-[#C5A059]" />
             </div>
-            <p className="text-3xl sm:text-4xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-baseline gap-1.5">
-              <AnimatedCounter target={verifiedPlayers} />
-              <span className="text-xs font-mono text-slate-400 font-bold">PLAYERS</span>
-            </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Total registered roster</p>
+            <div>
+              <span className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white block leading-tight">
+                {verifiedPlayers}
+              </span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Verified Athletes
+              </span>
+            </div>
           </div>
 
-          {/* STAT 3: MATCHES */}
-          <div className="space-y-1.5 p-2">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-              <Swords className="w-4 h-4 text-bgmi-red" />
-              <span>Tournament Matches</span>
+          {/* STAT 3: TOTAL MATCHES */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shrink-0">
+              <Swords className="w-5 h-5 text-[#C5A059]" />
             </div>
-            <p className="text-3xl sm:text-4xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-baseline gap-1.5">
-              <AnimatedCounter target={totalMatches} />
-              <span className="text-xs font-mono text-bgmi-red font-bold">ROOMS</span>
-            </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Official custom lobbies</p>
+            <div>
+              <span className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white block leading-tight">
+                {totalMatches}
+              </span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Scheduled Matches
+              </span>
+            </div>
           </div>
 
-          {/* STAT 4: ROUND */}
-          <div className="space-y-1.5 p-2">
-            <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-              <Trophy className="w-4 h-4 text-bgmi-gold" />
-              <span>Tournament Stage</span>
+          {/* STAT 4: TOURNAMENT STAGE */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shrink-0">
+              <Trophy className="w-5 h-5 text-[#C5A059]" />
             </div>
-            <p className="text-2xl sm:text-3xl font-display font-black text-amber-600 dark:text-bgmi-gold uppercase tracking-tight">
-              STAGE {currentRound || 1}
-            </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Grand finals qualifier</p>
+            <div>
+              <span className="font-display font-black text-xl sm:text-2xl text-slate-900 dark:text-white block leading-tight">
+                {currentRound > 0 ? `Round ${currentRound}` : 'Lobby Open'}
+              </span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Tournament Stage
+              </span>
+            </div>
           </div>
 
         </div>
+
+        {/* ROW 2: 4 AUTHENTIC FEATURE CARDS */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          
+          <Link
+            href="/matches"
+            className="p-5 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl hover:border-[#C5A059] transition-all shadow-sm group flex items-center gap-3.5"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center text-slate-900 dark:text-white group-hover:scale-110 transition-transform shrink-0">
+              <Swords className="w-5 h-5 text-[#C5A059]" />
+            </div>
+            <div>
+              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-[#C5A059] transition-colors">
+                Matches &amp; Rooms
+              </h4>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Lobby Schedule
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            href="/standings"
+            className="p-5 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl hover:border-[#C5A059] transition-all shadow-sm group flex items-center gap-3.5"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center text-slate-900 dark:text-white group-hover:scale-110 transition-transform shrink-0">
+              <BarChart3 className="w-5 h-5 text-[#C5A059]" />
+            </div>
+            <div>
+              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-[#C5A059] transition-colors">
+                Leaderboard
+              </h4>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Points Table
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            href="/results"
+            className="p-5 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl hover:border-[#C5A059] transition-all shadow-sm group flex items-center gap-3.5"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center text-slate-900 dark:text-white group-hover:scale-110 transition-transform shrink-0">
+              <Trophy className="w-5 h-5 text-[#C5A059]" />
+            </div>
+            <div>
+              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-[#C5A059] transition-colors">
+                Match Results
+              </h4>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Scorecards &amp; WWCD
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            href="/mvp"
+            className="p-5 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl hover:border-[#C5A059] transition-all shadow-sm group flex items-center gap-3.5"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center text-slate-900 dark:text-white group-hover:scale-110 transition-transform shrink-0">
+              <Medal className="w-5 h-5 text-[#C5A059]" />
+            </div>
+            <div>
+              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-[#C5A059] transition-colors">
+                MVP Leaderboard
+              </h4>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Top Fraggers
+              </p>
+            </div>
+          </Link>
+
+        </div>
+
       </div>
     </section>
   );

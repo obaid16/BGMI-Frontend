@@ -14,7 +14,8 @@ import {
   Bell,
   BookOpen,
   LogOut,
-  Crosshair,
+  Shield,
+  Crown,
 } from 'lucide-react';
 import ThemeToggle from '../common/ThemeToggle';
 
@@ -24,13 +25,13 @@ export default function AdminSidebar() {
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Registrations', href: '/admin/registrations', icon: ClipboardList },
-    { name: 'Squads & Teams', href: '/admin/teams', icon: Users },
-    { name: 'Player Rosters', href: '/admin/players', icon: UserCheck },
-    { name: 'Match Schedules', href: '/admin/matches', icon: Swords },
-    { name: 'Scorecard Entry', href: '/admin/results', icon: Trophy },
-    { name: 'Media Approvals', href: '/admin/media', icon: Video },
+    { name: 'Tournaments & Teams', href: '/admin/teams', icon: Users },
+    { name: 'Participants & Rosters', href: '/admin/players', icon: UserCheck },
+    { name: 'Matches', href: '/admin/matches', icon: Swords },
+    { name: 'Results', href: '/admin/results', icon: Trophy },
     { name: 'Announcements', href: '/admin/announcements', icon: Bell },
-    { name: 'Rules Manager', href: '/admin/rules', icon: BookOpen },
+    { name: 'Media Moderation', href: '/admin/media', icon: Video },
+    { name: 'Rules', href: '/admin/rules', icon: BookOpen },
   ];
 
   const isActive = (href) => {
@@ -38,25 +39,51 @@ export default function AdminSidebar() {
     return pathname.startsWith(href);
   };
 
+  const [adminUser, setAdminUser] = React.useState(null);
+
+  React.useEffect(() => {
+    try {
+      const stored = localStorage.getItem('bgmi_esports_admin_user');
+      if (stored) {
+        setAdminUser(JSON.parse(stored));
+      }
+    } catch (_) {}
+  }, []);
+
+  const adminName = adminUser?.name || adminUser?.username || 'Tournament Director';
+  const adminRole = adminUser?.role || 'Administrator';
+  const initials = adminName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'AD';
+
   return (
-    <aside className="w-64 bg-white dark:bg-[#12141c] border-r border-slate-200 dark:border-white/10 min-h-screen flex flex-col justify-between p-4 flex-shrink-0 transition-colors duration-200">
-      <div className="space-y-6">
-        {/* BRANDING LOGO */}
-        <div className="flex items-center justify-between px-2 py-3 border-b border-slate-200 dark:border-white/10">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-slate-900 border border-slate-200 dark:border-white/15 rounded p-0.5 clip-tactical flex items-center justify-center text-white font-bold">
-              <Crosshair className="w-5 h-5 text-bgmi-red" />
+    <aside className="w-64 bg-[#0B0E14] text-white border-r border-[#1E2638] min-h-screen flex flex-col justify-between p-4 flex-shrink-0 font-sans select-none">
+      <div className="space-y-5">
+        
+        {/* BRANDING HEADER */}
+        <div className="flex items-center justify-between px-2 pt-2 pb-1">
+          <Link href="/admin" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-[#181E2C] border border-[#2C364F] flex items-center justify-center text-[#C5A059]">
+              <Shield className="w-4 h-4" />
             </div>
-            <div>
-              <h2 className="font-broadcast font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">
-                TOURNAMENT <span className="text-bgmi-red">ADMIN</span>
-              </h2>
-              <p className="text-[9px] font-mono text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">
-                NIT ESPORTS COMMAND
-              </p>
-            </div>
+            <span className="font-display font-extrabold text-base tracking-tight text-white uppercase">
+              BGMI Portal
+            </span>
+          </Link>
+          <ThemeToggle className="scale-85" />
+        </div>
+
+        {/* AUTHENTIC USER PROFILE BADGE */}
+        <div className="flex items-center gap-3 p-3 bg-[#121620] border border-[#1E2638] rounded-2xl">
+          <div className="w-10 h-10 rounded-full bg-[#181E2C] border border-[#2C364F] flex items-center justify-center font-display font-bold text-xs text-[#C5A059]">
+            {initials}
           </div>
-          <ThemeToggle className="scale-90" />
+          <div className="overflow-hidden">
+            <p className="font-display font-bold text-xs text-white truncate">
+              {adminName}
+            </p>
+            <p className="text-[10px] text-slate-400 font-mono uppercase">
+              {adminRole}
+            </p>
+          </div>
         </div>
 
         {/* SIDEBAR NAVIGATION LINKS */}
@@ -68,31 +95,42 @@ export default function AdminSidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded text-xs font-broadcast font-bold uppercase tracking-wider transition-all duration-200 ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-semibold tracking-wide transition-all duration-200 ${
                   active
-                    ? 'bg-bgmi-red/15 text-bgmi-red dark:text-white border-l-2 border-bgmi-red font-black'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                    ? 'bg-[#FAF8F5] text-slate-950 font-bold shadow-md'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${active ? 'text-bgmi-red' : 'text-slate-500 dark:text-slate-400'}`} />
+                <Icon className={`w-4 h-4 ${active ? 'text-slate-950' : 'text-slate-400'}`} />
                 <span>{item.name}</span>
               </Link>
             );
           })}
         </nav>
+
       </div>
 
-      {/* FOOTER EXIT LINK */}
-      <div className="pt-4 border-t border-slate-200 dark:border-white/10">
+      {/* BOTTOM BANNER CARD (AS IN REFERENCE) */}
+      <div className="space-y-3 pt-4 border-t border-[#1E2638]">
+        <div className="p-3.5 bg-[#121620] border border-[#1E2638] rounded-2xl space-y-1 flex items-center justify-between">
+          <div>
+            <p className="font-display font-black text-xs text-white uppercase tracking-wider">
+              Manage. Organize. Grow.
+            </p>
+            <p className="text-[10px] text-slate-500 font-mono">BGMI Portal</p>
+          </div>
+          <Crown className="w-5 h-5 text-amber-400 shrink-0" />
+        </div>
+
         <Link
           href="/"
-          className="flex items-center gap-2 px-3 py-2 text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-bgmi-red transition-colors font-bold"
+          className="flex items-center gap-2 px-2 py-1.5 text-xs text-slate-400 hover:text-white transition-colors font-medium"
         >
-          <LogOut className="w-4 h-4 text-bgmi-red" /> Public Main Site →
+          <LogOut className="w-3.5 h-3.5 text-[#E5383B]" />
+          <span>Exit to Public Portal</span>
         </Link>
       </div>
+
     </aside>
   );
-
 }
-

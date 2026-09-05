@@ -78,14 +78,33 @@ async function fetchAPI(endpoint, options = {}) {
     ...options.headers,
   };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+    });
+  } catch (netErr) {
+    if (isGet) {
+      console.warn(`[API] Endpoint "${endpoint}" unavailable (${netErr.message || 'offline'}). Using empty fallback.`);
+      return { success: false, data: null, message: netErr.message, isOffline: true };
+    }
+    throw new Error(`Unable to connect to server: ${netErr.message || 'Network error'}`);
+  }
 
-  const resData = await response.json();
+  let resData = null;
+  try {
+    resData = await response.json();
+  } catch (jsonErr) {
+    resData = { success: false, message: 'Invalid response format' };
+  }
+
   if (!response.ok) {
-    throw new Error(resData.message || 'API request failed');
+    if (isGet) {
+      console.warn(`[API] GET "${endpoint}" returned status ${response.status}`);
+      return { success: false, data: null, status: response.status };
+    }
+    throw new Error(resData?.message || `API request failed with status ${response.status}`);
   }
 
   if (isGet) {
@@ -136,7 +155,7 @@ export async function getTeams(filter = 'All', searchQuery = '') {
 
     return teams;
   } catch (err) {
-    console.error('getTeams failed:', err);
+    console.warn('getTeams fallback (backend may be offline):', err.message);
     return [];
   }
 }
@@ -146,7 +165,7 @@ export async function getTeamById(id) {
     const res = await fetchAPI(`/teams/${id}`);
     if (res.data) return res.data;
   } catch (err) {
-    console.error('getTeamById failed:', err);
+    console.warn('getTeamById failed:', err.message);
   }
   return null;
 }
@@ -229,7 +248,7 @@ export async function getMatches(filter = 'All') {
     }
     return data;
   } catch (err) {
-    console.error('getMatches failed:', err);
+    console.warn('getMatches fallback (backend may be offline):', err.message);
     return [];
   }
 }
@@ -239,7 +258,7 @@ export async function getMatchById(id) {
     const res = await fetchAPI(`/matches/${id}`);
     if (res.data) return res.data;
   } catch (err) {
-    console.error('getMatchById failed:', err);
+    console.warn('getMatchById failed:', err.message);
   }
   return null;
 }
@@ -274,7 +293,7 @@ export async function getStandings() {
     const res = await fetchAPI('/standings');
     if (Array.isArray(res.data)) return res.data;
   } catch (err) {
-    console.error('getStandings failed:', err);
+    console.warn('getStandings fallback (backend may be offline):', err.message);
   }
   return [];
 }
@@ -284,7 +303,7 @@ export async function getScoringRules() {
     const res = await fetchAPI('/standings/rules');
     if (res.data && Object.keys(res.data).length > 0) return res.data;
   } catch (err) {
-    console.error('getScoringRules failed:', err);
+    console.warn('getScoringRules fallback:', err.message);
   }
   return {
     placementPoints: [
@@ -303,7 +322,7 @@ export async function getResults() {
     const res = await fetchAPI('/results');
     if (Array.isArray(res.data)) return res.data;
   } catch (err) {
-    console.error('getResults failed:', err);
+    console.warn('getResults fallback (backend may be offline):', err.message);
   }
   return [];
 }
@@ -313,7 +332,7 @@ export async function getResultById(id) {
     const res = await fetchAPI(`/results/${id}`);
     if (res.data) return res.data;
   } catch (err) {
-    console.error('getResultById failed:', err);
+    console.warn('getResultById failed:', err.message);
   }
   return null;
 }
@@ -385,7 +404,7 @@ export async function getMedia(filter = 'All', status = 'Published') {
     }
 
     const res = await fetchAPI(url);
-    const list = res.data || [];
+    const list = Array.isArray(res?.data) ? res.data : [];
     return list.map((item) => {
       const formattedUrl = getMediaImageUrl(item);
       return {
@@ -395,7 +414,7 @@ export async function getMedia(filter = 'All', status = 'Published') {
       };
     });
   } catch (err) {
-    console.error('getMedia failed:', err);
+    console.warn('getMedia fallback (backend may be offline):', err.message);
     return [];
   }
 }
@@ -443,9 +462,9 @@ export async function getAnnouncements() {
       url += '?published=true';
     }
     const res = await fetchAPI(url);
-    return res.data || [];
+    return Array.isArray(res?.data) ? res.data : [];
   } catch (err) {
-    console.error('getAnnouncements failed:', err);
+    console.warn('getAnnouncements fallback (backend may be offline):', err.message);
     return [];
   }
 }
@@ -462,9 +481,9 @@ export async function createAnnouncement(annData) {
 export async function getRules() {
   try {
     const res = await fetchAPI('/rules');
-    return res.data || [];
+    return Array.isArray(res?.data) ? res.data : [];
   } catch (err) {
-    console.error('getRules failed:', err);
+    console.warn('getRules fallback (backend may be offline):', err.message);
     return [];
   }
 }
@@ -588,7 +607,7 @@ export async function getAdminDashboardStats() {
     const res = await fetchAPI('/admin/dashboard');
     return res.data || {};
   } catch (err) {
-    console.error('getAdminDashboardStats failed:', err);
+    console.warn('getAdminDashboardStats failed:', err.message);
     return {};
   }
 }
@@ -596,9 +615,9 @@ export async function getAdminDashboardStats() {
 export async function getAdminAuditLogs() {
   try {
     const res = await fetchAPI('/admin/audit-logs');
-    return res.data || [];
+    return Array.isArray(res?.data) ? res.data : [];
   } catch (err) {
-    console.error('getAdminAuditLogs failed:', err);
+    console.warn('getAdminAuditLogs failed:', err.message);
     return [];
   }
 }
