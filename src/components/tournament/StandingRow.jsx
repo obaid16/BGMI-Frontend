@@ -10,12 +10,12 @@ export default function StandingRow({ standing }) {
   const isTop1 = standing.rank === 1;
 
   return (
-    <tr className={`border-b border-slate-200 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-[#181E2C] transition-colors font-mono text-xs ${
-      isTop1 ? 'bg-amber-500/10' : ''
+    <tr className={`border-b border-[#E7E3DA] dark:border-[#1E2638] hover:bg-[#FAF8F5] dark:hover:bg-[#181E2C] transition-colors font-mono text-xs ${
+      isTop1 ? 'bg-amber-500/5 dark:bg-amber-500/10' : ''
     }`}>
       {/* RANK */}
-      <td className="py-3 px-4 text-center font-broadcast font-black text-sm">
-        <span className={`px-2 py-0.5 rounded ${isTop1 ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-500 dark:text-slate-400'}`}>
+      <td className="py-3 px-4 text-center font-display font-black text-sm">
+        <span className={`px-2 py-0.5 rounded-lg ${isTop1 ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-500 dark:text-slate-400'}`}>
           {rankStr}
         </span>
       </td>
@@ -23,7 +23,7 @@ export default function StandingRow({ standing }) {
       {/* SQUAD NAME */}
       <td className="py-3 px-4 font-sans">
         <Link href={`/teams/${standing.shortName || standing.registrationId || standing.teamId}`} className="group flex items-center gap-2">
-          <span className="font-broadcast font-bold text-sm text-slate-900 dark:text-white group-hover:text-bgmi-red transition-colors uppercase">
+          <span className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-bgmi-red transition-colors uppercase">
             {standing.teamName}
           </span>
         </Link>
@@ -35,7 +35,7 @@ export default function StandingRow({ standing }) {
       </td>
 
       {/* WWCD */}
-      <td className="py-3 px-4 text-center font-bold text-amber-500">
+      <td className="py-3 px-4 text-center font-bold text-amber-600 dark:text-amber-400">
         {standing.wwcd || 0}
       </td>
 
@@ -50,7 +50,7 @@ export default function StandingRow({ standing }) {
       </td>
 
       {/* TOTAL POINTS */}
-      <td className="py-3 px-4 text-center font-broadcast font-black text-sm text-slate-900 dark:text-white">
+      <td className="py-3 px-4 text-center font-display font-black text-sm text-slate-900 dark:text-white">
         {standing.totalPoints !== undefined ? standing.totalPoints : standing.points || 0}
       </td>
     </tr>

@@ -64,7 +64,7 @@ export default function RegisterPage() {
   const handleReset = () => {
     setFormData({
       teamName: '',
-      collegeName: 'NIT',
+      collegeName: 'Nexcore Institute of Technology',
       captainName: '',
       captainPhone: '',
       captainEmail: '',
@@ -81,14 +81,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 font-sans">
       
       {/* HEADER */}
-      <div className="border-b border-slate-200 dark:border-bgmi-border/60 pb-6 text-center space-y-2">
-        <h1 className="font-display font-black text-3xl sm:text-5xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center justify-center gap-3">
-          <ShieldCheck className="w-9 h-9 sm:w-11 sm:h-11 text-bgmi-red" /> Official Squad Registration
+      <div className="border-b border-[#E7E3DA] dark:border-[#1E2638] pb-6 text-center space-y-2">
+        <h1 className="font-display font-black text-3xl sm:text-5xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center justify-center gap-3">
+          <ShieldCheck className="w-8 h-8 sm:w-10 sm:h-10 text-bgmi-red" /> Official Squad Registration
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto font-medium">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto font-normal">
           Register your college BGMI squad for Championship 2026. Complete the steps to receive your official Registration Pass.
         </p>
       </div>
@@ -100,18 +100,18 @@ export default function RegisterPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* LEFT COLUMN (4 COLS): LIVE SQUAD PASS PREVIEW CARD */}
-        <div className="lg:col-span-4 bg-white dark:bg-bgmi-surface/95 border-2 border-bgmi-red/60 rounded-2xl p-6 clip-tactical shadow-md dark:shadow-red-glow space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-bgmi-border/60 pb-3">
-            <span className="text-[10px] font-black text-amber-600 dark:text-bgmi-gold uppercase tracking-widest flex items-center gap-1">
+        <div className="lg:col-span-4 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl p-6 shadow-editorial-sm space-y-6">
+          <div className="flex items-center justify-between border-b border-[#E7E3DA] dark:border-[#1E2638] pb-3">
+            <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest flex items-center gap-1">
               <Trophy className="w-3.5 h-3.5" /> SQUAD PASS PREVIEW
             </span>
-            <span className="text-[10px] font-mono text-slate-700 dark:text-slate-400 bg-slate-100 dark:bg-bgmi-dark px-2 py-0.5 rounded border border-slate-300 dark:border-bgmi-border">
+            <span className="text-[10px] font-mono text-slate-500 bg-[#FAF8F5] dark:bg-[#0B0E14] px-2.5 py-0.5 rounded-full border border-[#E7E3DA] dark:border-[#1E2638]">
               STEP 0{currentStep}/04
             </span>
           </div>
 
           <div className="space-y-4">
-            <div className="w-20 h-20 bg-slate-100 dark:bg-bgmi-dark rounded-2xl border-2 border-bgmi-red p-1 mx-auto flex items-center justify-center shadow-red-glow">
+            <div className="w-20 h-20 bg-[#FAF8F5] dark:bg-[#0B0E14] rounded-2xl border border-[#E7E3DA] dark:border-[#1E2638] p-1 mx-auto flex items-center justify-center shadow-editorial-sm">
               {formData.teamLogo ? (
                 <img src={formData.teamLogo} alt="Squad Logo" className="w-full h-full object-cover rounded-xl" />
               ) : (
@@ -122,33 +122,33 @@ export default function RegisterPage() {
             </div>
 
             <div className="text-center space-y-1">
-              <h3 className="font-display font-black text-2xl text-slate-900 dark:text-white uppercase">
+              <h3 className="font-display font-black text-xl text-slate-900 dark:text-white uppercase line-clamp-1">
                 {formData.teamName || 'Your Squad Name'}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Captain: {formData.captainName || 'Not Set'}</p>
+              <p className="text-xs text-slate-500 font-medium">Captain: {formData.captainName || 'Pending'}</p>
             </div>
 
-            <div className="p-3 bg-slate-100 dark:bg-bgmi-dark/90 rounded-xl border border-slate-200 dark:border-bgmi-border/60 text-xs space-y-2">
+            <div className="p-3.5 bg-[#FAF8F5] dark:bg-[#0B0E14] rounded-2xl border border-[#E7E3DA] dark:border-[#1E2638] text-xs space-y-2 font-mono">
               <div className="flex justify-between text-[11px]">
-                <span className="text-slate-600 dark:text-slate-400 font-medium">Roster Count:</span>
+                <span className="text-slate-400">Roster Count:</span>
                 <span className="font-bold text-slate-900 dark:text-white">4 Starters</span>
               </div>
               <div className="flex justify-between text-[11px]">
-                <span className="text-slate-600 dark:text-slate-400 font-medium">WhatsApp:</span>
-                <span className="font-mono text-sky-600 dark:text-bgmi-cyan font-bold">{formData.captainPhone || 'Pending'}</span>
+                <span className="text-slate-400">WhatsApp:</span>
+                <span className="text-slate-900 dark:text-white font-bold">{formData.captainPhone || 'Pending'}</span>
               </div>
             </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-200 dark:border-bgmi-border/60 text-center">
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-600 dark:text-slate-400 flex items-center justify-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> LIVE FORM SYNCHRONIZED
+          <div className="pt-2 border-t border-[#E7E3DA] dark:border-[#1E2638] text-center">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 flex items-center justify-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Form Synchronized
             </span>
           </div>
         </div>
 
-        {/* RIGHT COLUMN (8 COLS): INTERACTIVE WIZARD STEP FORMS */}
-        <div className="lg:col-span-8 bg-white dark:bg-bgmi-surface/90 border border-slate-200 dark:border-bgmi-border rounded-2xl p-6 sm:p-10 clip-tactical shadow-md dark:shadow-2xl">
+        {/* RIGHT COLUMN (8 COLS): WIZARD STEP FORMS */}
+        <div className="lg:col-span-8 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl p-6 sm:p-10 shadow-editorial">
           {currentStep === 1 && (
             <Step1TeamDetails
               formData={formData}

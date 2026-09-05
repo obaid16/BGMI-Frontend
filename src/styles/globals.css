@@ -4,12 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Root Theme Variable Tokens - Premium Esports Palette */
+/* Root Theme Variable Tokens - Dual System: Editorial Ivory & Tactical Dark */
 :root {
   /* Dark Mode Defaults (Graphite / Steel / Crimson / Muted Gold) */
   --bg-main: #0B0E14;
   --bg-surface: #121620;
   --bg-card: #181E2C;
+  --bg-card-muted: #141A26;
   --border-color: #1E2638;
   --border-bright: #2C364F;
   --text-main: #F8F9FA;
@@ -18,29 +19,34 @@
   --accent-red: #E5383B;
   --accent-red-hover: #C52225;
   --accent-red-glow: rgba(229, 56, 59, 0.25);
-  --accent-gold: #D4AF37;
-  --accent-gold-muted: #C5A059;
-  --accent-gold-glow: rgba(212, 175, 55, 0.2);
+  --accent-gold: #C5A059;
+  --accent-gold-muted: #AD8944;
+  --accent-gold-glow: rgba(197, 160, 89, 0.2);
+  --accent-gold-soft: rgba(197, 160, 89, 0.08);
   --grid-line: rgba(30, 38, 56, 0.35);
+  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
 }
 
 html.light {
-  /* Light Mode Defaults (Crisp Editorial Sports Theme) */
-  --bg-main: #F4F6F8;
+  /* Light Mode Defaults (Editorial Ivory Sports Platform from Reference) */
+  --bg-main: #FAF8F5;
   --bg-surface: #FFFFFF;
   --bg-card: #FFFFFF;
-  --border-color: #E2E8F0;
-  --border-bright: #CBD5E1;
+  --bg-card-muted: #F5F2EB;
+  --border-color: #E7E3DA;
+  --border-bright: #DCD7CE;
   --text-main: #0F172A;
-  --text-muted: #475569;
-  --text-dim: #64748B;
-  --accent-red: #D90429;
-  --accent-red-hover: #B7092B;
-  --accent-red-glow: rgba(217, 4, 41, 0.15);
-  --accent-gold: #B8860B;
-  --accent-gold-muted: #A67C1E;
-  --accent-gold-glow: rgba(184, 134, 11, 0.15);
-  --grid-line: rgba(203, 213, 225, 0.4);
+  --text-muted: #526071;
+  --text-dim: #798797;
+  --accent-red: #E5383B;
+  --accent-red-hover: #C52225;
+  --accent-red-glow: rgba(229, 56, 59, 0.15);
+  --accent-gold: #C5A059;
+  --accent-gold-muted: #AD8944;
+  --accent-gold-glow: rgba(197, 160, 89, 0.15);
+  --accent-gold-soft: #FBF8F2;
+  --grid-line: rgba(231, 227, 218, 0.6);
+  --shadow-card: 0 6px 20px -4px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
 }
 
 html, body {
@@ -49,12 +55,33 @@ html, body {
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
   max-width: 100vw;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, h4, h5, h6, .font-display, .font-broadcast {
   font-family: 'Chakra Petch', 'Outfit', sans-serif;
   letter-spacing: -0.01em;
+}
+
+/* Lenis Smooth Scroll Foundation */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 /* Tactical Background & Grid Pattern Utilities */
@@ -65,52 +92,12 @@ h1, h2, h3, h4, h5, h6, .font-display, .font-broadcast {
   background-size: 32px 32px;
 }
 
-.bg-hero-left-dark {
-  background: linear-gradient(to right, rgba(11, 14, 20, 0.96) 0%, rgba(11, 14, 20, 0.88) 45%, rgba(11, 14, 20, 0.45) 75%, rgba(11, 14, 20, 0.15) 100%);
+.bg-hero-overlay-light {
+  background: linear-gradient(to right, rgba(250, 248, 245, 0.98) 0%, rgba(250, 248, 245, 0.92) 45%, rgba(250, 248, 245, 0.5) 75%, rgba(250, 248, 245, 0.1) 100%);
 }
 
-html.light .bg-hero-left-dark {
-  background: linear-gradient(to right, rgba(244, 246, 248, 0.96) 0%, rgba(244, 246, 248, 0.88) 45%, rgba(244, 246, 248, 0.45) 75%, rgba(244, 246, 248, 0.15) 100%);
-}
-
-.bg-vignette {
-  background: radial-gradient(circle at center, transparent 35%, rgba(11, 14, 20, 0.92) 100%);
-}
-
-html.light .bg-vignette {
-  background: radial-gradient(circle at center, transparent 35%, rgba(244, 246, 248, 0.92) 100%);
-}
-
-/* Atmospheric Glow Spotlights */
-.bg-glow-red {
-  background: radial-gradient(circle at 20% 50%, rgba(229, 56, 59, 0.12) 0%, transparent 60%);
-}
-
-.bg-glow-gold {
-  background: radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
-}
-
-/* Esports Technical Cut Corners */
-.clip-tactical {
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-}
-
-.clip-badge {
-  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
-}
-
-.clip-technical-btn {
-  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-}
-
-/* Mobile Sideways Scroll Utilities */
-.table-scroll-container {
-  width: 100%;
-  overflow-x: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-x !important;
-  overscroll-behavior-x: contain !important;
-  scrollbar-width: thin;
+.bg-hero-overlay-dark {
+  background: linear-gradient(to right, rgba(11, 14, 20, 0.98) 0%, rgba(11, 14, 20, 0.9) 45%, rgba(11, 14, 20, 0.5) 75%, rgba(11, 14, 20, 0.15) 100%);
 }
 
 /* Glass Panels with refined theme borders */
@@ -123,7 +110,33 @@ html.light .bg-vignette {
 html.light .glass-panel {
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid rgba(231, 227, 218, 0.9);
+}
+
+/* Mobile Sideways Scroll Utilities */
+.table-scroll-container {
+  width: 100%;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+  overscroll-behavior-x: contain !important;
+  scrollbar-width: thin;
+}
+
+/* Accessible visible focus styles */
+:focus-visible {
+  outline: 2px solid var(--accent-red);
+  outline-offset: 2px;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Custom Subtle Scrollbars */

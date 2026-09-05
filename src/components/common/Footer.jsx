@@ -2,40 +2,39 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Crosshair, Award, ExternalLink, Flame } from 'lucide-react';
+import { Award, ExternalLink, Flame } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-slate-100 dark:bg-bgmi-surface/90 border-t border-slate-200 dark:border-bgmi-border/80 pt-16 pb-10 text-slate-600 dark:text-slate-400">
+    <footer className="w-full bg-[#FAF8F5] dark:bg-[#0B0E14] border-t border-[#E7E3DA] dark:border-[#1E2638] pt-16 pb-12 text-slate-600 dark:text-slate-400 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-200 dark:border-bgmi-border/60">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-[#E7E3DA] dark:border-[#1E2638]">
           
           {/* COL 1: BRAND */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-              <div className="h-12 px-3 py-1.5 bg-white rounded-lg border border-slate-200 dark:border-white/30 flex items-center justify-center shadow-md">
+              <div className="h-11 px-3 py-1.5 bg-white dark:bg-[#121620] rounded-xl border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shadow-editorial-sm">
                 <img
                   src="/images/nit-logo-icon.png"
                   alt="NIT Esports Logo"
-                  className="h-9 w-auto object-contain"
+                  className="h-7 w-auto object-contain"
                 />
               </div>
-              <div className="flex flex-col border-l border-slate-300 dark:border-white/15 pl-3">
-                <span className="font-display font-black text-lg text-slate-900 dark:text-white uppercase tracking-wider leading-none">
-                  <span className="text-bgmi-red">BGMI</span> CHAMPIONSHIP
+              <div className="flex flex-col border-l border-[#E7E3DA] dark:border-[#1E2638] pl-3">
+                <span className="font-display font-black text-base text-slate-900 dark:text-white uppercase tracking-wider leading-none">
+                  BGMI <span className="text-bgmi-red">PORTAL</span>
                 </span>
-                <span className="text-[9px] font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-0.5">
-                  OFFICIAL CAMPUS ESPORTS 2026
+                <span className="text-[9px] font-mono font-bold text-bgmi-gold dark:text-amber-400 uppercase tracking-widest mt-0.5">
+                  NEXCORE INSTITUTE OF TECHNOLOGY
                 </span>
               </div>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm leading-relaxed">
-              Official NIT BGMI Esports Championship 2026 organized by Nexcore Institute of Technology. An exclusive tournament platform for campus squads to compete, survive, and claim ultimate victory.
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-sm leading-relaxed">
+              Official NIT BGMI Esports Championship 2026 organized by Nexcore Institute of Technology. An exclusive esports tournament platform for campus squads to compete, survive, and claim ultimate victory.
             </p>
-            <div className="flex flex-wrap items-center gap-2 pt-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-bgmi-gold bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/30">
-                <Award className="w-3.5 h-3.5" /> Nexcore Campus Event
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-800 dark:text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
+                <Award className="w-3.5 h-3.5 text-bgmi-gold" /> Official Campus Tournament
               </span>
             </div>
           </div>
@@ -43,7 +42,7 @@ export default function Footer() {
           {/* COL 2: QUICK LINKS */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold font-display uppercase tracking-widest text-slate-900 dark:text-white">Tournament</h4>
-            <ul className="space-y-2.5 text-xs">
+            <ul className="space-y-2 text-xs">
               <li><Link href="/teams" className="hover:text-bgmi-red transition-colors">College Squads</Link></li>
               <li><Link href="/matches" className="hover:text-bgmi-red transition-colors">Match Schedule & Lobbies</Link></li>
               <li><Link href="/standings" className="hover:text-bgmi-red transition-colors">Leaderboard Standings</Link></li>
@@ -55,10 +54,11 @@ export default function Footer() {
           {/* COL 3: REGISTRATION & MEDIA */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold font-display uppercase tracking-widest text-slate-900 dark:text-white">Portal</h4>
-            <ul className="space-y-2.5 text-xs">
+            <ul className="space-y-2 text-xs">
               <li><Link href="/register" className="hover:text-bgmi-red transition-colors text-bgmi-red font-bold flex items-center gap-1"><Flame className="w-3.5 h-3.5 text-bgmi-red" /> Register Squad</Link></li>
-              <li><Link href="/media" className="hover:text-bgmi-red transition-colors">POV Clips & Media</Link></li>
+              <li><Link href="/media" className="hover:text-bgmi-red transition-colors">POV Clips & Screenshots</Link></li>
               <li><Link href="/rules" className="hover:text-bgmi-red transition-colors">Official Rulebook</Link></li>
+              <li><Link href="/admin/login" className="hover:text-bgmi-red transition-colors">Admin Login</Link></li>
             </ul>
           </div>
 
@@ -71,7 +71,7 @@ export default function Footer() {
                 href="https://chat.whatsapp.com/E8vPQ1JZOPV4BNPF9FPLKG?s=cl&p=a&ilr=4"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-bgmi-red/10 hover:bg-bgmi-red/20 text-bgmi-red border border-bgmi-red/40 rounded-lg text-xs font-bold transition-all clip-tactical w-full"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-bgmi-red dark:hover:bg-bgmi-red-hover text-white rounded-xl text-xs font-display font-bold uppercase tracking-wider transition-all shadow-editorial w-full"
               >
                 <span>Join WhatsApp Group</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -82,11 +82,11 @@ export default function Footer() {
         </div>
 
         {/* BOTTOM COPYRIGHT */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-500">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© 2026 Nexcore Institute of Technology — NIT BGMI Esports Championship. All Rights Reserved.</p>
           <div className="flex items-center gap-6 text-[11px]">
             <Link href="/rules" className="hover:text-bgmi-red">Rules & Code of Conduct</Link>
-            <span className="hover:text-bgmi-red cursor-pointer">Anti-Cheat Policy</span>
+            <Link href="/rules" className="hover:text-bgmi-red">Anti-Cheat Policy</Link>
           </div>
         </div>
       </div>

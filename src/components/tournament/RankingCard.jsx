@@ -9,17 +9,17 @@ export default function RankingCard({ standing }) {
   const isTop1 = standing.rank === 1;
 
   return (
-    <div className={`p-4 rounded-xl border transition-all ${
+    <div className={`p-4 rounded-2xl border transition-all ${
       isTop1
-        ? 'bg-amber-500/10 border-amber-500/50 shadow-md'
-        : 'bg-white dark:bg-bgmi-surface/90 border-slate-200 dark:border-bgmi-border'
+        ? 'bg-amber-500/10 border-amber-500/40 shadow-editorial-sm'
+        : 'bg-white dark:bg-[#121620] border-[#E7E3DA] dark:border-[#1E2638] shadow-editorial-sm'
     }`}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-display font-black text-sm ${
+          <span className={`w-8 h-8 rounded-xl flex items-center justify-center font-display font-black text-sm ${
             isTop1
-              ? 'bg-amber-500 text-slate-950 shadow-md'
-              : 'bg-slate-100 dark:bg-bgmi-dark text-slate-900 dark:text-slate-200 border border-slate-200 dark:border-bgmi-border'
+              ? 'bg-amber-500 text-slate-950 shadow-sm'
+              : 'bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-900 dark:text-slate-200 border border-[#E7E3DA] dark:border-[#1E2638]'
           }`}>
             #{standing.rank}
           </span>
@@ -38,13 +38,13 @@ export default function RankingCard({ standing }) {
           <p className="font-display font-black text-lg text-slate-900 dark:text-white">
             {standing.totalPoints !== undefined ? standing.totalPoints : standing.points || 0} <span className="text-[10px] text-slate-500 font-normal">PTS</span>
           </p>
-          <p className="text-[10px] text-amber-600 dark:text-bgmi-gold font-bold">
+          <p className="text-[10px] text-amber-600 dark:text-amber-400 font-bold">
             {standing.wwcd > 0 ? `🍗 ${standing.wwcd} WWCD` : '0 WWCD'}
           </p>
         </div>
       </div>
 
-      <div className="mt-3 pt-2 border-t border-slate-200 dark:border-bgmi-border/40 grid grid-cols-3 gap-2 text-center text-xs">
+      <div className="mt-3 pt-2.5 border-t border-[#E7E3DA] dark:border-[#1E2638] grid grid-cols-3 gap-2 text-center text-xs">
         <div>
           <span className="text-[9px] text-slate-500 uppercase font-bold block">Matches</span>
           <span className="font-bold text-slate-800 dark:text-slate-200">{standing.matchesPlayed || standing.played || 4}</span>

@@ -59,8 +59,12 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
         setError('Please upload a valid screenshot image file (PNG, JPG, WEBP).');
         return;
       }
-      setError('');
+      if (file.size > 10 * 1024 * 1024) {
+        setError('Image size exceeds 10MB limit.');
+        return;
+      }
       setSelectedFile(file);
+      setError('');
       const reader = new FileReader();
       reader.onloadend = () => {
         setFilePreview(reader.result);
@@ -69,63 +73,54 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (!formData.team || !formData.player) {
-      setError('Please fill in Team Name and Player/IGL Name.');
+    if (!formData.title.trim()) {
+      setError('Please provide a title or description.');
       return;
     }
 
-    if (!selectedFile && !formData.videoUrl) {
-      setError('Please select a screenshot file to upload or provide a video URL.');
+    if (formData.type === 'Screenshots' && !selectedFile && !filePreview) {
+      setError('Please select a screenshot file to upload.');
+      return;
+    }
+
+    if (formData.type === 'POV' && !formData.videoUrl.trim()) {
+      setError('Please provide a YouTube, Twitch, or Google Drive link for POV recording.');
       return;
     }
 
     try {
       setSubmitting(true);
 
-      const generatedTitle = `${formData.team} - ${formData.player} (${formData.type === 'POV' ? 'POV Video' : 'Screenshot'}) - ${formData.match}`;
+      const submitData = new FormData();
+      submitData.append('title', formData.title);
+      submitData.append('type', formData.type);
+      submitData.append('team', formData.team || 'Independent Roster');
+      submitData.append('player', formData.player || 'Player POV');
+      submitData.append('match', formData.match);
 
-      const submissionData = new FormData();
-      submissionData.append('title', formData.title || generatedTitle);
-      submissionData.append('type', formData.type);
-      submissionData.append('team', formData.team);
-      submissionData.append('player', formData.player);
-      submissionData.append('match', formData.match);
-
-      if (formData.videoUrl) {
-        submissionData.append('videoUrl', formData.videoUrl);
+      if (formData.type === 'Screenshots' && selectedFile) {
+        submitData.append('mediaFile', selectedFile);
+      } else if (formData.type === 'POV') {
+        submitData.append('videoUrl', formData.videoUrl);
       }
 
-      if (selectedFile) {
-        submissionData.append('file', selectedFile);
-      }
+      const res = await submitMedia(submitData);
 
-      if (filePreview) {
-        submissionData.append('imageUrl', filePreview);
-      }
-
-      const res = await submitMedia(submissionData);
-
-      if (res && res.success) {
+      if (res && (res.success || res.data)) {
         setSubmittedSuccess(true);
         setTimeout(() => {
           setSubmittedSuccess(false);
-          onSuccess && onSuccess();
           onClose();
-          // Reset form
-          setFormData({
-            title: '',
-            type: 'Screenshots',
-            team: '',
-            player: '',
-            match: 'Match #01',
-            videoUrl: '',
-          });
-          setSelectedFile(null);
-          setFilePreview(null);
+          if (onSuccess) onSuccess();
         }, 1800);
       } else {
         setError(res?.message || 'Failed to submit screenshot. Please try again.');
@@ -139,31 +134,31 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
   };
 
   const modalContent = (
-    <div className="fixed inset-0 w-screen h-screen z-[100] flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 w-screen h-screen z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Viewport Backdrop */}
       <div 
-        className="fixed inset-0 w-full h-full bg-black/85 backdrop-blur-md transition-opacity duration-200 z-[100]" 
+        className="fixed inset-0 w-full h-full bg-black/80 dark:bg-black/85 backdrop-blur-md transition-opacity duration-200 z-[9999]" 
         onClick={onClose}
       />
 
       {/* Modal Dialog */}
       <div 
-        className="relative w-full max-w-lg bg-bgmi-dark border border-bgmi-border rounded-2xl overflow-hidden shadow-2xl clip-tactical z-[101] my-auto"
+        className="relative w-full max-w-lg bg-[#FAF8F5] dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl overflow-hidden shadow-2xl z-[10000] my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* MODAL HEADER */}
-        <div className="px-6 py-4 border-b border-bgmi-border flex items-center justify-between bg-bgmi-surface/60">
+        <div className="px-6 py-4 border-b border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-between bg-white dark:bg-[#181E2C]">
           <div className="flex items-center gap-2">
             <Upload className="w-5 h-5 text-bgmi-gold" />
-            <h2 className="font-display font-bold text-lg text-white uppercase tracking-wider">
-              Submit Match Media / Screenshot
+            <h2 className="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white uppercase tracking-wider">
+              Submit Match Media / Proof
             </h2>
           </div>
           <button
             onClick={onClose}
             aria-label="Close modal"
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-bgmi-surface transition-colors"
+            className="p-1.5 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -174,157 +169,189 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
           
           {submittedSuccess ? (
             <div className="py-10 text-center space-y-3">
-              <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto animate-bounce" />
-              <h3 className="font-display font-bold text-xl text-white uppercase">
-                Screenshot Submitted Successfully!
+              <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto animate-bounce" />
+              <h3 className="font-display font-bold text-xl text-slate-900 dark:text-white uppercase">
+                Media Submitted Successfully!
               </h3>
-              <p className="text-xs text-slate-300 max-w-xs mx-auto">
-                Your post-match screenshot/POV clip has been submitted for admin verification. It will appear live in the gallery once approved.
+              <p className="text-xs text-slate-600 dark:text-slate-400">
+                Referees will review and publish your submission shortly.
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               
               {error && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-xs text-red-400">
+                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-600 dark:text-red-400 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
-              {/* MEDIA TYPE & MATCH */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                    Category Type
-                  </label>
-                  <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                    className="w-full bg-bgmi-surface border border-bgmi-border rounded-lg px-3 py-2 text-xs text-white focus:border-bgmi-gold focus:outline-none"
-                  >
-                    <option value="Screenshots">In-Game Screenshot</option>
-                    <option value="POV">Player POV Video</option>
-                  </select>
-                </div>
+              {/* MEDIA TYPE TOGGLE */}
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, type: 'Screenshots' }))}
+                  className={`p-3 rounded-xl border text-xs font-display font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+                    formData.type === 'Screenshots'
+                      ? 'bg-slate-900 text-white border-slate-900 dark:bg-bgmi-red dark:border-bgmi-red shadow-editorial'
+                      : 'bg-white dark:bg-[#181E2C] text-slate-700 dark:text-slate-300 border-[#E7E3DA] dark:border-[#1E2638] hover:border-bgmi-gold'
+                  }`}
+                >
+                  <ImageIcon className="w-4 h-4" />
+                  <span>Screenshot</span>
+                </button>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                    Match Context
-                  </label>
-                  <select
-                    value={formData.match}
-                    onChange={(e) => setFormData({ ...formData, match: e.target.value })}
-                    className="w-full bg-bgmi-surface border border-bgmi-border rounded-lg px-3 py-2 text-xs text-white focus:border-bgmi-gold focus:outline-none"
-                  >
-                    <option value="Match #01">Match #01 / Erangel</option>
-                    <option value="Match #02">Match #02 / Livik</option>
-                    <option value="Match #03">Match #03 / Livik</option>
-                    <option value="Match #04">Match #04 / Erangel</option>
-                    <option value="Match #05">Match #05 / Miramar</option>
-                    <option value="Match #06">Match #06 / Erangel</option>
-                    <option value="Media Day">Media Day / General</option>
-                  </select>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, type: 'POV' }))}
+                  className={`p-3 rounded-xl border text-xs font-display font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+                    formData.type === 'POV'
+                      ? 'bg-slate-900 text-white border-slate-900 dark:bg-bgmi-red dark:border-bgmi-red shadow-editorial'
+                      : 'bg-white dark:bg-[#181E2C] text-slate-700 dark:text-slate-300 border-[#E7E3DA] dark:border-[#1E2638] hover:border-bgmi-gold'
+                  }`}
+                >
+                  <Video className="w-4 h-4" />
+                  <span>POV / Replay</span>
+                </button>
               </div>
 
-              {/* TEAM & PLAYER */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                    Squad / Team Name *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. BITS Apex Esports"
-                    value={formData.team}
-                    onChange={(e) => setFormData({ ...formData, team: e.target.value })}
-                    className="w-full bg-bgmi-surface border border-bgmi-border rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:border-bgmi-gold focus:outline-none"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                    Player / IGL Name *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Yash (IGL)"
-                    value={formData.player}
-                    onChange={(e) => setFormData({ ...formData, player: e.target.value })}
-                    className="w-full bg-bgmi-surface border border-bgmi-border rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:border-bgmi-gold focus:outline-none"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* FILE UPLOAD DRAG & DROP */}
-              <div>
-                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                  {formData.type === 'POV' ? 'Upload POV Media / Thumbnail File *' : 'Upload Screenshot Image *'}
+              {/* TITLE */}
+              <div className="space-y-1">
+                <label className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-300">
+                  Title / Match Highlight
                 </label>
-                <div className="relative border-2 border-dashed border-bgmi-border hover:border-bgmi-gold/50 rounded-xl p-4 text-center bg-bgmi-surface/30 transition-colors">
+                <input
+                  type="text"
+                  name="title"
+                  required
+                  placeholder="e.g., Erangel Final Circle 1v3 Clutch"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  className="w-full px-3.5 py-2.5 bg-white dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm"
+                />
+              </div>
+
+              {/* SQUAD & PLAYER ROW */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-300">
+                    Squad Name
+                  </label>
                   <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    type="text"
+                    name="team"
+                    placeholder="e.g., Soul Reapers"
+                    value={formData.team}
+                    onChange={handleInputChange}
+                    className="w-full px-3.5 py-2.5 bg-white dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm"
                   />
-                  {filePreview ? (
-                    <div className="space-y-2">
-                      <img
-                        src={filePreview}
-                        alt="Preview"
-                        className="max-h-36 mx-auto rounded border border-bgmi-border object-contain"
-                      />
-                      <p className="text-[11px] text-emerald-400 font-bold flex items-center justify-center gap-1">
-                        <ImageIcon className="w-3.5 h-3.5" /> File Selected: {selectedFile?.name}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-1 py-2">
-                      <Upload className="w-8 h-8 text-bgmi-cyan mx-auto opacity-80" />
-                      <p className="text-xs text-slate-300 font-medium">
-                        {formData.type === 'POV' ? 'Click to select or drag & drop POV file/screenshot' : 'Click to select or drag & drop post-match screenshot'}
-                      </p>
-                      <p className="text-[10px] text-slate-500">Supports PNG, JPG, WEBP (Max 10MB)</p>
-                    </div>
-                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-300">
+                    Player IGN
+                  </label>
+                  <input
+                    type="text"
+                    name="player"
+                    placeholder="e.g., JonathanOP"
+                    value={formData.player}
+                    onChange={handleInputChange}
+                    className="w-full px-3.5 py-2.5 bg-white dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm"
+                  />
                 </div>
               </div>
 
-              {/* OPTIONAL YOUTUBE / VIDEO POV URL */}
-              {formData.type === 'POV' && (
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
-                    <Video className="w-3.5 h-3.5 text-bgmi-cyan" /> YouTube / Drive POV Video URL (Optional)
+              {/* MATCH SELECTION */}
+              <div className="space-y-1">
+                <label className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-300">
+                  Tournament Match
+                </label>
+                <select
+                  name="match"
+                  value={formData.match}
+                  onChange={handleInputChange}
+                  className="w-full px-3.5 py-2.5 bg-white dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm"
+                >
+                  <option value="Match #01">Match #01 - Erangel</option>
+                  <option value="Match #02">Match #02 - Miramar</option>
+                  <option value="Match #03">Match #03 - Sanhok</option>
+                  <option value="Match #04">Match #04 - Erangel Finals</option>
+                  <option value="Scrims / Friendly">Campus Scrims / Friendly</option>
+                </select>
+              </div>
+
+              {/* FILE OR VIDEO INPUT */}
+              {formData.type === 'Screenshots' ? (
+                <div className="space-y-2">
+                  <label className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-300">
+                    Upload Screenshot (Max 10MB)
+                  </label>
+                  <div className="border-2 border-dashed border-[#E7E3DA] dark:border-[#1E2638] hover:border-bgmi-gold rounded-2xl p-6 text-center cursor-pointer relative bg-white dark:bg-[#181E2C]/50 transition-colors">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    {filePreview ? (
+                      <div className="space-y-2">
+                        <img
+                          src={filePreview}
+                          alt="Screenshot Preview"
+                          className="h-32 mx-auto rounded-xl object-contain border border-[#E7E3DA] dark:border-[#1E2638]"
+                        />
+                        <span className="text-[10px] font-mono text-slate-500 block">Click or drag to change image</span>
+                      </div>
+                    ) : (
+                      <div className="space-y-2 text-slate-500">
+                        <Upload className="w-8 h-8 mx-auto text-slate-400" />
+                        <span className="text-xs font-medium block text-slate-700 dark:text-slate-300">
+                          Click to browse or drop victory screenshot here
+                        </span>
+                        <span className="text-[10px] font-mono block">PNG, JPG, WEBP accepted</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  <label className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-300">
+                    POV Stream / Video Link
                   </label>
                   <input
                     type="url"
-                    placeholder="https://www.youtube.com/embed/..."
+                    name="videoUrl"
+                    placeholder="https://youtube.com/watch?v=... or Google Drive link"
                     value={formData.videoUrl}
-                    onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                    className="w-full bg-bgmi-surface border border-bgmi-border rounded-lg px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:border-bgmi-gold focus:outline-none"
+                    onChange={handleInputChange}
+                    className="w-full px-3.5 py-2.5 bg-white dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm"
                   />
+                  <p className="text-[10px] text-slate-500 font-mono">
+                    Ensure link permissions are set to public view for verification.
+                  </p>
                 </div>
               )}
 
-              {/* SUBMIT BUTTON */}
-              <div className="pt-3 border-t border-bgmi-border flex items-center justify-end gap-3">
-                <Button variant="secondary" size="sm" type="button" onClick={onClose} disabled={submitting}>
+              {/* ACTION BUTTONS */}
+              <div className="pt-2 flex items-center justify-end gap-3 border-t border-[#E7E3DA] dark:border-[#1E2638]">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  disabled={submitting}
+                  className="px-4 py-2.5 text-xs font-display font-bold uppercase text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                >
                   Cancel
-                </Button>
-                <Button variant="primary" size="sm" type="submit" disabled={submitting}>
-                  {submitting ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin" /> Uploading...
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1.5">
-                      <Upload className="w-4 h-4" /> {formData.type === 'POV' ? 'Submit POV Video' : 'Submit Screenshot'}
-                    </span>
-                  )}
-                </Button>
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-6 py-2.5 bg-slate-950 hover:bg-slate-800 dark:bg-bgmi-red dark:hover:bg-bgmi-red-hover text-white text-xs font-display font-bold uppercase tracking-wider rounded-xl shadow-editorial transition-all flex items-center gap-2 active:scale-95 disabled:opacity-50"
+                >
+                  {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                  <span>{submitting ? 'Uploading...' : 'Submit for Review'}</span>
+                </button>
               </div>
 
             </form>

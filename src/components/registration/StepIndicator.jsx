@@ -5,7 +5,7 @@ import { Check } from 'lucide-react';
 
 export default function StepIndicator({ currentStep, steps }) {
   return (
-    <div className="w-full mb-8 overflow-x-auto pb-2">
+    <div className="w-full mb-8 overflow-x-auto pb-2 font-sans">
       <div className="flex items-center justify-between min-w-[300px] max-w-3xl mx-auto px-4">
         {steps.map((step, idx) => {
           const stepNum = idx + 1;
@@ -15,25 +15,25 @@ export default function StepIndicator({ currentStep, steps }) {
           return (
             <React.Fragment key={step.title}>
               {/* Step item */}
-              <div className="flex flex-col items-center gap-2 group flex-shrink-0">
+              <div className="flex flex-col items-center gap-2 group shrink-0">
                 <div
-                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center font-display font-black text-xs sm:text-sm transition-all duration-300 clip-tactical ${
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center font-display font-black text-xs sm:text-sm transition-all duration-200 ${
                     isCompleted
-                      ? 'bg-amber-500 text-slate-950 shadow-md font-bold'
+                      ? 'bg-amber-500 text-slate-950 shadow-editorial-sm font-bold'
                       : isCurrent
-                      ? 'bg-bgmi-red text-white shadow-red-glow border-2 border-red-400 scale-105'
-                      : 'bg-white dark:bg-bgmi-surface text-slate-700 dark:text-slate-400 border border-slate-300 dark:border-bgmi-border'
+                      ? 'bg-slate-950 dark:bg-bgmi-red text-white shadow-editorial scale-105'
+                      : 'bg-white dark:bg-[#121620] text-slate-500 dark:text-slate-400 border border-[#E7E3DA] dark:border-[#1E2638]'
                   }`}
                 >
-                  {isCompleted ? <Check className="w-5 h-5 stroke-[3]" /> : stepNum}
+                  {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : stepNum}
                 </div>
                 <span
-                  className={`text-[10px] sm:text-xs font-black uppercase tracking-wider ${
+                  className={`text-[10px] sm:text-xs font-display font-bold uppercase tracking-wider ${
                     isCurrent
-                      ? 'text-bgmi-red'
+                      ? 'text-slate-950 dark:text-white'
                       : isCompleted
-                      ? 'text-slate-900 dark:text-slate-200'
-                      : 'text-slate-600 dark:text-slate-500'
+                      ? 'text-amber-700 dark:text-amber-400'
+                      : 'text-slate-400 dark:text-slate-600'
                   }`}
                 >
                   {step.title}
@@ -43,8 +43,8 @@ export default function StepIndicator({ currentStep, steps }) {
               {/* Connecting Line */}
               {idx < steps.length - 1 && (
                 <div
-                  className={`flex-1 h-0.5 mx-2 sm:mx-4 transition-colors duration-300 ${
-                    currentStep > stepNum ? 'bg-amber-500' : 'bg-slate-300 dark:bg-bgmi-border'
+                  className={`flex-1 h-0.5 mx-2 sm:mx-4 rounded-full transition-colors duration-200 ${
+                    currentStep > stepNum ? 'bg-amber-500' : 'bg-[#E7E3DA] dark:bg-[#1E2638]'
                   }`}
                 />
               )}

@@ -3,13 +3,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext({
-  theme: 'dark',
+  theme: 'light',
   toggleTheme: () => {},
   setTheme: () => {},
+  mounted: false,
 });
 
 export function ThemeProvider({ children }) {
-  const [theme, setThemeState] = useState('dark');
+  const [theme, setThemeState] = useState('light');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -19,9 +20,11 @@ export function ThemeProvider({ children }) {
       setThemeState(savedTheme);
       applyTheme(savedTheme);
     } else {
-      // Default to dark theme for esports broadcast aesthetic
-      setThemeState('dark');
-      applyTheme('dark');
+      // Default to light theme as inspired by primary editorial reference
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = prefersDark ? 'dark' : 'light';
+      setThemeState(initialTheme);
+      applyTheme(initialTheme);
     }
   }, []);
 
@@ -55,7 +58,6 @@ export function ThemeProvider({ children }) {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
   };
-
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme, mounted }}>

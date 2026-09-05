@@ -1,19 +1,20 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import Hero from '@/components/tournament/Hero';
 import TournamentStats from '@/components/tournament/TournamentStats';
-import NextMatchCard from '@/components/tournament/NextMatchCard';
 import Top3Leaderboard from '@/components/tournament/Top3Leaderboard';
 import StandingRow from '@/components/tournament/StandingRow';
 import RankingCard from '@/components/tournament/RankingCard';
 import MatchCard from '@/components/tournament/MatchCard';
 import MediaCard from '@/components/tournament/MediaCard';
 import MediaLightbox from '@/components/tournament/MediaLightbox';
+import EmptyState from '@/components/common/EmptyState';
 import { SkeletonGrid } from '@/components/common/Skeleton';
 import { getMatches, getStandings, getResults, getMedia, getAnnouncements, getTeamById, getTeams } from '@/services/api';
-import { Trophy, Swords, Flame, Video, ArrowRight, Crown, ShieldAlert } from 'lucide-react';
+import { Trophy, Swords, Video, ArrowRight, Crown } from 'lucide-react';
 
 export default function HomePage() {
   const [loading, setLoading] = useState(true);
@@ -98,12 +99,12 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="space-y-16 pb-20 overflow-x-hidden font-sans">
+    <div className="space-y-12 sm:space-y-16 pb-20 overflow-x-hidden font-sans">
       
-      {/* 1. ASYMMETRIC HERO SECTION */}
+      {/* 1. ASYMMETRIC EDITORIAL HERO */}
       <Hero nextMatch={nextMatch} registeredSquads={teamsStats.registeredSquads} />
 
-      {/* 2. BROADCAST TELEMETRY TICKER STRIP (EDGE TO EDGE) */}
+      {/* 2. BROADCAST TELEMETRY STATS CARD */}
       <TournamentStats
         registeredSquads={teamsStats.registeredSquads}
         verifiedPlayers={teamsStats.verifiedPlayers}
@@ -113,109 +114,112 @@ export default function HomePage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
 
-        {/* 3. GRAND CHAMPION CROWN STAGE */}
+        {/* 3. GRAND CHAMPION CROWN STAGE (IF COMPLETED) */}
         {isComplete && championTeam && (
-          <section className="relative bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 text-slate-950 rounded-2xl p-8 clip-tactical shadow-2xl overflow-hidden">
+          <motion.section 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 rounded-3xl p-6 sm:p-8 shadow-editorial-lg overflow-hidden"
+          >
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-slate-950 text-amber-400 rounded-xl flex items-center justify-center font-black text-2xl shadow-xl">
+                <div className="w-16 h-16 bg-slate-950 text-amber-400 rounded-2xl flex items-center justify-center font-black text-2xl shadow-editorial">
                   <Crown className="w-8 h-8" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest bg-slate-950 text-amber-400 px-2.5 py-0.5 rounded">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest bg-slate-950 text-amber-400 px-3 py-0.5 rounded-full">
                     OFFICIAL COLLEGE CHAMPION 2026
                   </span>
-                  <h3 className="font-broadcast font-black text-3xl uppercase tracking-tight">
+                  <h3 className="font-display font-black text-3xl uppercase tracking-tight mt-1">
                     {championTeam.teamName}
                   </h3>
                 </div>
               </div>
               <div className="font-mono text-right">
-                <span className="font-broadcast font-black text-3xl text-slate-950 block">
+                <span className="font-display font-black text-3xl text-slate-950 block">
                   {championTeam.totalPoints || championTeam.points || 0} PTS
                 </span>
                 <span className="text-xs font-bold text-slate-900">🍗 {championTeam.wwcd || 0} WWCD VICTORIES</span>
               </div>
             </div>
-          </section>
+          </motion.section>
         )}
 
-        {/* 4. BROADCAST MATCH SCOREBARS STACK */}
+        {/* 4. MATCH SCOREBARS STACK */}
         <section className="space-y-6">
-          <div className="border-b-2 border-bgmi-red pb-3 flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-4">
             <div>
               <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
                 /// LIVE MATCH SCHEDULE & SCOREBOARDS
               </span>
-              <h2 className="font-broadcast font-black text-2xl sm:text-4xl text-slate-900 dark:text-white uppercase tracking-tight">
-                MATCH SCOREBARS
+              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight">
+                Tournament Schedule
               </h2>
             </div>
             <Link
               href="/matches"
-              className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-broadcast font-bold text-xs uppercase tracking-wider clip-technical-btn hover:bg-bgmi-red transition-colors flex items-center gap-1"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-[#121620] hover:bg-slate-50 dark:hover:bg-[#181E2C] text-slate-900 dark:text-white border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-editorial-sm transition-all"
             >
-              <span>SCHEDULE & LOBBIES</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>All Matches & Lobbies</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          {/* HORIZONTAL MATCH STRIPIFIED SCHEDULE */}
           {matchesList.length > 0 ? (
             <div className="space-y-3">
-              {matchesList.slice(0, 3).map((m) => (
+              {matchesList.slice(0, 4).map((m) => (
                 <MatchCard key={m.id || m.matchNumber} match={{ ...m, registeredSquadsCount: teamsStats.registeredSquads }} />
               ))}
             </div>
           ) : (
-            <div className="bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-8 text-center space-y-2 font-mono">
-              <Swords className="w-10 h-10 text-slate-400 mx-auto" />
-              <h3 className="font-broadcast font-black text-lg text-slate-900 dark:text-white uppercase">NO MATCHES SCHEDULED YET</h3>
-              <p className="text-xs text-slate-500">Live custom lobbies will appear here once configured by tournament referees.</p>
-            </div>
+            <EmptyState
+              title="No Matches Scheduled Yet"
+              message="Official tournament matches and custom room lobbies will appear here once scheduled."
+              icon={Swords}
+            />
           )}
         </section>
 
         {/* 5. TOP 3 PODIUM & SCOREBOARD TABLE */}
         <section className="space-y-6">
-          <div className="border-b-2 border-amber-500 pb-3 flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-4">
             <div>
-              <span className="text-[10px] font-mono text-amber-500 font-bold uppercase tracking-widest block">
+              <span className="text-[10px] font-mono text-amber-600 dark:text-bgmi-gold font-bold uppercase tracking-widest block">
                 /// OFFICIAL TOURNAMENT RANKINGS
               </span>
-              <h2 className="font-broadcast font-black text-2xl sm:text-4xl text-slate-900 dark:text-white uppercase tracking-tight">
-                STANDINGS SCOREBOARD
+              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight">
+                Standings Leaderboard
               </h2>
             </div>
             <Link
               href="/standings"
-              className="px-4 py-2 bg-amber-500 text-slate-950 font-broadcast font-black text-xs uppercase tracking-wider clip-technical-btn hover:bg-amber-400 transition-colors flex items-center gap-1"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-[#121620] hover:bg-slate-50 dark:hover:bg-[#181E2C] text-slate-900 dark:text-white border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-editorial-sm transition-all"
             >
-              <span>FULL STANDINGS MATRIX</span>
-              <Trophy className="w-4 h-4" />
+              <span>Full Standings Table</span>
+              <Trophy className="w-3.5 h-3.5 text-amber-500" />
             </Link>
           </div>
 
           {topStandings.length > 0 ? (
             <>
-              {/* PODIUM ARENA */}
+              {/* PODIUM CARDS */}
               <Top3Leaderboard standings={topStandings} />
 
               {/* DESKTOP SCOREBOARD TABLE */}
-              <div className="hidden md:block overflow-x-auto bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl shadow-xl clip-tactical">
+              <div className="hidden md:block overflow-x-auto bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl shadow-editorial-sm overflow-hidden">
                 <table className="w-full text-left border-collapse font-mono text-xs">
-                  <thead className="bg-slate-900 text-white font-broadcast font-black uppercase text-xs">
+                  <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-700 dark:text-slate-300 font-display font-bold uppercase text-xs border-b border-[#E7E3DA] dark:border-[#1E2638]">
                     <tr>
-                      <th className="py-3 px-4 text-center">RANK</th>
-                      <th className="py-3 px-4">SQUAD NAME</th>
-                      <th className="py-3 px-4 text-center">PLAYED</th>
-                      <th className="py-3 px-4 text-center">WWCD</th>
-                      <th className="py-3 px-4 text-center">PLACEMENT</th>
-                      <th className="py-3 px-4 text-center">KILLS</th>
-                      <th className="py-3 px-4 text-center">TOTAL PTS</th>
+                      <th className="py-3.5 px-4 text-center">RANK</th>
+                      <th className="py-3.5 px-4">SQUAD NAME</th>
+                      <th className="py-3.5 px-4 text-center">PLAYED</th>
+                      <th className="py-3.5 px-4 text-center">WWCD</th>
+                      <th className="py-3.5 px-4 text-center">PLACEMENT</th>
+                      <th className="py-3.5 px-4 text-center">KILLS</th>
+                      <th className="py-3.5 px-4 text-center">TOTAL PTS</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200 dark:divide-white/5">
+                  <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
                     {topStandings.map((standing) => (
                       <StandingRow key={standing.teamId || standing.rank} standing={standing} />
                     ))}
@@ -231,31 +235,31 @@ export default function HomePage() {
               </div>
             </>
           ) : (
-            <div className="bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-8 text-center space-y-2 font-mono">
-              <Trophy className="w-10 h-10 text-amber-500 mx-auto" />
-              <h3 className="font-broadcast font-black text-lg text-slate-900 dark:text-white uppercase">NO STANDINGS RECORDED YET</h3>
-              <p className="text-xs text-slate-500">Official tournament rankings will populate automatically as match scorecards are submitted.</p>
-            </div>
+            <EmptyState
+              title="No Standings Recorded Yet"
+              message="Official rankings will populate automatically as match scorecards are submitted by referees."
+              icon={Trophy}
+            />
           )}
         </section>
 
-        {/* 6. MASONRY MEDIA GALLERY */}
+        {/* 6. MEDIA GALLERY */}
         <section className="space-y-6">
-          <div className="border-b-2 border-sky-500 pb-3 flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-4">
             <div>
-              <span className="text-[10px] font-mono text-sky-400 font-bold uppercase tracking-widest block">
+              <span className="text-[10px] font-mono text-sky-600 dark:text-sky-400 font-bold uppercase tracking-widest block">
                 /// PLAYER POVs & REPLAY HIGHLIGHTS
               </span>
-              <h2 className="font-broadcast font-black text-2xl sm:text-4xl text-slate-900 dark:text-white uppercase tracking-tight">
-                MEDIA GALLERY
+              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight">
+                Tournament Media
               </h2>
             </div>
             <Link
               href="/media"
-              className="px-4 py-2 bg-sky-500 text-slate-950 font-broadcast font-black text-xs uppercase tracking-wider clip-technical-btn hover:bg-sky-400 transition-colors flex items-center gap-1"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-[#121620] hover:bg-slate-50 dark:hover:bg-[#181E2C] text-slate-900 dark:text-white border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-editorial-sm transition-all"
             >
-              <span>ALL MEDIA POVS</span>
-              <Video className="w-4 h-4" />
+              <span>Explore Gallery</span>
+              <Video className="w-3.5 h-3.5 text-sky-500" />
             </Link>
           </div>
 
@@ -266,11 +270,11 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white dark:bg-[#121620] border-2 border-slate-200 dark:border-white/10 rounded-2xl p-8 text-center space-y-2 font-mono">
-              <Video className="w-10 h-10 text-sky-400 mx-auto" />
-              <h3 className="font-broadcast font-black text-lg text-slate-900 dark:text-white uppercase">NO MEDIA PUBLISHED YET</h3>
-              <p className="text-xs text-slate-500">Player POVs and stream highlights uploaded during matches will appear here.</p>
-            </div>
+            <EmptyState
+              title="No Media Published Yet"
+              message="Screenshots and player recordings uploaded during matches will appear here."
+              icon={Video}
+            />
           )}
         </section>
 

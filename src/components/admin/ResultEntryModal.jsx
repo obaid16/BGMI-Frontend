@@ -235,17 +235,17 @@ export default function ResultEntryModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Match Result Entry & Every Team Scorecard" maxWidth="max-w-4xl">
+    <Modal isOpen={isOpen} onClose={onClose} title="Match Result Dossier & Scorecard Entry" maxWidth="max-w-4xl">
       <div className="space-y-5 text-xs max-h-[80vh] overflow-y-auto pr-1">
 
         {/* TOP CONTROLS: MATCH SELECTOR & WWCD HIGHLIGHT */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-bgmi-dark/80 p-4 rounded-xl border border-bgmi-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-white/10">
           <div className="space-y-1">
-            <label className="font-bold text-slate-300 uppercase">1. Select Target Match</label>
+            <label className="font-broadcast font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider text-[11px]">1. Select Target Match</label>
             <select
               value={selectedMatchId}
               onChange={(e) => setSelectedMatchId(e.target.value)}
-              className="w-full p-2.5 bg-bgmi-surface border border-bgmi-border rounded-lg text-white font-bold"
+              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg text-slate-900 dark:text-white font-bold text-xs"
             >
               {matches.map((m) => (
                 <option key={m.id || m._id} value={m.id || m._id}>
@@ -255,14 +255,14 @@ export default function ResultEntryModal({
             </select>
           </div>
 
-          <div className="space-y-1 bg-bgmi-surface p-2.5 rounded-lg border border-bgmi-gold/40 flex items-center justify-between">
+          <div className="space-y-1 bg-white dark:bg-slate-900 p-3 rounded-lg border border-amber-500/40 flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold text-bgmi-gold uppercase block">WWCD Champion (Rank #1)</span>
-              <p className="font-display font-black text-sm text-white">{winnerTeamScore?.teamName || 'N/A'}</p>
+              <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-bgmi-gold uppercase tracking-widest block">WWCD Champion (Rank #1)</span>
+              <p className="font-broadcast font-bold text-sm text-slate-900 dark:text-white">{winnerTeamScore?.teamName || 'N/A'}</p>
             </div>
             <div className="text-right font-mono">
-              <span className="text-xs font-bold text-bgmi-cyan">{winnerTeamScore?.kills || 0} Kills</span>
-              <p className="text-sm font-black text-bgmi-gold">{winnerTeamScore?.total || 0} PTS</p>
+              <span className="text-xs font-bold text-sky-600 dark:text-sky-400">{winnerTeamScore?.kills || 0} Kills</span>
+              <p className="text-sm font-black text-amber-600 dark:text-bgmi-gold">{winnerTeamScore?.total || 0} PTS</p>
             </div>
           </div>
         </div>
@@ -271,19 +271,19 @@ export default function ResultEntryModal({
         <div className="space-y-3">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div>
-              <h3 className="font-display font-black text-sm text-white uppercase flex items-center gap-1.5">
-                <Trophy className="w-4 h-4 text-bgmi-gold" /> All Teams Match Scorecard Table
+              <h3 className="font-broadcast font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Trophy className="w-4 h-4 text-amber-600 dark:text-bgmi-gold" /> All Teams Match Scorecard Table
               </h3>
-              <p className="text-[11px] text-slate-400">Enter Rank and Kills for every team. Placement & Total Points update automatically.</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans">Enter Rank and Kills for every team. Placement & Total Points update automatically.</p>
             </div>
             <Button variant="secondary" size="sm" icon={ArrowUpDown} onClick={handleAutoRank}>
               Auto-Rank by Total Pts
             </Button>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-bgmi-border bg-bgmi-surface">
+          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/40">
             <table className="w-full text-left border-collapse text-xs">
-              <thead className="bg-bgmi-dark text-slate-400 font-display font-bold uppercase text-[10px] border-b border-bgmi-border">
+              <thead className="bg-slate-100 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 font-broadcast font-bold uppercase text-[10px] border-b border-slate-200 dark:border-white/10">
                 <tr>
                   <th className="p-3 text-center w-20">Rank</th>
                   <th className="p-3">Team / Squad Name</th>
@@ -292,11 +292,11 @@ export default function ResultEntryModal({
                   <th className="p-3 text-center w-28">Total Points</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-bgmi-border/40 font-mono">
+              <tbody className="divide-y divide-slate-200 dark:divide-white/5 font-mono">
                 {teamScores.map((ts) => {
                   const isWinner = Number(ts.rank) === 1;
                   return (
-                    <tr key={ts.teamId} className={isWinner ? 'bg-bgmi-gold/10 font-bold' : 'hover:bg-bgmi-dark/40'}>
+                    <tr key={ts.teamId} className={isWinner ? 'bg-amber-500/10 font-bold' : 'hover:bg-slate-50 dark:hover:bg-white/5'}>
                       {/* RANK INPUT */}
                       <td className="p-2 text-center">
                         <input
@@ -307,15 +307,15 @@ export default function ResultEntryModal({
                           onChange={(e) => handleScoreChange(ts.teamId, 'rank', e.target.value)}
                           className={`w-14 p-1 text-center font-bold rounded border ${
                             isWinner
-                              ? 'bg-bgmi-gold text-slate-900 border-bgmi-gold'
-                              : 'bg-bgmi-dark text-white border-bgmi-border'
+                              ? 'bg-amber-500 text-slate-950 border-amber-400 font-black'
+                              : 'bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white border-slate-300 dark:border-white/10'
                           }`}
                         />
                       </td>
 
                       {/* TEAM NAME */}
-                      <td className="p-3 font-sans font-bold text-white flex items-center gap-2">
-                        {isWinner && <Trophy className="w-4 h-4 text-bgmi-gold shrink-0" />}
+                      <td className="p-3 font-sans font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        {isWinner && <Trophy className="w-4 h-4 text-amber-500 shrink-0" />}
                         <span>{ts.teamName}</span>
                       </td>
 
@@ -326,17 +326,17 @@ export default function ResultEntryModal({
                           min="0"
                           value={ts.kills}
                           onChange={(e) => handleScoreChange(ts.teamId, 'kills', e.target.value)}
-                          className="w-16 p-1 text-center font-bold rounded bg-bgmi-dark text-bgmi-cyan border border-bgmi-border"
+                          className="w-16 p-1 text-center font-bold rounded bg-slate-100 dark:bg-slate-900 text-sky-600 dark:text-sky-400 border border-slate-300 dark:border-white/10"
                         />
                       </td>
 
                       {/* PLACEMENT POINTS */}
-                      <td className="p-3 text-center font-bold text-slate-300">
+                      <td className="p-3 text-center font-bold text-slate-600 dark:text-slate-300">
                         {ts.placementPts} PTS
                       </td>
 
                       {/* TOTAL POINTS */}
-                      <td className="p-3 text-center font-black text-bgmi-gold text-sm">
+                      <td className="p-3 text-center font-black text-amber-600 dark:text-bgmi-gold text-sm">
                         {ts.total} PTS
                       </td>
                     </tr>
@@ -348,17 +348,17 @@ export default function ResultEntryModal({
         </div>
 
         {/* SINGLE MATCH MVP SPOTLIGHT ENTRY */}
-        <div className="p-4 bg-[#0a0b0e] rounded-xl border border-bgmi-gold/30 space-y-3">
+        <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-amber-500/30 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="font-bold text-bgmi-gold uppercase text-xs flex items-center gap-1.5">
-              <UserCheck className="w-4 h-4 text-bgmi-gold" /> SINGLE MATCH MVP SPOTLIGHT
+            <span className="font-broadcast font-bold text-amber-600 dark:text-bgmi-gold uppercase text-xs flex items-center gap-1.5">
+              <UserCheck className="w-4 h-4" /> Single Match MVP Spotlight
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">1 MVP PER MATCH</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">1 MVP PER MATCH</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="space-y-1 sm:col-span-3">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">Select Registered Player (Dropdown)</label>
+              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">Select Registered Player (Dropdown)</label>
               <select
                 value={
                   allRegisteredPlayers.find(
@@ -378,7 +378,7 @@ export default function ResultEntryModal({
                   ''
                 }
                 onChange={(e) => handleMvpDropdownSelect(e.target.value)}
-                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-white font-bold text-xs"
+                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded text-slate-900 dark:text-white font-bold text-xs"
               >
                 <option value="">-- Choose Player from Any Team Roster --</option>
                 {allRegisteredPlayers.map((p, idx) => {
@@ -394,56 +394,56 @@ export default function ResultEntryModal({
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Player Name / IGN</label>
+              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">MVP Player Name / IGN</label>
               <input
                 type="text"
                 placeholder="e.g. OBAID (IGL)"
                 value={mvpPlayerName}
                 onChange={(e) => setMvpPlayerName(e.target.value)}
-                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-white font-bold text-xs"
+                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded text-slate-900 dark:text-white font-bold text-xs"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Team Name</label>
+              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">MVP Team Name</label>
               <input
                 type="text"
                 placeholder="e.g. GodLike Esports"
                 value={mvpTeamName}
                 onChange={(e) => setMvpTeamName(e.target.value)}
-                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-white font-bold text-xs"
+                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded text-slate-900 dark:text-white font-bold text-xs"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">MVP Match Kills</label>
+              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">MVP Match Kills</label>
               <input
                 type="number"
                 min="0"
                 placeholder="e.g. 7"
                 value={mvpKills}
                 onChange={(e) => setMvpKills(e.target.value)}
-                className="w-full p-2 bg-bgmi-surface border border-bgmi-border rounded text-bgmi-gold text-center font-bold font-mono text-xs"
+                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded text-amber-600 dark:text-bgmi-gold text-center font-bold font-mono text-xs"
               />
             </div>
           </div>
         </div>
 
         {/* LIVE FORMULA PREVIEW */}
-        <div className="p-4 bg-gradient-to-r from-bgmi-surface via-bgmi-card to-bgmi-surface border border-bgmi-gold/50 rounded-xl space-y-2">
-          <div className="flex items-center justify-between text-slate-400 font-bold uppercase">
-            <span className="flex items-center gap-1.5 text-bgmi-gold">
+        <div className="p-4 bg-slate-100 dark:bg-slate-900/90 border border-amber-500/30 rounded-xl space-y-2">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-bold uppercase font-broadcast text-[10px]">
+            <span className="flex items-center gap-1.5 text-amber-600 dark:text-bgmi-gold">
               <Calculator className="w-4 h-4" /> Live Score Formula
             </span>
-            <span className="text-[10px] text-slate-500">Official BGMI Scoring Rules</span>
+            <span>Official BGMI Scoring Rules</span>
           </div>
-          <p className="text-xs text-slate-300 font-mono">
+          <p className="text-xs text-slate-700 dark:text-slate-300 font-mono">
             Rank #1 = 10 pts • Rank #2 = 8 pts • Rank #3 = 5 pts • Rank #4 = 3 pts • Rank #5 = 1 pt • 1 Kill = 1 pt
           </p>
         </div>
 
         {/* ACTION BUTTONS */}
-        <div className="pt-4 border-t border-bgmi-border/60 flex items-center justify-end gap-3">
+        <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-end gap-3">
           <Button variant="secondary" size="md" icon={Save} onClick={() => handleSave(false)}>
             SAVE DRAFT RESULT
           </Button>

@@ -19,7 +19,7 @@ export default function SubmitScreenshotPage() {
 
   // Form states
   const [title, setTitle] = useState('');
-  const [type, setType] = useState('Screenshots'); // default to Screenshots
+  const [type, setType] = useState('Screenshots');
   const [selectedTeam, setSelectedTeam] = useState('');
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [selectedMatch, setSelectedMatch] = useState('');
@@ -37,7 +37,7 @@ export default function SubmitScreenshotPage() {
         setTeams(teamsData);
         setMatches(matchesData);
         
-        if (teamsData.length > 0) setSelectedTeam(teamsData[0].name);
+        if (teamsData.length > 0) setSelectedTeam(teamsData[0].name || teamsData[0].teamName);
         if (matchesData.length > 0) setSelectedMatch(`Match #${matchesData[0].matchNumber} - ${matchesData[0].map}`);
       } catch (err) {
         console.error('Failed to load form dropdown data:', err);
@@ -99,43 +99,42 @@ export default function SubmitScreenshotPage() {
     }
   };
 
-  // Get selected team's players to populate player IGN suggestions
-  const currentTeamObj = teams.find(t => t.name === selectedTeam);
+  const currentTeamObj = teams.find(t => (t.name || t.teamName) === selectedTeam);
   const teamPlayers = currentTeamObj?.players || [];
 
   return (
-    <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+    <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8 font-sans">
       
       {/* BACK NAVIGATION */}
-      <Link href="/media" className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors">
-        <ArrowLeft className="w-4 h-4 text-bgmi-cyan" /> Back to Media Gallery
+      <Link href="/media" className="inline-flex items-center gap-2 text-xs font-mono font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+        <ArrowLeft className="w-4 h-4 text-bgmi-red" /> Back to Media Gallery
       </Link>
 
       {/* HEADER */}
-      <div className="border-b border-bgmi-border/60 pb-4 space-y-2">
-        <h1 className="font-display font-black text-2xl sm:text-3xl text-white uppercase tracking-wide flex items-center gap-2">
-          <Camera className="w-6 h-6 text-bgmi-cyan" /> Submit Match Screenshot / POV
+      <div className="border-b border-[#E7E3DA] dark:border-[#1E2638] pb-4 space-y-2">
+        <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
+          <Camera className="w-6 h-6 text-bgmi-red" /> Submit Match Media Proof
         </h1>
-        <p className="text-xs text-slate-400">
-          Upload match scoreboards, win results, or highlight screenshots for verified scoreboard compilation.
+        <p className="text-xs text-slate-500">
+          Upload match scoreboards, victory screenshots, or highlight proofs for referee verification.
         </p>
       </div>
 
       {loadingLists ? (
         <div className="flex flex-col items-center justify-center py-16 space-y-3">
-          <div className="w-8 h-8 border-4 border-bgmi-cyan border-t-transparent rounded-full animate-spin" />
-          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">Loading form selections...</p>
+          <div className="w-8 h-8 border-4 border-bgmi-red border-t-transparent rounded-full animate-spin" />
+          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Loading form selections...</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="bg-bgmi-surface border border-bgmi-border rounded-2xl p-6 sm:p-8 clip-tactical shadow-2xl space-y-5 text-xs">
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl p-6 sm:p-8 shadow-editorial space-y-5 text-xs">
           
           {/* TYPE SELECT */}
           <div className="space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300">Media Type</label>
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">Media Type</label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="w-full px-4 py-2.5 bg-bgmi-dark border border-bgmi-border rounded-xl text-white focus:outline-none focus:border-bgmi-cyan transition-colors cursor-pointer font-bold"
+              className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors cursor-pointer font-bold shadow-editorial-sm"
             >
               <option value="Screenshots">In-Game Screenshot</option>
               <option value="POV">Player POV Video</option>
@@ -144,8 +143,8 @@ export default function SubmitScreenshotPage() {
 
           {/* SQUAD SELECT */}
           <div className="space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-slate-400" /> Select Your Squad / Team
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5 font-mono">
+              <Users className="w-3.5 h-3.5 text-slate-400" /> Select Squad
             </label>
             <select
               value={selectedTeam}
@@ -153,11 +152,11 @@ export default function SubmitScreenshotPage() {
                 setSelectedTeam(e.target.value);
                 setSelectedPlayer('');
               }}
-              className="w-full px-4 py-2.5 bg-bgmi-dark border border-bgmi-border rounded-xl text-white focus:outline-none focus:border-bgmi-cyan transition-colors cursor-pointer"
+              className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors cursor-pointer shadow-editorial-sm"
             >
               {teams.map((t) => (
-                <option key={t.id || t._id} value={t.name}>
-                  {t.name} ({t.college})
+                <option key={t.id || t._id} value={t.name || t.teamName}>
+                  {t.name || t.teamName} ({t.college || t.collegeName || 'NIT'})
                 </option>
               ))}
             </select>
@@ -165,7 +164,7 @@ export default function SubmitScreenshotPage() {
 
           {/* PLAYER SELECT/INPUT */}
           <div className="space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5 font-mono">
               <User className="w-3.5 h-3.5 text-slate-400" /> Player Submitting (IGN)
             </label>
             {teamPlayers.length > 0 ? (
@@ -173,9 +172,9 @@ export default function SubmitScreenshotPage() {
                 value={selectedPlayer}
                 onChange={(e) => setSelectedPlayer(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 bg-bgmi-dark border border-bgmi-border rounded-xl text-white focus:outline-none focus:border-bgmi-cyan transition-colors cursor-pointer"
+                className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors cursor-pointer shadow-editorial-sm"
               >
-                <option value="">-- Select Your Player Name --</option>
+                <option value="">-- Select Your Player IGN --</option>
                 {teamPlayers.map((p, idx) => (
                   <option key={p.id || p._id || idx} value={p.ign}>
                     {p.ign} ({p.name})
@@ -189,20 +188,20 @@ export default function SubmitScreenshotPage() {
                 placeholder="Enter your In-Game Name (IGN)"
                 value={selectedPlayer}
                 onChange={(e) => setSelectedPlayer(e.target.value)}
-                className="w-full px-4 py-2.5 bg-bgmi-dark border border-bgmi-border rounded-xl text-white focus:outline-none focus:border-bgmi-cyan transition-colors"
+                className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors shadow-editorial-sm"
               />
             )}
           </div>
 
           {/* MATCH SELECT */}
           <div className="space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <Trophy className="w-3.5 h-3.5 text-slate-400" /> Select Match Played
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5 font-mono">
+              <Trophy className="w-3.5 h-3.5 text-slate-400" /> Select Match
             </label>
             <select
               value={selectedMatch}
               onChange={(e) => setSelectedMatch(e.target.value)}
-              className="w-full px-4 py-2.5 bg-bgmi-dark border border-bgmi-border rounded-xl text-white focus:outline-none focus:border-bgmi-cyan transition-colors cursor-pointer"
+              className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors cursor-pointer shadow-editorial-sm"
             >
               {matches.map((m) => (
                 <option key={m.id || m._id} value={`Match #${m.matchNumber} - ${m.map}`}>
@@ -214,17 +213,19 @@ export default function SubmitScreenshotPage() {
 
           {/* SCREENSHOT FILE UPLOAD */}
           <div className="space-y-2 pt-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300">Upload Screenshot File (PNG/JPG)</label>
-            <div className="relative border-2 border-dashed border-bgmi-border hover:border-bgmi-cyan/50 rounded-2xl p-6 transition-colors flex flex-col items-center justify-center gap-2 bg-bgmi-dark/30 cursor-pointer">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">
+              Upload Screenshot File (PNG/JPG)
+            </label>
+            <div className="relative border-2 border-dashed border-[#E7E3DA] dark:border-[#1E2638] hover:border-bgmi-red/50 rounded-2xl p-6 transition-colors flex flex-col items-center justify-center gap-2 bg-[#FAF8F5] dark:bg-[#0B0E14] cursor-pointer">
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <UploadCloud className="w-10 h-10 text-slate-500" />
+              <UploadCloud className="w-10 h-10 text-slate-400" />
               <div className="text-center">
-                <p className="font-bold text-white text-xs">
+                <p className="font-bold text-slate-900 dark:text-white text-xs">
                   {fileName ? `Selected: ${fileName}` : 'Click or Drag screenshot here'}
                 </p>
                 <p className="text-[10px] text-slate-400 mt-1">Image files up to 10MB</p>
@@ -233,7 +234,7 @@ export default function SubmitScreenshotPage() {
           </div>
 
           {/* SUBMIT BUTTON */}
-          <div className="pt-4 border-t border-bgmi-border/40">
+          <div className="pt-4 border-t border-[#E7E3DA] dark:border-[#1E2638]">
             <Button
               type="submit"
               variant="primary"

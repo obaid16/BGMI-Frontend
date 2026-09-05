@@ -62,7 +62,7 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-[#0a0b0e] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
+    <div className="flex min-h-screen bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
 
       {/* DESKTOP SIDEBAR */}
       <div className="hidden lg:block flex-shrink-0">
@@ -86,7 +86,7 @@ export default function AdminLayout({ children }) {
 
       {/* MAIN ADMIN CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <div className="flex items-center justify-between bg-white dark:bg-[#12141c] border-b border-slate-200 dark:border-white/10 px-4 h-16 lg:hidden sticky top-0 z-30">
+        <div className="flex items-center justify-between bg-white dark:bg-[#12141c] border-b border-slate-200/80 dark:border-white/10 px-4 h-16 lg:hidden sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileSidebarOpen(true)}
@@ -95,7 +95,7 @@ export default function AdminLayout({ children }) {
               <Menu className="w-5 h-5" />
             </button>
             <span className="font-broadcast font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wide">
-              TOURNAMENT <span className="text-bgmi-red">ADMIN</span>
+              TOURNAMENT <span className="text-bgmi-red">COMMAND</span>
             </span>
           </div>
         </div>
