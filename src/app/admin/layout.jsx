@@ -79,7 +79,7 @@ export default function AdminLayout({ children }) {
             className="absolute left-0 top-0 h-full animate-in slide-in-from-left duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <AdminSidebar />
+            <AdminSidebar onClose={() => setMobileSidebarOpen(false)} />
           </div>
         </div>
       )}

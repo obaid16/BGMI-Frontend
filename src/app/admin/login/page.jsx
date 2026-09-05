@@ -82,7 +82,7 @@ export default function AdminLoginPage() {
           </div>
 
           {/* 3 AUTHENTIC CAPABILITY PILLS */}
-          <div className="grid grid-cols-3 gap-4 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-2">
             <div className="p-4 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl">
               <Shield className="w-5 h-5 text-[#C5A059] mb-1.5" />
               <span className="font-display font-bold text-xs text-slate-900 dark:text-white block">

@@ -43,89 +43,91 @@ export default function Navbar() {
   };
 
   return (
-    <header className={`sticky top-0 w-full bg-[#FAF8F5]/95 dark:bg-[#0B0E14]/95 backdrop-blur-md border-b border-[#E7E3DA] dark:border-[#1E2638] transition-colors duration-200 ${mobileMenuOpen ? 'z-[90]' : 'z-30'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
-        
-        {/* BRAND IDENTITY */}
-        <Link href="/" className="flex items-center gap-3 group shrink-0">
-          <div className="h-9 sm:h-11 px-2.5 py-1 bg-white dark:bg-[#121620] rounded-xl border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shadow-editorial-sm group-hover:border-bgmi-red/50 transition-all group-hover:scale-105">
-            <img
-              src="/images/nit-logo-icon.png"
-              alt="NIT Esports Logo"
-              className="h-6 sm:h-8 w-auto object-contain"
-            />
-          </div>
-          <div className="flex flex-col border-l border-[#E7E3DA] dark:border-[#1E2638] pl-3">
-            <span className="font-display font-black text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider leading-tight flex items-center gap-1.5">
-              BGMI <span className="text-bgmi-red">PORTAL</span>
-            </span>
-            <span className="text-[8px] sm:text-[9px] font-mono font-bold text-bgmi-gold dark:text-amber-400 uppercase tracking-widest mt-0.5">
-              NEXCORE CHAMPIONSHIP
-            </span>
-          </div>
-        </Link>
-
-        {/* DESKTOP NAV LINKS */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-          {navLinks.map((link) => {
-            const active = isActive(link.href);
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`px-3 py-1.5 text-xs font-semibold tracking-wide transition-all relative rounded-lg ${
-                  active
-                    ? 'text-slate-950 dark:text-white font-bold bg-[#F0ECE4]/80 dark:bg-white/10'
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-[#F5F2EB]/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5'
-                }`}
-              >
-                <span>{link.name}</span>
-                {active && (
-                  <span className="absolute -bottom-2 left-3 right-3 h-[2px] bg-bgmi-red rounded-full" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* RIGHT CONTROLS & CTA (AS IN REFERENCE HEADER) */}
-        <div className="hidden lg:flex items-center gap-2.5">
-          <ThemeToggle />
-          <Link
-            href="/register"
-            className="px-5 py-2 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-display font-bold text-xs uppercase tracking-wider rounded-full shadow-sm transition-all active:scale-95"
-          >
-            <span>Register</span>
+    <>
+      <header className="sticky top-0 z-40 w-full bg-[#FAF8F5]/95 dark:bg-[#0B0E14]/95 backdrop-blur-md border-b border-[#E7E3DA] dark:border-[#1E2638] transition-colors duration-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+          
+          {/* BRAND IDENTITY */}
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
+            <div className="h-9 sm:h-11 px-2.5 py-1 bg-white dark:bg-[#121620] rounded-xl border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shadow-editorial-sm group-hover:border-bgmi-red/50 transition-all group-hover:scale-105">
+              <img
+                src="/images/nit-logo-icon.png"
+                alt="NIT Esports Logo"
+                className="h-6 sm:h-8 w-auto object-contain"
+              />
+            </div>
+            <div className="flex flex-col border-l border-[#E7E3DA] dark:border-[#1E2638] pl-3">
+              <span className="font-display font-black text-xs sm:text-sm text-slate-900 dark:text-white uppercase tracking-wider leading-tight flex items-center gap-1.5">
+                BGMI <span className="text-bgmi-red">ESPORTS</span>
+              </span>
+              <span className="text-[8px] sm:text-[9px] font-mono font-bold text-bgmi-gold dark:text-amber-400 uppercase tracking-widest mt-0.5">
+                NEXCORE CHAMPIONSHIP
+              </span>
+            </div>
           </Link>
-          <Link
-            href="/admin/login"
-            className="px-5 py-2 bg-white dark:bg-[#121620] hover:bg-[#FAF8F5] dark:hover:bg-[#181E2C] text-slate-850 dark:text-slate-200 border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-full shadow-sm transition-all active:scale-95"
-          >
-            <span>Login</span>
-          </Link>
+
+          {/* DESKTOP NAV LINKS */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`px-3 py-1.5 text-xs font-semibold tracking-wide transition-all relative rounded-lg ${
+                    active
+                      ? 'text-slate-950 dark:text-white font-bold bg-[#F0ECE4]/80 dark:bg-white/10'
+                      : 'text-slate-600 hover:text-slate-950 hover:bg-[#F5F2EB]/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5'
+                  }`}
+                >
+                  <span>{link.name}</span>
+                  {active && (
+                    <span className="absolute -bottom-2 left-3 right-3 h-[2px] bg-bgmi-red rounded-full" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* RIGHT CONTROLS & CTA (AS IN REFERENCE HEADER) */}
+          <div className="hidden lg:flex items-center gap-2.5">
+            <ThemeToggle />
+            <Link
+              href="/register"
+              className="px-5 py-2 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-display font-bold text-xs uppercase tracking-wider rounded-full shadow-sm transition-all active:scale-95"
+            >
+              <span>Register</span>
+            </Link>
+            <Link
+              href="/admin/login"
+              className="px-5 py-2 bg-white dark:bg-[#121620] hover:bg-[#FAF8F5] dark:hover:bg-[#181E2C] text-slate-850 dark:text-slate-200 border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-full shadow-sm transition-all active:scale-95"
+            >
+              <span>Login</span>
+            </Link>
+          </div>
+
+          {/* MOBILE HAMBURGER TOGGLE */}
+          <div className="flex lg:hidden items-center gap-2 sm:gap-3">
+            <ThemeToggle className="scale-90" />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-slate-900 dark:text-white bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl shadow-editorial-sm focus:outline-none"
+              aria-label="Toggle Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5 text-bgmi-red" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+
         </div>
+      </header>
 
-        {/* MOBILE HAMBURGER TOGGLE */}
-        <div className="flex lg:hidden items-center gap-2 sm:gap-3">
-          <ThemeToggle className="scale-90" />
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-slate-900 dark:text-white bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl shadow-editorial-sm focus:outline-none"
-            aria-label="Toggle Menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-bgmi-red" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-
-      </div>
-
-      {/* MOBILE FULLSCREEN NAVIGATION MATRIX */}
+      {/* MOBILE FULLSCREEN NAVIGATION OVERLAY (OUTSIDE OF BACKDROP BLUR HEADER) */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-16 sm:top-20 bottom-0 bg-[#FAF8F5] dark:bg-[#0B0E14] z-[90] p-6 flex flex-col justify-between overflow-y-auto border-t border-[#E7E3DA] dark:border-[#1E2638] shadow-2xl">
+        <div className="lg:hidden fixed inset-0 top-16 sm:top-20 z-50 bg-[#FAF8F5] dark:bg-[#0B0E14] p-5 sm:p-6 flex flex-col justify-between overflow-y-auto border-t border-[#E7E3DA] dark:border-[#1E2638] shadow-2xl">
           <div className="space-y-4">
             <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-[#E7E3DA] dark:border-[#1E2638] pb-2 flex items-center justify-between">
               <span>TOURNAMENT SECTIONS</span>
-              <span className="text-[9px] text-bgmi-gold font-bold">PORTAL NAVIGATION</span>
+              <span className="text-[9px] text-[#C5A059] font-bold">NAVIGATION</span>
             </div>
             <div className="grid grid-cols-1 gap-2">
               {navLinks.map((link) => {
@@ -149,7 +151,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-[#E7E3DA] dark:border-[#1E2638] space-y-3 mt-6">
+          <div className="pt-6 border-t border-[#E7E3DA] dark:border-[#1E2638] space-y-2.5 mt-6">
             <Link
               href="/register"
               onClick={() => setMobileMenuOpen(false)}
@@ -157,10 +159,16 @@ export default function Navbar() {
             >
               Register Squad →
             </Link>
+            <Link
+              href="/admin/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block w-full py-3 text-center bg-white dark:bg-[#121620] hover:bg-[#FAF8F5] dark:hover:bg-[#181E2C] text-slate-800 dark:text-slate-200 border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-sm transition-all active:scale-95"
+            >
+              Referee / Admin Console
+            </Link>
           </div>
         </div>
       )}
-
-    </header>
+    </>
   );
 }
