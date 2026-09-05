@@ -79,15 +79,21 @@ export default function AdminMatchesPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden">
+    <div className="space-y-6 max-w-full overflow-hidden font-sans">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
         <div>
-          <h1 className="font-display font-black text-2xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
-            <Swords className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> Custom Match Lobby Manager
+          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
+            /// TOURNAMENT OPERATIONS
+          </span>
+          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
+            <Swords className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
+            Custom Match Lobby Manager
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Schedule custom matches, publish Room ID & Passwords, and change live status.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
+            Schedule custom matches, publish Room ID &amp; Passwords, and change live status.
+          </p>
         </div>
 
         <Button variant="primary" size="md" icon={Plus} onClick={handleCreateClick}>
@@ -95,66 +101,68 @@ export default function AdminMatchesPage() {
         </Button>
       </div>
 
-      {/* MATCHES TABLE WITH HORIZONTAL SCROLL */}
-      <div className="bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-xl overflow-x-auto clip-tactical shadow-md dark:shadow-xl transition-colors duration-200">
-        <table className="w-full text-left text-xs border-collapse min-w-[850px]">
-          <thead className="bg-slate-100 dark:bg-bgmi-dark text-slate-700 dark:text-slate-400 font-display font-bold uppercase text-[10px] border-b border-slate-200 dark:border-bgmi-border">
-            <tr>
-              <th className="p-4 whitespace-nowrap">Match Number</th>
-              <th className="p-4 whitespace-nowrap">Stage Round</th>
-              <th className="p-4 whitespace-nowrap">Map</th>
-              <th className="p-4 whitespace-nowrap">Room ID & Pass</th>
-              <th className="p-4 whitespace-nowrap">Schedule Time</th>
-              <th className="p-4 whitespace-nowrap">Status</th>
-              <th className="p-4 whitespace-nowrap text-right min-w-[240px]">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-200 dark:divide-bgmi-border/40">
-            {matches.map((m) => (
-              <tr key={m.id || m._id} className="hover:bg-slate-50 dark:hover:bg-bgmi-dark/40 transition-colors">
-                <td className="p-4 whitespace-nowrap font-bold text-slate-900 dark:text-white text-sm">Match #{m.matchNumber}</td>
-                <td className="p-4 whitespace-nowrap text-amber-600 dark:text-bgmi-gold font-bold">{m.round}</td>
-                <td className="p-4 whitespace-nowrap text-sky-600 dark:text-bgmi-cyan font-bold">{m.map}</td>
-                <td className="p-4 whitespace-nowrap font-mono">
-                  {m.roomId ? (
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="text-amber-600 dark:text-bgmi-gold font-bold">ID: {m.roomId}</span>
-                      <span className="text-slate-400">|</span>
-                      <span className="text-sky-600 dark:text-sky-400 font-bold">PASS: {m.password || 'N/A'}</span>
-                    </div>
-                  ) : (
-                    <span className="text-slate-500 italic">Not set yet</span>
-                  )}
-                </td>
-                <td className="p-4 whitespace-nowrap text-slate-700 dark:text-slate-300">{m.date} @ {m.time}</td>
-                <td className="p-4 whitespace-nowrap">
-                  <Badge variant={m.status === 'Live' ? 'live' : m.status === 'Completed' ? 'green' : 'gold'} size="sm">
-                    {m.status}
-                  </Badge>
-                </td>
-                <td className="p-4 whitespace-nowrap text-right">
-                  <div className="flex items-center justify-end gap-1.5">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      icon={Edit2}
-                      onClick={() => handleEditClick(m)}
-                    >
-                      Edit Room Code
-                    </Button>
-                    <Button
-                      variant={m.status === 'Upcoming' ? 'danger' : m.status === 'Live' ? 'primary' : 'outline'}
-                      size="sm"
-                      onClick={() => handleStatusToggle(m.id || m._id, m.status)}
-                    >
-                      {m.status === 'Upcoming' ? '● Launch LIVE' : m.status === 'Live' ? 'Finish Match' : 'Reopen Match'}
-                    </Button>
-                  </div>
-                </td>
+      {/* MATCHES TABLE WITH EDITORIAL CONTAINER */}
+      <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl shadow-editorial-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse min-w-[850px]">
+            <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
+              <tr>
+                <th className="p-4 whitespace-nowrap">Match Number</th>
+                <th className="p-4 whitespace-nowrap">Stage Round</th>
+                <th className="p-4 whitespace-nowrap">Map</th>
+                <th className="p-4 whitespace-nowrap">Room ID &amp; Pass</th>
+                <th className="p-4 whitespace-nowrap">Schedule Time</th>
+                <th className="p-4 whitespace-nowrap">Status</th>
+                <th className="p-4 whitespace-nowrap text-right min-w-[240px]">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
+              {matches.map((m) => (
+                <tr key={m.id || m._id} className="hover:bg-slate-50/70 dark:hover:bg-[#181E2C]/50 transition-colors">
+                  <td className="p-4 whitespace-nowrap font-display font-bold text-slate-900 dark:text-white text-sm">Match #{m.matchNumber}</td>
+                  <td className="p-4 whitespace-nowrap text-amber-600 dark:text-bgmi-gold font-bold">{m.round}</td>
+                  <td className="p-4 whitespace-nowrap text-sky-600 dark:text-sky-400 font-bold uppercase">{m.map}</td>
+                  <td className="p-4 whitespace-nowrap font-mono">
+                    {m.roomId ? (
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="text-amber-600 dark:text-bgmi-gold font-bold">ID: {m.roomId}</span>
+                        <span className="text-slate-400">|</span>
+                        <span className="text-sky-600 dark:text-sky-400 font-bold">PASS: {m.password || 'N/A'}</span>
+                      </div>
+                    ) : (
+                      <span className="text-slate-400 italic">Not set yet</span>
+                    )}
+                  </td>
+                  <td className="p-4 whitespace-nowrap text-slate-700 dark:text-slate-300 font-medium">{m.date} @ {m.time}</td>
+                  <td className="p-4 whitespace-nowrap">
+                    <Badge variant={m.status === 'Live' ? 'live' : m.status === 'Completed' ? 'green' : 'gold'} size="sm">
+                      {m.status}
+                    </Badge>
+                  </td>
+                  <td className="p-4 whitespace-nowrap text-right">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        icon={Edit2}
+                        onClick={() => handleEditClick(m)}
+                      >
+                        Edit Room Code
+                      </Button>
+                      <Button
+                        variant={m.status === 'Upcoming' ? 'danger' : m.status === 'Live' ? 'primary' : 'outline'}
+                        size="sm"
+                        onClick={() => handleStatusToggle(m.id || m._id, m.status)}
+                      >
+                        {m.status === 'Upcoming' ? '● Launch LIVE' : m.status === 'Live' ? 'Finish Match' : 'Reopen Match'}
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* CREATE/EDIT MATCH MODAL */}

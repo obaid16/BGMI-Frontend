@@ -2,62 +2,30 @@
 
 import React, { useState, useEffect } from 'react';
 import Badge from '@/components/common/Badge';
-import Button from '@/components/common/Button';
-import Modal from '@/components/common/Modal';
-import { getTeams, updateTeamStatus, deleteTeam, bulkDeleteTeams } from '@/services/api';
+import { getTeams, deleteTeam } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Users, Plus, ShieldCheck, Trash2, Edit3, CheckSquare, Square } from 'lucide-react';
+import { Users, Trash2, ShieldCheck, Trophy, Swords } from 'lucide-react';
 
 export default function AdminTeamsPage() {
   const { showToast } = useToast();
   const [teams, setTeams] = useState([]);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
-
-  // Form states
-  const [newTeamName, setNewTeamName] = useState('');
-  const [newCollege, setNewCollege] = useState('NIT');
-  const [newTeamLogo, setNewTeamLogo] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
-      const data = await getTeams();
-      setTeams(data);
+      setLoading(true);
+      try {
+        const data = await getTeams();
+        setTeams(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Failed to load teams', err);
+      } finally {
+        setLoading(false);
+      }
     }
     loadData();
   }, []);
-
-  const handleCreateTeam = (e) => {
-    e.preventDefault();
-    const logoUrl = newTeamLogo.trim() || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&auto=format&fit=crop&q=80';
-    const newTeam = {
-      id: `team-${Date.now()}`,
-      name: newTeamName,
-      shortName: newTeamName.substring(0, 5).toUpperCase(),
-      college: newCollege,
-      logo: logoUrl,
-      rank: teams.length + 1,
-      points: 0,
-      wwcd: 0,
-      kills: 0,
-      verified: true,
-      status: 'Approved',
-      registrationId: `BGMI-2026-MANUAL-${teams.length + 1}`,
-      players: [
-        { name: 'Player 1', ign: 'P1_IGL', bgmiId: '5123987410', role: 'IGL', verified: true },
-        { name: 'Player 2', ign: 'P2_FRAGGER', bgmiId: '5123987411', role: 'Assaulter', verified: true },
-      ],
-    };
-
-    setTeams([newTeam, ...teams]);
-    showToast('New Team Created Successfully!', 'success');
-    setIsAddModalOpen(false);
-    setNewTeamName('');
-    setNewCollege('');
-    setNewTeamLogo('');
-  };
 
   const handleDeleteTeam = async (id) => {
     if (deletingId) return;
@@ -66,7 +34,6 @@ export default function AdminTeamsPage() {
         setDeletingId(id);
         const res = await deleteTeam(id);
         if (res) {
-          setSelectedIds((prev) => prev.filter((item) => item !== id));
           setTeams((prev) => prev.filter((t) => (t.id || t._id) !== id));
           showToast('Team Roster Removed successfully', 'success');
         } else {
@@ -80,206 +47,120 @@ export default function AdminTeamsPage() {
     }
   };
 
-  const toggleSelect = (id) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  const toggleSelectAll = () => {
-    const allIds = teams.map((t) => t.id || t._id);
-    if (selectedIds.length === allIds.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(allIds);
-    }
-  };
-
-  const handleBulkDelete = async () => {
-    if (selectedIds.length === 0) return;
-    const count = selectedIds.length;
-    if (window.confirm(`⚠️ Permanently delete ${count} selected squad rosters? This will remove all their players as well.`)) {
-      try {
-        setIsBulkDeleting(true);
-        const toDelete = [...selectedIds];
-        setTeams((prev) => prev.filter((t) => !toDelete.includes(t.id || t._id)));
-        setSelectedIds([]);
-        await bulkDeleteTeams(toDelete);
-        showToast(`Successfully deleted ${count} squad rosters!`, 'success');
-        const refreshed = await getTeams();
-        if (refreshed) setTeams(refreshed);
-      } catch (err) {
-        console.error('Bulk delete teams error:', err);
-        showToast('Failed to bulk delete squads', 'error');
-      } finally {
-        setIsBulkDeleting(false);
-      }
-    }
-  };
-
   return (
-    <div className="space-y-6 max-w-full overflow-hidden">
+    <div className="space-y-6 max-w-full overflow-hidden font-sans">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
         <div>
-          <h1 className="font-display font-black text-2xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
-            <Users className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> Squad Roster Management
+          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
+            /// ROSTER DIRECTORY
+          </span>
+          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
+            <Users className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
+            Squad Roster Management
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Add, edit, verify, or remove participating tournament squads.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
+            Manage participating tournament squads, verify rosters, and oversee registered teams.
+          </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {teams.length > 0 && (
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={toggleSelectAll}
-            >
-              {selectedIds.length === teams.length ? 'Deselect All' : 'Select All'}
-            </Button>
-          )}
-          <Button variant="primary" size="md" icon={Plus} onClick={() => setIsAddModalOpen(true)}>
-            Add New Squad
-          </Button>
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] text-xs font-mono font-bold text-slate-700 dark:text-slate-300 shadow-editorial-sm">
+          <span className="text-amber-600 dark:text-bgmi-gold">{teams.length}</span>
+          <span className="text-slate-500 dark:text-slate-400 uppercase">Squads Registered</span>
         </div>
       </div>
-
-      {/* BULK ACTION BAR */}
-      {selectedIds.length > 0 && (
-        <div className="bg-rose-500/10 border-2 border-rose-500/40 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in duration-200">
-          <div className="flex items-center gap-3">
-            <span className="px-2.5 py-1 bg-rose-500 text-white font-mono font-black text-xs rounded-lg">
-              {selectedIds.length}
-            </span>
-            <span className="text-xs font-bold text-slate-900 dark:text-white">
-              {selectedIds.length === 1 ? '1 Squad Selected' : `${selectedIds.length} Squads Selected`}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setSelectedIds([])}
-              disabled={isBulkDeleting}
-            >
-              Cancel Selection
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              icon={Trash2}
-              onClick={handleBulkDelete}
-              disabled={isBulkDeleting}
-            >
-              {isBulkDeleting ? 'Deleting...' : `Bulk Delete (${selectedIds.length})`}
-            </Button>
-          </div>
-        </div>
-      )}
 
       {/* TEAMS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {teams.map((team) => {
-          const tId = team.id || team._id;
-          const isSelected = selectedIds.includes(tId);
-          return (
-            <div
-              key={tId}
-              className={`bg-white dark:bg-bgmi-surface border rounded-xl p-5 clip-tactical space-y-4 shadow-md dark:shadow-xl transition-all duration-200 ${
-                isSelected
-                  ? 'border-rose-500 ring-2 ring-rose-500/30 dark:bg-rose-950/10'
-                  : 'border-slate-200 dark:border-bgmi-border'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => toggleSelect(tId)}
-                    aria-label={`Select ${team.name}`}
-                    className="w-4 h-4 rounded border-slate-300 dark:border-bgmi-border text-bgmi-red focus:ring-bgmi-red cursor-pointer accent-red-600"
-                  />
-                  <span className="font-display font-black text-lg text-amber-600 dark:text-bgmi-gold">#{team.rank}</span>
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="h-48 rounded-2xl bg-slate-200 dark:bg-[#181E2C] animate-pulse" />
+          ))}
+        </div>
+      ) : teams.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {teams.map((team, idx) => {
+            const tId = team.id || team._id;
+            return (
+              <div
+                key={tId}
+                className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl p-5 space-y-4 shadow-editorial-sm hover:shadow-editorial transition-all flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-xs px-2.5 py-0.5 rounded bg-slate-100 dark:bg-[#181E2C] text-slate-700 dark:text-slate-300">
+                      #{team.rank || idx + 1}
+                    </span>
+                    <Badge variant={team.status === 'Approved' || team.verified ? 'green' : 'pending'} size="sm">
+                      {team.status === 'Approved' || team.verified ? 'Verified' : 'Pending'}
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center gap-3.5">
+                    {team.logo ? (
+                      <img 
+                        src={team.logo} 
+                        alt={team.name} 
+                        className="w-12 h-12 rounded-xl border border-[#E7E3DA] dark:border-[#1E2638] object-cover shrink-0" 
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center font-display font-black text-amber-600 dark:text-bgmi-gold text-lg shrink-0">
+                        {(team.name || 'T')[0]}
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="font-display font-bold text-base text-slate-900 dark:text-white line-clamp-1">
+                        {team.name}
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
+                        Captain: <span className="font-semibold text-slate-800 dark:text-slate-200">{team.captain?.name || 'N/A'}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] font-mono">
+                    <div className="p-2 rounded-xl bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638]">
+                      <span className="text-slate-400 block text-[9px] uppercase">Roster</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200">
+                        {team.players?.length || 4} Players
+                      </span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638]">
+                      <span className="text-slate-400 block text-[9px] uppercase">Points</span>
+                      <span className="font-bold text-amber-600 dark:text-bgmi-gold">
+                        {team.points || team.totalPoints || 0} PTS
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <Badge variant={team.verified ? 'green' : 'pending'} size="sm">
-                  {team.verified ? 'Verified' : 'Pending'}
-                </Badge>
-              </div>
 
-              <div className="flex items-center gap-3">
-                <img src={team.logo} alt={team.name} className="w-12 h-12 rounded-lg border border-slate-200 dark:border-bgmi-border object-cover shrink-0" />
-                <div>
-                  <h3 className="font-display font-bold text-base text-slate-900 dark:text-white line-clamp-1">{team.name}</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Captain: {team.captain?.name || 'N/A'}</p>
+                <div className="pt-3 border-t border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-between text-xs">
+                  <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+                    {team.registrationId || 'NIT-2026'}
+                  </span>
+                  <button
+                    onClick={() => handleDeleteTeam(tId)}
+                    disabled={deletingId === tId}
+                    className={`text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1 font-display font-bold text-xs uppercase tracking-wider ${
+                      deletingId === tId ? 'opacity-40 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" /> 
+                    <span>Delete</span>
+                  </button>
                 </div>
               </div>
-
-              <div className="pt-3 border-t border-slate-200 dark:border-bgmi-border/40 flex items-center justify-between text-xs">
-                <span className="text-slate-600 dark:text-slate-400 font-medium">{team.players?.length || 4} Squad Members</span>
-                <button
-                  onClick={() => handleDeleteTeam(tId)}
-                  disabled={deletingId === tId}
-                  className={`text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1 font-bold ${
-                    deletingId === tId ? 'opacity-40 cursor-not-allowed' : ''
-                  }`}
-                >
-                  <Trash2 className="w-3.5 h-3.5" /> Delete Squad
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ADD SQUAD MODAL */}
-      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Create New Team Roster" maxWidth="max-w-md">
-        <form onSubmit={handleCreateTeam} className="space-y-4 text-xs">
-          <div className="space-y-1">
-            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Team / Squad Name</label>
-            <input
-              type="text"
-              required
-              placeholder="e.g. Cyber Knights"
-              value={newTeamName}
-              onChange={(e) => setNewTeamName(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">College</label>
-            <input
-              type="text"
-              readOnly
-              value={newCollege}
-              className="w-full p-2.5 bg-slate-100 dark:bg-bgmi-dark/60 border border-slate-200 dark:border-bgmi-border/40 rounded-lg text-slate-500 dark:text-slate-400 font-bold select-none cursor-not-allowed"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Team / Squad Logo URL</label>
-            <input
-              type="text"
-              placeholder="Paste Logo Image URL or leave blank for default"
-              value={newTeamLogo}
-              onChange={(e) => setNewTeamLogo(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
-            />
-          </div>
-
-          <div className="pt-4 flex justify-end gap-3">
-            <Button variant="secondary" size="md" onClick={() => setIsAddModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary" size="md">
-              Create Team
-            </Button>
-          </div>
-        </form>
-      </Modal>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="p-12 text-center bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl">
+          <p className="text-sm font-mono text-slate-500 dark:text-slate-400">
+            No squads registered yet. Approved squads from registration will appear here.
+          </p>
+        </div>
+      )}
 
     </div>
   );

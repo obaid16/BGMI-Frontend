@@ -31,16 +31,20 @@ export default function Hero({ nextMatch = null, registeredSquads = 0 }) {
             {/* HIGH-IMPACT EDITORIAL HEADLINE */}
             <div className="space-y-1">
               <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl text-slate-900 dark:text-white uppercase tracking-tight leading-[1.05]">
-                Battles Build <br />
-                <span className="text-bgmi-red">Better People.</span>
+                BGMI <br />
+                <span className="text-bgmi-red">CHAMPIONSHIP</span>
               </h1>
             </div>
 
-            {/* EDITORIAL DESCRIPTION */}
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl font-normal leading-relaxed">
-              Official campus BGMI championship organized by Nexcore Institute of Technology. 
-              Compete across custom room battlegrounds, dominate the circle, and claim ultimate college glory.
-            </p>
+            {/* EDITORIAL SUBTITLE & DESCRIPTION */}
+            <div className="space-y-2 max-w-xl">
+              <p className="font-display font-bold text-sm sm:text-base text-amber-600 dark:text-bgmi-gold uppercase tracking-wider">
+                NEXCORE INSTITUTE OF TECHNOLOGY
+              </p>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 font-normal leading-relaxed">
+                Official campus squads competing across custom room matches. Dominate the circle and claim ultimate glory.
+              </p>
+            </div>
 
             {/* ACTION BUTTONS */}
             <div className="flex flex-wrap items-center gap-3.5 pt-2">
@@ -64,17 +68,17 @@ export default function Hero({ nextMatch = null, registeredSquads = 0 }) {
             <div className="pt-4 border-t border-[#E7E3DA] dark:border-[#1E2638] flex flex-wrap items-center gap-4 sm:gap-6 text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               <div className="flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-bgmi-gold" />
-                <span>ANTI-CHEAT MOSAC</span>
+                <span>NEXCORE INSTITUTE OF TECHNOLOGY</span>
               </div>
               <span>•</span>
               <div className="flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-bgmi-red" />
-                <span>TPP SQUAD 4v4</span>
+                <span>BATTLE ROYALE TOURNAMENT</span>
               </div>
               <span>•</span>
               <div className="flex items-center gap-1.5">
                 <Trophy className="w-3.5 h-3.5 text-amber-500" />
-                <span>NIT 2026 TROPHY</span>
+                <span>CAMPUS SQUAD LEAGUE</span>
               </div>
             </div>
 
@@ -93,7 +97,7 @@ export default function Hero({ nextMatch = null, registeredSquads = 0 }) {
               <div className="relative h-72 sm:h-84 lg:h-96 w-full overflow-hidden">
                 <img
                   src="/images/bgmi-hero-bg.jpg"
-                  alt="BGMI Level 3 Soldier"
+                  alt="BGMI Championship"
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
                 
@@ -117,10 +121,10 @@ export default function Hero({ nextMatch = null, registeredSquads = 0 }) {
                     NEXCORE INSTITUTE OF TECHNOLOGY
                   </span>
                   <h3 className="font-display font-black text-xl sm:text-2xl uppercase tracking-tight leading-tight">
-                    INDIA PLAYS TOGETHER
+                    BGMI CHAMPIONSHIP
                   </h3>
                   <p className="text-[11px] text-slate-300 font-medium line-clamp-1">
-                    Skills • Squad • Strategy • Glory
+                    Official College Battlegrounds Tournament
                   </p>
                 </div>
               </div>

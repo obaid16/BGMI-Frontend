@@ -108,31 +108,44 @@ export default function AdminMediaPage() {
   }, [mediaList, statusFilter, playerSearch, selectedPlayer]);
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden">
+    <div className="space-y-6 max-w-full overflow-hidden font-sans">
       
       {/* HEADER */}
-      <div className="border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
-        <h1 className="font-display font-black text-2xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
-          <Video className="w-6 h-6 text-bgmi-cyan" /> Uploaded Proofs & Media Approvals Queue
-        </h1>
-        <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Verify player match screenshots, approve media entries, and publish highlights to the Home Page.</p>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
+        <div>
+          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
+            /// CONTENT MODERATION
+          </span>
+          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
+            <Video className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
+            Media &amp; POV Proof Moderation
+          </h1>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
+            Review uploaded match score screenshots and kill proof clips submitted by teams.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] text-xs font-mono font-bold text-slate-700 dark:text-slate-300 shadow-editorial-sm">
+          <span className="text-amber-600 dark:text-bgmi-gold">{mediaList.length}</span>
+          <span className="text-slate-500 dark:text-slate-400 uppercase">Submissions</span>
+        </div>
       </div>
 
       {/* FILTER & PLAYER VERIFICATION TOOLBAR */}
-      <div className="bg-white dark:bg-bgmi-surface/90 border border-slate-200 dark:border-bgmi-border p-4 rounded-xl space-y-4 shadow-sm">
+      <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] p-4 rounded-2xl space-y-4 shadow-editorial-sm">
         
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           
           {/* STATUS TABS */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 table-scroll-container">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
             {['All', 'Pending Review', 'Published', 'Approved', 'Rejected'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setStatusFilter(tab)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all whitespace-nowrap ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all whitespace-nowrap shadow-editorial-sm ${
                   statusFilter === tab
-                    ? 'bg-bgmi-red text-white shadow-md'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                    ? 'bg-slate-950 text-white dark:bg-bgmi-red dark:text-white'
+                    : 'bg-white text-slate-700 border border-[#E7E3DA] dark:bg-[#181E2C] dark:text-slate-400 dark:border-[#1E2638] hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {tab}
@@ -148,10 +161,10 @@ export default function AdminMediaPage() {
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
-                placeholder="Filter by Player / IGN Name..."
+                placeholder="Filter by Player / IGN..."
                 value={playerSearch}
                 onChange={(e) => setPlayerSearch(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-bgmi-dark border border-slate-200 dark:border-bgmi-border rounded-lg text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-bgmi-cyan"
+                className="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-amber-500"
               />
               {playerSearch && (
                 <button
@@ -167,9 +180,9 @@ export default function AdminMediaPage() {
             <select
               value={selectedPlayer}
               onChange={(e) => setSelectedPlayer(e.target.value)}
-              className="w-full sm:w-auto px-3 py-2 bg-slate-50 dark:bg-bgmi-dark border border-slate-200 dark:border-bgmi-border rounded-lg text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-bgmi-gold"
+              className="w-full sm:w-auto px-3 py-2 bg-slate-50 dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-amber-500"
             >
-              <option value="All Players">All Players ({mediaList.length} Total Proofs)</option>
+              <option value="All Players">All Players ({mediaList.length})</option>
               {uniquePlayers.map((p) => (
                 <option key={p} value={p}>
                   Player: {p}
@@ -181,73 +194,36 @@ export default function AdminMediaPage() {
 
         </div>
 
-        {/* QUICK PLAYER SUBMISSION STATUS BADGES */}
-        {uniquePlayers.length > 0 && (
-          <div className="pt-3 border-t border-slate-100 dark:border-bgmi-border/40 flex items-center gap-2 overflow-x-auto text-xs table-scroll-container">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1 shrink-0">
-              <UserCheck className="w-3.5 h-3.5 text-emerald-500" /> Filter by Player Name:
-            </span>
-            <button
-              onClick={() => { setSelectedPlayer('All Players'); setPlayerSearch(''); }}
-              className={`px-2.5 py-1 rounded text-[11px] font-bold transition-all shrink-0 ${
-                selectedPlayer === 'All Players' && !playerSearch
-                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
-                  : 'bg-slate-100 dark:bg-bgmi-dark text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              All Players
-            </button>
-            {uniquePlayers.map((player) => {
-              const playerMedia = mediaList.filter((m) => m.player && m.player.toLowerCase() === player.toLowerCase());
-              const hasVerified = playerMedia.some((m) => m.status === 'Published' || m.status === 'Approved' || m.verified);
-
-              return (
-                <button
-                  key={player}
-                  onClick={() => { setSelectedPlayer(player); setPlayerSearch(''); }}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold transition-all shrink-0 flex items-center gap-1.5 ${
-                    selectedPlayer === player
-                      ? 'bg-amber-500 text-slate-950 font-black'
-                      : 'bg-slate-100 dark:bg-bgmi-dark/70 text-slate-700 dark:text-slate-300 hover:bg-amber-500/20'
-                  }`}
-                >
-                  <span>{player}</span>
-                  <span className={`w-2 h-2 rounded-full ${hasVerified ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                </button>
-              );
-            })}
-          </div>
-        )}
-
       </div>
 
-      {/* MEDIA TABLE CONTAINER WITH SIDEWAYS TOUCH SCROLL */}
-      <div className="bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-xl shadow-md dark:shadow-xl transition-colors duration-200 table-scroll-container">
+      {/* MEDIA TABLE CONTAINER */}
+      <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl shadow-editorial-sm overflow-hidden">
         {loading ? (
           <div className="py-12 text-center text-xs font-mono text-slate-400">Loading proof submissions...</div>
         ) : filteredMedia.length === 0 ? (
           <div className="py-12 text-center text-xs font-mono text-slate-500 dark:text-slate-400">
-            No media submissions found for "{playerSearch || selectedPlayer || statusFilter}".
+            No media submissions found for &quot;{playerSearch || selectedPlayer || statusFilter}&quot;.
           </div>
         ) : (
-          <table className="w-full text-left text-xs border-collapse min-w-[1050px]">
-            <thead className="bg-slate-100 dark:bg-bgmi-dark text-slate-700 dark:text-slate-400 font-display font-bold uppercase text-[10px] border-b border-slate-200 dark:border-bgmi-border">
-              <tr>
-                <th className="p-4 whitespace-nowrap min-w-[200px]">Media Preview & Title</th>
-                <th className="p-4 whitespace-nowrap min-w-[100px]">Type</th>
-                <th className="p-4 whitespace-nowrap min-w-[150px]">Team / Player Name</th>
-                <th className="p-4 whitespace-nowrap min-w-[90px]">Match</th>
-                <th className="p-4 whitespace-nowrap min-w-[110px]">Status</th>
-                <th className="p-4 whitespace-nowrap text-right min-w-[480px]">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200 dark:divide-bgmi-border/40">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse min-w-[1050px]">
+              <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
+                <tr>
+                  <th className="p-4 whitespace-nowrap min-w-[200px]">Media Preview &amp; Title</th>
+                  <th className="p-4 whitespace-nowrap min-w-[100px]">Type</th>
+                  <th className="p-4 whitespace-nowrap min-w-[150px]">Team / Player</th>
+                  <th className="p-4 whitespace-nowrap min-w-[90px]">Match</th>
+                  <th className="p-4 whitespace-nowrap min-w-[110px]">Status</th>
+                  <th className="p-4 whitespace-nowrap text-right min-w-[480px]">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
               {filteredMedia.map((m) => {
                 const mId = m.id || m._id;
                 const previewImg = getMediaImageUrl(m);
 
                 return (
-                  <tr key={mId} className="hover:bg-slate-50 dark:hover:bg-bgmi-dark/40 transition-colors">
+                  <tr key={mId} className="hover:bg-slate-50 dark:hover:bg-[#1A2131] transition-colors">
                     <td className="p-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <img
@@ -311,6 +287,7 @@ export default function AdminMediaPage() {
               })}
             </tbody>
           </table>
+        </div>
         )}
       </div>
 

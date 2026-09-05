@@ -47,40 +47,49 @@ export default function AdminAnnouncementsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden">
+    <div className="space-y-6 max-w-full overflow-hidden font-sans">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-bgmi-border/60 pb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
         <div>
-          <h1 className="font-display font-black text-2xl text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
-            <Bell className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> Official Bulletins & News Manager
+          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
+            /// OFFICIAL COMMUNICATIONS
+          </span>
+          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
+            <Bell className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
+            Bulletins &amp; News Manager
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Post tournament updates, registration reminders, and lobby schedule bulletins.</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
+            Publish broadcast bulletins, schedule advisories, and tournament status updates.
+          </p>
         </div>
 
         <Button variant="primary" size="md" icon={Plus} onClick={() => setIsModalOpen(true)}>
-          Add New Announcement
+          Add Announcement
         </Button>
       </div>
 
       {/* ANNOUNCEMENTS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {announcements.map((ann) => (
-          <div key={ann.id} className="bg-white dark:bg-bgmi-surface border border-slate-200 dark:border-bgmi-border rounded-xl p-5 clip-tactical space-y-3 shadow-md dark:shadow-xl transition-colors duration-200">
-            <div className="flex items-center justify-between">
-              <Badge variant="gold" size="sm">{ann.category}</Badge>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">{ann.date}</span>
+          <div key={ann.id} className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl p-5 sm:p-6 space-y-3 shadow-editorial-sm transition-all flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Badge variant="gold" size="sm">{ann.category}</Badge>
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold uppercase">{ann.date}</span>
+              </div>
+
+              <h3 className="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white">{ann.title}</h3>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">{ann.content}</p>
             </div>
 
-            <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">{ann.title}</h3>
-            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{ann.content}</p>
-
-            <div className="pt-3 border-t border-slate-200 dark:border-bgmi-border/40 flex justify-end">
+            <div className="pt-3 border-t border-[#E7E3DA] dark:border-[#1E2638] flex justify-end">
               <button
                 onClick={() => handleDelete(ann.id)}
-                className="text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1 font-bold"
+                className="text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1 font-display font-bold uppercase tracking-wider"
               >
-                <Trash2 className="w-3.5 h-3.5" /> Remove
+                <Trash2 className="w-3.5 h-3.5" /> 
+                <span>Remove</span>
               </button>
             </div>
           </div>

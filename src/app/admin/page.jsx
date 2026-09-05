@@ -5,9 +5,9 @@ import Link from 'next/link';
 import AdminStatCard from '@/components/admin/AdminStatCard';
 import RegistrationModal from '@/components/admin/RegistrationModal';
 import Badge from '@/components/common/Badge';
-import { getTeams, getAdminDashboardStats, updateTeamStatus, clearAllDemoData } from '@/services/api';
+import { getTeams, getAdminDashboardStats, updateTeamStatus } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Users, ShieldCheck, Clock, Swords, Trophy, Video, ArrowRight, Trash2 } from 'lucide-react';
+import { Users, ShieldCheck, Clock, Swords, Trophy, Video, ArrowRight } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const { showToast } = useToast();
@@ -83,8 +83,8 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* RECENT PENDING REGISTRATIONS QUEUE */}
-        <div className="lg:col-span-2 bg-white dark:bg-[#12141c] border border-slate-200 dark:border-white/10 rounded-lg p-6 clip-tactical space-y-4 shadow-md dark:shadow-xl transition-colors duration-200">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+        <div className="lg:col-span-2 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl p-6 space-y-4 shadow-editorial-sm">
+          <div className="flex items-center justify-between border-b border-[#E7E3DA] dark:border-[#1E2638] pb-3">
             <h3 className="font-display font-bold text-base text-slate-900 dark:text-white uppercase flex items-center gap-2">
               <Clock className="w-4 h-4 text-bgmi-red" /> Pending Squad Approvals Queue
             </h3>
@@ -95,7 +95,7 @@ export default function AdminDashboardPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono border-collapse min-w-[650px]">
-              <thead className="bg-slate-100 dark:bg-[#0a0b0e] text-slate-600 dark:text-slate-400 font-display font-bold uppercase text-[10px]">
+              <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
                 <tr>
                   <th className="p-3 whitespace-nowrap">Squad Name</th>
                   <th className="p-3 whitespace-nowrap">Captain</th>
@@ -104,14 +104,14 @@ export default function AdminDashboardPage() {
                   <th className="p-3 whitespace-nowrap text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-white/5">
+              <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
                 {teams.slice(0, 5).map((team) => (
-                  <tr key={team.id || team._id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                  <tr key={team.id || team._id} className="hover:bg-slate-50/70 dark:hover:bg-[#181E2C]/50 transition-colors">
                     <td className="p-3 whitespace-nowrap">
                       <p className="font-display font-bold text-slate-900 dark:text-white text-sm">{team.teamName || team.name}</p>
                     </td>
                     <td className="p-3 whitespace-nowrap text-slate-600 dark:text-slate-300">{team.captainName || team.captain?.name || 'N/A'}</td>
-                    <td className="p-3 whitespace-nowrap text-bgmi-red font-bold">{team.registrationId || team.regId}</td>
+                    <td className="p-3 whitespace-nowrap text-amber-600 dark:text-bgmi-gold font-bold">{team.registrationId || team.regId}</td>
                     <td className="p-3 whitespace-nowrap">
                       <Badge variant={team.status === 'Approved' ? 'green' : team.status === 'Rejected' ? 'rejected' : 'pending'} size="sm">
                         {team.status || 'Pending'}
@@ -120,7 +120,7 @@ export default function AdminDashboardPage() {
                     <td className="p-3 whitespace-nowrap text-right">
                       <button
                         onClick={() => setSelectedTeam(team)}
-                        className="px-3 py-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-bgmi-red/60 text-slate-800 dark:text-slate-200 rounded font-bold transition-colors"
+                        className="px-3 py-1 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] hover:border-bgmi-red/60 text-slate-800 dark:text-slate-200 rounded-xl font-display font-bold text-xs uppercase tracking-wider transition-colors shadow-editorial-sm"
                       >
                         Review
                       </button>
@@ -133,14 +133,14 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* QUICK CONTROL CENTER SHORTCUTS */}
-        <div className="bg-white dark:bg-[#12141c] border border-slate-200 dark:border-white/10 rounded-lg p-6 clip-tactical space-y-4 shadow-md dark:shadow-xl transition-colors duration-200">
-          <h3 className="font-display font-bold text-base text-slate-900 dark:text-white uppercase border-b border-slate-200 dark:border-white/10 pb-3">
+        <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl p-6 space-y-4 shadow-editorial-sm">
+          <h3 className="font-display font-bold text-base text-slate-900 dark:text-white uppercase border-b border-[#E7E3DA] dark:border-[#1E2638] pb-3">
             Admin Quick Actions
           </h3>
 
           <div className="space-y-3 font-mono">
             <Link href="/admin/results" className="block">
-              <div className="p-4 bg-gradient-to-r from-bgmi-red/20 via-slate-100 dark:via-[#12141c] to-white dark:to-[#0a0b0e] border border-bgmi-red/50 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
+              <div className="p-3.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl hover:border-amber-500 transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white shadow-editorial-sm">
                 <span className="flex items-center gap-2">
                   <Trophy className="w-4 h-4 text-amber-600 dark:text-bgmi-gold" /> Publish Scorecard Results
                 </span>
@@ -149,16 +149,16 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link href="/admin/players" className="block">
-              <div className="p-4 bg-slate-50 dark:bg-[#0a0b0e] border border-slate-200 dark:border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
+              <div className="p-3.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl hover:border-amber-500 transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white shadow-editorial-sm">
                 <span className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-sky-600 dark:text-bgmi-cyan" /> Player Rosters & MVP Kills
+                  <Users className="w-4 h-4 text-sky-600 dark:text-sky-400" /> Player Rosters &amp; MVP Kills
                 </span>
                 <span>→</span>
               </div>
             </Link>
 
             <Link href="/admin/matches" className="block">
-              <div className="p-4 bg-slate-50 dark:bg-[#0a0b0e] border border-slate-200 dark:border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
+              <div className="p-3.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl hover:border-amber-500 transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white shadow-editorial-sm">
                 <span className="flex items-center gap-2">
                   <Swords className="w-4 h-4 text-bgmi-red" /> Schedule Custom Room
                 </span>
@@ -167,45 +167,13 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link href="/admin/announcements" className="block">
-              <div className="p-4 bg-slate-50 dark:bg-[#0a0b0e] border border-slate-200 dark:border-white/10 rounded hover:border-bgmi-red transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
+              <div className="p-3.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl hover:border-amber-500 transition-colors flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white shadow-editorial-sm">
                 <span className="flex items-center gap-2">
                   <Video className="w-4 h-4 text-slate-500 dark:text-slate-300" /> Broadcast Bulletin
                 </span>
                 <span>→</span>
               </div>
             </Link>
-
-            <button
-              onClick={async () => {
-                if (window.confirm('⚠️ WARNING: Delete ALL demo data (teams, matches, scorecards, media)?')) {
-                  const res = await clearAllDemoData();
-                  if (res && (res.success || res.status === 200)) {
-                    setTeams([]);
-                    setStats({
-                      totalTeams: 0,
-                      approvedTeams: 0,
-                      pendingRegistrations: 0,
-                      totalPlayers: 0,
-                      upcomingMatches: 0,
-                      liveMatches: 0,
-                      completedMatches: 0,
-                      pendingProofs: 0,
-                    });
-                    showToast('All demo data cleared successfully!', 'success');
-                  } else {
-                    showToast('Failed to clear demo data', 'error');
-                  }
-                }
-              }}
-              className="w-full text-left block"
-            >
-              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded hover:border-red-500 transition-colors flex items-center justify-between text-xs font-bold text-red-600 dark:text-red-400">
-                <span className="flex items-center gap-2">
-                  <Trash2 className="w-4 h-4 text-red-500" /> Clear All Demo Data
-                </span>
-                <span>🗑️</span>
-              </div>
-            </button>
           </div>
 
         </div>
