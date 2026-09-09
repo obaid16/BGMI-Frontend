@@ -25,7 +25,6 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess, initialMa
   const [formData, setFormData] = useState({
     type: 'Screenshots', // 'Screenshots' | 'POV'
     team: '',
-    player: '',
     match: '',
   });
 
@@ -107,31 +106,6 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess, initialMa
       isMounted = false;
     };
   }, [isOpen, initialMatch, initialTeam]);
-
-  // Derive roster for the currently selected squad
-  const currentRoster = useMemo(() => {
-    if (!formData.team) return [];
-    const teamObj = teams.find(
-      (t) => (t.name || t.teamName) === formData.team
-    );
-    if (!teamObj || !Array.isArray(teamObj.players)) return [];
-    return teamObj.players;
-  }, [teams, formData.team]);
-
-  // Auto-select first player whenever team changes, if current player not in roster
-  useEffect(() => {
-    if (currentRoster.length > 0) {
-      const playerExists = currentRoster.some(
-        (p) => (p.ign || p.name) === formData.player
-      );
-      if (!playerExists) {
-        const firstPlayer = currentRoster[0].ign || currentRoster[0].name || '';
-        setFormData((prev) => ({ ...prev, player: firstPlayer }));
-      }
-    } else {
-      setFormData((prev) => ({ ...prev, player: '' }));
-    }
-  }, [currentRoster]);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -275,11 +249,6 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess, initialMa
       return;
     }
 
-    if (!formData.player) {
-      setError('Please select a Player IGN.');
-      return;
-    }
-
     if (!formData.match) {
       setError('Please select a Tournament Match.');
       return;
@@ -295,14 +264,13 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess, initialMa
     try {
       setSubmitting(true);
 
-      // Auto-generate title cleanly from squad, player, match, and type
-      const autoTitle = `${formData.team} - ${formData.player} (${formData.type === 'POV' ? 'POV' : 'Screenshot'}) - ${formData.match}`;
+      // Auto-generate title cleanly from squad, match, and type
+      const autoTitle = `${formData.team} (${formData.type === 'POV' ? 'POV' : 'Screenshot'}) - ${formData.match}`;
 
       const submitData = new FormData();
       submitData.append('title', autoTitle);
       submitData.append('type', formData.type);
       submitData.append('team', formData.team);
-      submitData.append('player', formData.player);
       submitData.append('match', formData.match);
 
       // Append file using both keys for seamless backend & multer compatibility
@@ -412,7 +380,7 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess, initialMa
                 </button>
               </div>
 
-              {/* SQUAD & PLAYER ROW */}
+              {/* SQUAD & MATCH ROW */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* SQUAD NAME DROPDOWN */}
                 <div className="space-y-1">
@@ -445,71 +413,38 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess, initialMa
                   </select>
                 </div>
 
-                {/* PLAYER IGN DROPDOWN */}
+                {/* TOURNAMENT MATCH SELECTION */}
                 <div className="space-y-1">
                   <label className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-300">
-                    Player IGN
+                    Tournament Match
                   </label>
                   <select
-                    name="player"
-                    value={formData.player}
+                    name="match"
+                    value={formData.match}
                     onChange={handleInputChange}
-                    disabled={!formData.team}
                     required
-                    className="w-full px-3.5 py-2.5 bg-white dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                    className="w-full px-3.5 py-2.5 bg-white dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm transition-colors cursor-pointer"
                   >
-                    {!formData.team ? (
-                      <option value="">-- Select Squad first --</option>
-                    ) : currentRoster.length === 0 ? (
-                      <option value="">No players in squad roster</option>
-                    ) : (
+                    {matches.length === 0 ? (
                       <>
-                        <option value="">-- Select Player IGN --</option>
-                        {currentRoster.map((p, idx) => {
-                          const ignVal = p.ign || p.name || `Player ${idx + 1}`;
-                          return (
-                            <option key={p.id || p.bgmiId || idx} value={ignVal}>
-                              {p.ign ? `${p.ign} (${p.name || p.role || 'Player'})` : p.name}
-                            </option>
-                          );
-                        })}
+                        <option value="Match #01 - Erangel">Match #01 - Erangel</option>
+                        <option value="Match #02 - Miramar">Match #02 - Miramar</option>
+                        <option value="Match #03 - Sanhok">Match #03 - Sanhok</option>
+                        <option value="Match #04 - Erangel Finals">Match #04 - Erangel Finals</option>
                       </>
+                    ) : (
+                      matches.map((m) => {
+                        const matchVal = `Match #${m.matchNumber} - ${m.map || m.title || 'Erangel'}`;
+                        return (
+                          <option key={m.id || m._id || m.matchNumber} value={matchVal}>
+                            Match #{m.matchNumber} - {m.map || m.title || 'Erangel'} {m.status ? `(${m.status})` : ''}
+                          </option>
+                        );
+                      })
                     )}
+                    <option value="Campus Scrims / Friendly">Campus Scrims / Friendly</option>
                   </select>
                 </div>
-              </div>
-
-              {/* TOURNAMENT MATCH SELECTION (LIVE DATA) */}
-              <div className="space-y-1">
-                <label className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-300">
-                  Tournament Match
-                </label>
-                <select
-                  name="match"
-                  value={formData.match}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3.5 py-2.5 bg-white dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm transition-colors cursor-pointer"
-                >
-                  {matches.length === 0 ? (
-                    <>
-                      <option value="Match #01 - Erangel">Match #01 - Erangel</option>
-                      <option value="Match #02 - Miramar">Match #02 - Miramar</option>
-                      <option value="Match #03 - Sanhok">Match #03 - Sanhok</option>
-                      <option value="Match #04 - Erangel Finals">Match #04 - Erangel Finals</option>
-                    </>
-                  ) : (
-                    matches.map((m) => {
-                      const matchVal = `Match #${m.matchNumber} - ${m.map || m.title || 'Erangel'}`;
-                      return (
-                        <option key={m.id || m._id || m.matchNumber} value={matchVal}>
-                          Match #{m.matchNumber} - {m.map || m.title || 'Erangel'} {m.status ? `(${m.status})` : ''}
-                        </option>
-                      );
-                    })
-                  )}
-                  <option value="Campus Scrims / Friendly">Campus Scrims / Friendly</option>
-                </select>
               </div>
 
               {/* DRAG & DROP UPLOAD ZONE (FOR SCREENSHOT & POV) */}

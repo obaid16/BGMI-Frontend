@@ -19,6 +19,7 @@ import {
   X,
 } from 'lucide-react';
 import ThemeToggle from '../common/ThemeToggle';
+import { logoutAdmin } from '@/services/api';
 
 export default function AdminSidebar({ onClose }) {
   const pathname = usePathname();
@@ -135,14 +136,28 @@ export default function AdminSidebar({ onClose }) {
           <Crown className="w-5 h-5 text-amber-400 shrink-0" />
         </div>
 
-        <Link
-          href="/"
-          onClick={() => onClose?.()}
-          className="flex items-center gap-2 px-2 py-1.5 text-xs text-slate-400 hover:text-white transition-colors font-medium"
-        >
-          <LogOut className="w-3.5 h-3.5 text-[#E5383B]" />
-          <span>Exit to Public Site</span>
-        </Link>
+        <div className="space-y-1">
+          <Link
+            href="/"
+            onClick={() => onClose?.()}
+            className="flex items-center gap-2 px-2 py-1.5 text-xs text-slate-400 hover:text-white transition-colors font-medium rounded-lg hover:bg-white/5"
+          >
+            <LogOut className="w-3.5 h-3.5 text-slate-400" />
+            <span>Exit to Public Site</span>
+          </Link>
+          <button
+            onClick={() => {
+              if (window.confirm('Sign out from tournament console?')) {
+                onClose?.();
+                logoutAdmin();
+              }
+            }}
+            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-red-400 hover:text-red-300 transition-colors font-medium rounded-lg hover:bg-red-500/10 text-left"
+          >
+            <LogOut className="w-3.5 h-3.5 text-[#E5383B]" />
+            <span>Sign Out Session</span>
+          </button>
+        </div>
       </div>
 
     </aside>

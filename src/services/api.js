@@ -42,6 +42,106 @@ export function getMediaImageUrl(item) {
   return url;
 }
 
+export function parseJwt(token) {
+  if (!token || typeof token !== 'string') return null;
+  try {
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const padLength = (4 - (base64.length % 4)) % 4;
+    const padded = base64 + '='.repeat(padLength);
+    const jsonPayload = decodeURIComponent(
+      atob(padded)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+}
+
+export function getCookie(name) {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(new RegExp('(^|;\\s*)' + name + '=([^;]*)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+export function setCookie(name, value, days = 30) {
+  if (typeof document === 'undefined') return;
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+}
+
+export function removeCookie(name) {
+  if (typeof document === 'undefined') return;
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+}
+
+export function getStoredAdminToken() {
+  if (typeof window === 'undefined') return null;
+  let token = localStorage.getItem('bgmi_esports_admin_token');
+  if (!token) {
+    token = getCookie('bgmi_esports_admin_token');
+    if (token) {
+      try {
+        localStorage.setItem('bgmi_esports_admin_token', token);
+      } catch (e) {}
+    }
+  }
+  return token;
+}
+
+export function getStoredAdminUser() {
+  if (typeof window === 'undefined') return null;
+  let userStr = localStorage.getItem('bgmi_esports_admin_user');
+  if (!userStr) {
+    const cookieUser = getCookie('bgmi_esports_admin_user');
+    if (cookieUser) {
+      try {
+        localStorage.setItem('bgmi_esports_admin_user', cookieUser);
+        return JSON.parse(cookieUser);
+      } catch (e) {}
+    }
+  }
+  try {
+    return userStr ? JSON.parse(userStr) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export function setStoredAdminSession(token, user, rememberMe = true) {
+  if (typeof window === 'undefined') return;
+  const days = rememberMe ? 30 : 1;
+  if (token) {
+    localStorage.setItem('bgmi_esports_admin_token', token);
+    setCookie('bgmi_esports_admin_token', token, days);
+  }
+  if (user) {
+    const serialized = JSON.stringify(user);
+    localStorage.setItem('bgmi_esports_admin_user', serialized);
+    setCookie('bgmi_esports_admin_user', serialized, days);
+  }
+}
+
+export function clearStoredAdminSession() {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem('bgmi_esports_admin_token');
+  localStorage.removeItem('bgmi_esports_admin_user');
+  removeCookie('bgmi_esports_admin_token');
+  removeCookie('bgmi_esports_admin_user');
+}
+
+export function isTokenValid(token) {
+  if (!token) return false;
+  const payload = parseJwt(token);
+  if (!payload || !payload.exp) return false;
+  return payload.exp * 1000 > Date.now();
+}
+
 /**
  * Reusable helper to make HTTP requests to the backend with auto-attached JWT headers
  * @param {string} endpoint - API path (e.g. '/teams')
@@ -64,11 +164,7 @@ async function fetchAPI(endpoint, options = {}) {
     apiCache.clear();
   }
 
-
-  let token = null;
-  if (typeof window !== 'undefined') {
-    token = localStorage.getItem('bgmi_esports_admin_token');
-  }
+  const token = getStoredAdminToken();
 
   const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
 
@@ -624,24 +720,48 @@ export async function deletePlayer(playerId) {
 }
 
 // ==================== AUTH SERVICES ====================
-export async function loginAdmin(email, password) {
+export async function loginAdmin(email, password, rememberMe = true) {
   try {
     const res = await fetchAPI('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
 
-    if (res.success && res.token) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('bgmi_esports_admin_token', res.token);
-        localStorage.setItem('bgmi_esports_admin_user', JSON.stringify(res.user));
-      }
+    if (res && res.success && res.token) {
+      setStoredAdminSession(res.token, res.user, rememberMe);
     }
     return res;
   } catch (err) {
     console.error('loginAdmin failed:', err.message);
     return { success: false, message: err.message || 'Invalid credentials' };
   }
+}
+
+export function logoutAdmin() {
+  clearStoredAdminSession();
+  if (typeof window !== 'undefined') {
+    window.location.href = '/admin/login';
+  }
+}
+
+export async function verifyAdminSession() {
+  const token = getStoredAdminToken();
+  if (!token || !isTokenValid(token)) {
+    return { valid: false, user: null };
+  }
+
+  try {
+    const res = await fetchAPI('/auth/me');
+    if (res && res.success && res.user) {
+      setStoredAdminSession(token, res.user, true);
+      return { valid: true, user: res.user };
+    }
+  } catch (err) {
+    console.warn('verifyAdminSession network check error, using local session:', err.message);
+  }
+
+  const cachedUser = getStoredAdminUser();
+  return { valid: true, user: cachedUser };
 }
 
 export async function getAdminDashboardStats() {

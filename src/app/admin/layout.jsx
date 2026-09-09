@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminTopbar from '@/components/admin/AdminTopbar';
 import { Menu } from 'lucide-react';
+import { getStoredAdminToken, getStoredAdminUser, isTokenValid, clearStoredAdminSession, verifyAdminSession } from '@/services/api';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
@@ -19,29 +20,26 @@ export default function AdminLayout({ children }) {
       return;
     }
 
-    const token = localStorage.getItem('bgmi_esports_admin_token');
-    const userStr = localStorage.getItem('bgmi_esports_admin_user');
+    const token = getStoredAdminToken();
 
-    if (!token || !userStr) {
-      localStorage.removeItem('bgmi_esports_admin_token');
-      localStorage.removeItem('bgmi_esports_admin_user');
+    if (!token || !isTokenValid(token)) {
+      clearStoredAdminSession();
       router.push('/admin/login');
-    } else {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        if (payload.exp * 1000 < Date.now()) {
-          localStorage.removeItem('bgmi_esports_admin_token');
-          localStorage.removeItem('bgmi_esports_admin_user');
-          router.push('/admin/login');
-        }
-      } catch (e) {
-        localStorage.removeItem('bgmi_esports_admin_token');
-        localStorage.removeItem('bgmi_esports_admin_user');
-        router.push('/admin/login');
-      } finally {
-        setCheckingAuth(false);
-      }
+      return;
     }
+
+    // Token is valid in storage/cookie - grant immediate access
+    setCheckingAuth(false);
+
+    // Asynchronously verify with backend to ensure account remains active
+    verifyAdminSession().then((res) => {
+      if (!res.valid) {
+        clearStoredAdminSession();
+        router.push('/admin/login');
+      }
+    }).catch(() => {
+      // Keep session on minor connection issues
+    });
   }, [isLoginPage, router]);
 
   if (checkingAuth) {

@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginAdmin } from '@/services/api';
+import { loginAdmin, getStoredAdminToken, isTokenValid } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, AlertCircle, Shield, CheckCircle2, Swords } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, AlertCircle, Shield, CheckCircle2, Swords, KeyRound } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminLoginPage() {
@@ -17,17 +17,25 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  // If administrator already has a valid JWT session, skip login form
+  useEffect(() => {
+    const token = getStoredAdminToken();
+    if (token && isTokenValid(token)) {
+      router.replace('/admin');
+    }
+  }, [router]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrorMsg('');
 
     try {
-      const res = await loginAdmin(email, password);
+      const res = await loginAdmin(email.trim(), password, rememberMe);
       setLoading(false);
 
       if (res && res.success) {
-        showToast('Admin Access Granted. Welcome Back!', 'success');
+        showToast(`Admin Access Granted (${res.user?.role || 'Admin'}). Welcome Back!`, 'success');
         router.push('/admin');
       } else {
         setErrorMsg(res?.message || 'Invalid credentials');
@@ -149,7 +157,7 @@ export default function AdminLoginPage() {
                   <input
                     type="email"
                     required
-                    placeholder="admin@bgmi.esports"
+                    placeholder="admin1@bgmi.esports or admin2@bgmi.esports"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-11 pr-4 py-3 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-[#C5A059] transition-colors"
@@ -182,6 +190,37 @@ export default function AdminLoginPage() {
                 </div>
               </div>
 
+              {/* ADMIN ACCOUNT QUICK-SELECTION */}
+              <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-[#E7E3DA] dark:border-[#1E2638] space-y-2">
+                <div className="flex items-center justify-between text-[10px] font-mono font-bold text-slate-500 uppercase">
+                  <span>Quick Fill Credentials:</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('admin1@bgmi.esports');
+                      setPassword('Admin1#BGMI2026');
+                    }}
+                    className="p-2 text-left bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] hover:border-[#C5A059] rounded-xl transition-all text-[11px]"
+                  >
+                    <div className="font-bold text-slate-900 dark:text-white">Admin 1</div>
+                    <div className="text-[10px] text-slate-400 font-mono truncate">Director (Super Admin)</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('admin2@bgmi.esports');
+                      setPassword('Admin2#BGMI2026');
+                    }}
+                    className="p-2 text-left bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] hover:border-[#C5A059] rounded-xl transition-all text-[11px]"
+                  >
+                    <div className="font-bold text-slate-900 dark:text-white">Admin 2</div>
+                    <div className="text-[10px] text-slate-400 font-mono truncate">Operations Referee</div>
+                  </button>
+                </div>
+              </div>
+
               {/* REMEMBER ME */}
               <div className="flex items-center justify-between text-xs pt-1">
                 <label className="flex items-center gap-2 text-slate-600 dark:text-slate-400 cursor-pointer">
@@ -191,7 +230,7 @@ export default function AdminLoginPage() {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="w-3.5 h-3.5 rounded border-[#E7E3DA] text-slate-900 focus:ring-0 accent-slate-900 cursor-pointer"
                   />
-                  <span>Remember this terminal</span>
+                  <span>Keep me logged in (30 days)</span>
                 </label>
               </div>
 

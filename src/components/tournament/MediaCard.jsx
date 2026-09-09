@@ -68,8 +68,12 @@ export default function MediaCard({ item, onClick }) {
               <span className="text-bgmi-red font-bold line-clamp-1">{item.match || 'Match #01'}</span>
             </div>
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 block font-mono">Player</span>
-              <span className="text-slate-900 dark:text-slate-200 line-clamp-1">{item.player || 'Player'}</span>
+              <span className="text-[9px] uppercase font-bold text-slate-400 block font-mono">
+                {item.player ? 'Player' : 'Proof Type'}
+              </span>
+              <span className="text-slate-900 dark:text-slate-200 line-clamp-1">
+                {item.player || item.type || 'Screenshot'}
+              </span>
             </div>
             <div>
               <span className="text-[9px] uppercase font-bold text-slate-400 block font-mono">Referee Check</span>

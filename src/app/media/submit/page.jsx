@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { getTeams, getMatches, uploadMedia } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { useRouter } from 'next/navigation';
-import { Camera, ArrowLeft, Send, UploadCloud, Users, Trophy, User } from 'lucide-react';
+import { Camera, ArrowLeft, Send, UploadCloud, Users, Trophy, CheckCircle2, ShieldAlert } from 'lucide-react';
 import Button from '@/components/common/Button';
 import Link from 'next/link';
 
@@ -18,13 +18,13 @@ export default function SubmitScreenshotPage() {
   const [submitting, setSubmitting] = useState(false);
 
   // Form states
-  const [title, setTitle] = useState('');
   const [type, setType] = useState('Screenshots');
   const [selectedTeam, setSelectedTeam] = useState('');
-  const [selectedPlayer, setSelectedPlayer] = useState('');
   const [selectedMatch, setSelectedMatch] = useState('');
+  const [notes, setNotes] = useState('');
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState('');
+  const [previewUrl, setPreviewUrl] = useState('');
 
   useEffect(() => {
     async function loadData() {
@@ -58,6 +58,7 @@ export default function SubmitScreenshotPage() {
       }
       setFile(selectedFile);
       setFileName(selectedFile.name);
+      setPreviewUrl(URL.createObjectURL(selectedFile));
     }
   };
 
@@ -67,27 +68,27 @@ export default function SubmitScreenshotPage() {
       showToast('Please upload a screenshot file', 'error');
       return;
     }
-    if (!selectedTeam || !selectedPlayer || !selectedMatch) {
-      showToast('Please fill in all details', 'error');
+    if (!selectedTeam || !selectedMatch) {
+      showToast('Please select squad and match', 'error');
       return;
     }
 
     try {
       setSubmitting(true);
       
-      const autoTitle = `${selectedTeam} - ${selectedPlayer} (${type === 'POV' ? 'POV' : 'Screenshot'}) - ${selectedMatch}`;
+      const autoTitle = `${selectedTeam} (${type === 'POV' ? 'POV' : 'Screenshot'}) - ${selectedMatch}`;
 
       const formData = new FormData();
       formData.append('title', autoTitle);
       formData.append('type', type);
       formData.append('team', selectedTeam);
-      formData.append('player', selectedPlayer);
       formData.append('match', selectedMatch);
+      if (notes.trim()) formData.append('notes', notes.trim());
       formData.append('file', file);
 
       const res = await uploadMedia(formData);
       if (res && res.success) {
-        showToast('Screenshot submitted successfully! Under review.', 'success');
+        showToast('Media proof submitted successfully! Under referee review.', 'success');
         router.push('/media');
       } else {
         showToast(res?.message || 'Failed to submit screenshot', 'error');
@@ -98,9 +99,6 @@ export default function SubmitScreenshotPage() {
       setSubmitting(false);
     }
   };
-
-  const currentTeamObj = teams.find(t => (t.name || t.teamName) === selectedTeam);
-  const teamPlayers = currentTeamObj?.players || [];
 
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8 font-sans">
@@ -148,10 +146,7 @@ export default function SubmitScreenshotPage() {
             </label>
             <select
               value={selectedTeam}
-              onChange={(e) => {
-                setSelectedTeam(e.target.value);
-                setSelectedPlayer('');
-              }}
+              onChange={(e) => setSelectedTeam(e.target.value)}
               className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors cursor-pointer shadow-editorial-sm"
             >
               {teams.map((t) => (
@@ -160,37 +155,6 @@ export default function SubmitScreenshotPage() {
                 </option>
               ))}
             </select>
-          </div>
-
-          {/* PLAYER SELECT/INPUT */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5 font-mono">
-              <User className="w-3.5 h-3.5 text-slate-400" /> Player Submitting (IGN)
-            </label>
-            {teamPlayers.length > 0 ? (
-              <select
-                value={selectedPlayer}
-                onChange={(e) => setSelectedPlayer(e.target.value)}
-                required
-                className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors cursor-pointer shadow-editorial-sm"
-              >
-                <option value="">-- Select Your Player IGN --</option>
-                {teamPlayers.map((p, idx) => (
-                  <option key={p.id || p._id || idx} value={p.ign}>
-                    {p.ign} ({p.name})
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type="text"
-                required
-                placeholder="Enter your In-Game Name (IGN)"
-                value={selectedPlayer}
-                onChange={(e) => setSelectedPlayer(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors shadow-editorial-sm"
-              />
-            )}
           </div>
 
           {/* MATCH SELECT */}
@@ -211,25 +175,54 @@ export default function SubmitScreenshotPage() {
             </select>
           </div>
 
+          {/* OPTIONAL REMARKS/NOTES */}
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5 font-mono">
+              Proof Remarks / Kill Summary <span className="text-slate-400 font-normal lowercase">(optional)</span>
+            </label>
+            <input
+              type="text"
+              placeholder="e.g., #1 Winner Winner Chicken Dinner, 18 Total Kills"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full px-4 py-2.5 bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-bgmi-red transition-colors shadow-editorial-sm"
+            />
+          </div>
+
           {/* SCREENSHOT FILE UPLOAD */}
           <div className="space-y-2 pt-2">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">
-              Upload Screenshot File (PNG/JPG)
+              Upload Match Screenshot Proof (PNG/JPG)
             </label>
-            <div className="relative border-2 border-dashed border-[#E7E3DA] dark:border-[#1E2638] hover:border-bgmi-red/50 rounded-2xl p-6 transition-colors flex flex-col items-center justify-center gap-2 bg-[#FAF8F5] dark:bg-[#0B0E14] cursor-pointer">
+            <div className="relative border-2 border-dashed border-[#E7E3DA] dark:border-[#1E2638] hover:border-bgmi-red/50 rounded-2xl p-6 transition-colors flex flex-col items-center justify-center gap-2 bg-[#FAF8F5] dark:bg-[#0B0E14] cursor-pointer group">
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <UploadCloud className="w-10 h-10 text-slate-400" />
-              <div className="text-center">
-                <p className="font-bold text-slate-900 dark:text-white text-xs">
-                  {fileName ? `Selected: ${fileName}` : 'Click or Drag screenshot here'}
-                </p>
-                <p className="text-[10px] text-slate-400 mt-1">Image files up to 10MB</p>
-              </div>
+              {previewUrl ? (
+                <div className="w-full space-y-3 text-center">
+                  <div className="relative aspect-video max-h-48 mx-auto rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-sm">
+                    <img src={previewUrl} alt="Screenshot Preview" className="w-full h-full object-contain bg-black/40" />
+                  </div>
+                  <div className="flex items-center justify-center gap-2 text-emerald-600 dark:text-emerald-400 font-mono text-[11px] font-bold">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{fileName}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400">Click or drag another image to replace</p>
+                </div>
+              ) : (
+                <>
+                  <UploadCloud className="w-10 h-10 text-slate-400 group-hover:text-bgmi-red transition-colors" />
+                  <div className="text-center">
+                    <p className="font-bold text-slate-900 dark:text-white text-xs">
+                      Click or Drag match screenshot here
+                    </p>
+                    <p className="text-[10px] text-slate-400 mt-1">High-resolution PNG, JPG or WEBP up to 10MB</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
