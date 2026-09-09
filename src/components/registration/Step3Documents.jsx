@@ -21,8 +21,7 @@ export default function Step3Documents({ formData, updateFormData, onNext, onPre
     const missingProofIdx = formData.players.findIndex(p => !p.studentProof || !p.studentProof.trim());
     if (missingProofIdx !== -1) {
       const playerNum = missingProofIdx + 1;
-      const isSub = formData.players[missingProofIdx].isSub;
-      setError(`Please provide a Student ID/Proof URL for Player ${playerNum} (${isSub ? 'Substitute' : 'Starter'}).`);
+      setError(`Please provide a Student ID/Proof URL for Player ${playerNum}.`);
       return;
     }
     

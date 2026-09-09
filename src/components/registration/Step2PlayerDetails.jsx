@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Users, UserCheck, ShieldAlert } from 'lucide-react';
+import { Users, UserCheck } from 'lucide-react';
 import Button from '../common/Button';
 
 export default function Step2PlayerDetails({ formData, updateFormData, onNext, onPrev }) {
-  const rolesList = ['IGL', 'Assaulter', 'Entry Fragger', 'Support', 'Substitute'];
+  const rolesList = ['IGL', 'Assaulter', 'Entry Fragger', 'Support'];
 
   const handlePlayerChange = (index, field, value) => {
     const updated = [...(formData.players || [])];
@@ -15,15 +15,14 @@ export default function Step2PlayerDetails({ formData, updateFormData, onNext, o
         name: '',
         ign: '',
         bgmiId: '',
-        substituteId: '',
-        role: index === 4 ? 'Substitute' : 'Support',
-        isSub: index === 4,
+        role: 'Support',
+        isSub: false,
         verificationStatus: 'Pending Verification'
       });
     }
 
     updated[index] = { ...updated[index], [field]: value };
-    updateFormData({ players: updated });
+    updateFormData({ players: updated.slice(0, 4) });
   };
 
   const handleSubmit = (e) => {
@@ -31,8 +30,7 @@ export default function Step2PlayerDetails({ formData, updateFormData, onNext, o
     onNext();
   };
 
-  const starters = (formData.players || []).slice(0, 4);
-  const subPlayer = (formData.players || [])[4] || { name: '', ign: '', bgmiId: '', substituteId: '', role: 'Substitute', isSub: true };
+  const players = (formData.players || []).slice(0, 4);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-300 font-sans">
@@ -41,18 +39,18 @@ export default function Step2PlayerDetails({ formData, updateFormData, onNext, o
           <Users className="w-5 h-5 text-bgmi-red" /> Step 2: Player Roster, IGN & BGMI Player IDs
         </h3>
         <p className="text-xs text-slate-500 font-normal">
-          Enter Full Name, In-Game Name (IGN), and BGMI Character ID for your 4 starters and optional 5th substitute.
+          Enter Full Name, In-Game Name (IGN), and BGMI Character ID for your 4 squad players.
         </p>
       </div>
 
-      {/* 4 MAIN STARTERS */}
+      {/* 4 MAIN PLAYERS */}
       <div className="space-y-4">
         <h4 className="text-xs font-mono font-bold uppercase tracking-widest text-bgmi-red flex items-center gap-1.5">
           <UserCheck className="w-4 h-4 text-bgmi-red" /> 4 Main Starting Roster Members (Required)
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {starters.map((player, idx) => (
+          {players.map((player, idx) => (
             <div
               key={idx}
               className="p-5 rounded-2xl border border-[#E7E3DA] dark:border-[#1E2638] bg-[#FAF8F5] dark:bg-[#0B0E14] space-y-3.5 shadow-editorial-sm"
@@ -119,51 +117,6 @@ export default function Step2PlayerDetails({ formData, updateFormData, onNext, o
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* 5TH SUBSTITUTE PLAYER */}
-      <div className="p-5 rounded-2xl border border-dashed border-[#E7E3DA] dark:border-[#1E2638] bg-[#FAF8F5]/60 dark:bg-[#0B0E14]/60 space-y-3">
-        <div className="flex items-center justify-between border-b border-[#E7E3DA] dark:border-[#1E2638] pb-2">
-          <span className="text-xs font-mono font-bold uppercase text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-500" /> 5th Substitute Player (Optional)
-          </span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold">
-            Substitute
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div>
-            <label className="block text-[11px] font-mono text-slate-500 mb-1">Full Name</label>
-            <input
-              type="text"
-              placeholder="Substitute Full Name"
-              value={subPlayer.name}
-              onChange={(e) => handlePlayerChange(4, 'name', e.target.value)}
-              className="w-full px-3.5 py-2 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:border-bgmi-red shadow-editorial-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-[11px] font-mono text-slate-500 mb-1">IGN</label>
-            <input
-              type="text"
-              placeholder="Substitute IGN"
-              value={subPlayer.ign}
-              onChange={(e) => handlePlayerChange(4, 'ign', e.target.value)}
-              className="w-full px-3.5 py-2 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-bgmi-red shadow-editorial-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-[11px] font-mono text-slate-500 mb-1">BGMI Character ID</label>
-            <input
-              type="text"
-              placeholder="Character ID"
-              value={subPlayer.bgmiId}
-              onChange={(e) => handlePlayerChange(4, 'bgmiId', e.target.value)}
-              className="w-full px-3.5 py-2 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-mono font-bold focus:outline-none focus:border-bgmi-red shadow-editorial-sm"
-            />
-          </div>
         </div>
       </div>
 
