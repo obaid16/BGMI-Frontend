@@ -36,9 +36,9 @@ function MatchesHubContent() {
   return (
     <div className="w-full">
       {/* GLOBAL TOURNAMENT TABS */}
-      <div className="sticky top-20 z-20 bg-premium-background/95 backdrop-blur-md border-b border-premium-border pt-4 px-6 lg:px-8">
+      <div className="sticky top-20 z-20 bg-premium-background/95 backdrop-blur-md border-b border-premium-border pt-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-[1500px] mx-auto">
-          <div className="flex items-center gap-6 overflow-x-auto hide-scrollbar">
+          <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto hide-scrollbar -mb-px">
             {tabs.map((tab) => (
               <button
                 key={tab.id}

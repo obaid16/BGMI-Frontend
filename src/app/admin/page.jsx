@@ -69,7 +69,7 @@ export default function AdminDashboardPage() {
     <div className="space-y-10 max-w-full overflow-hidden">
       
       {/* DASHBOARD STATS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <AdminStatCard title="Registered Squads" value={stats.totalTeams} subtext="Total Applications" icon={Users} color="gold" />
         <AdminStatCard title="Approved Squads" value={stats.approvedTeams} subtext="Verified Squads" icon={ShieldCheck} color="green" />
         <AdminStatCard title="Pending Approvals" value={stats.pendingRegistrations} subtext="Requires Review" icon={Clock} color="amber" />
@@ -83,7 +83,7 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* RECENT PENDING REGISTRATIONS QUEUE */}
-        <div className="lg:col-span-2 bg-premium-surface border border-premium-border rounded-[24px] p-6 sm:p-8 space-y-6 shadow-sm">
+        <div className="lg:col-span-2 bg-premium-surface border border-premium-border rounded-[20px] sm:rounded-[24px] p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 shadow-sm">
           <div className="flex items-center justify-between border-b border-premium-border pb-4">
             <h3 className="font-bold text-lg text-premium-text flex items-center gap-2">
               <Clock className="w-5 h-5 text-amber-500" /> Pending Squad Approvals

@@ -24,11 +24,11 @@ export default function MatchCard({ match }) {
   const teamBName = getTeamName(match.teamB) || getTeamName(match.teams?.[1]) || null;
 
   return (
-    <div className="w-full bg-premium-surface border border-premium-border hover:border-premium-text transition-all rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 group">
+    <div className="w-full bg-premium-surface border border-premium-border hover:border-premium-text transition-all rounded-2xl p-4 shadow-sm flex flex-col gap-4 group">
       
       {/* LEFT: MATCH NUMBER & MAP */}
-      <div className="flex items-center gap-4 min-w-[220px]">
-        <div className="w-14 h-14 bg-premium-surface-soft text-premium-text font-bold text-lg flex flex-col items-center justify-center rounded-xl flex-shrink-0">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 sm:w-14 sm:h-14 bg-premium-surface-soft text-premium-text font-bold text-base sm:text-lg flex flex-col items-center justify-center rounded-xl flex-shrink-0">
           <span className="text-[9px] font-semibold text-premium-text-secondary uppercase tracking-widest leading-none mb-0.5">Match</span>
           <span className="leading-none">{String(match.matchNumber || 1).padStart(2, '0')}</span>
         </div>
@@ -52,7 +52,7 @@ export default function MatchCard({ match }) {
       </div>
 
       {/* CENTER: DYNAMIC CONTENT */}
-      <div className="flex-1 max-w-md bg-premium-background rounded-xl p-3 sm:px-4 sm:py-3 flex items-center justify-between border border-premium-border">
+      <div className="flex-1 bg-premium-background rounded-xl p-3 flex items-center justify-between border border-premium-border">
         
         {isUpcoming ? (
           <div className="w-full flex items-center justify-between px-2 text-premium-text-secondary whitespace-nowrap gap-4">
@@ -110,7 +110,7 @@ export default function MatchCard({ match }) {
       </div>
 
       {/* RIGHT: TIME & CTA */}
-      <div className="flex items-center justify-between md:justify-end gap-5 min-w-[200px] border-t md:border-t-0 pt-4 md:pt-0 border-premium-border">
+      <div className="flex items-center justify-between gap-4 border-t pt-3 border-premium-border">
         <div className="text-right">
           <p className="font-semibold text-premium-text flex items-center justify-end gap-1.5 text-sm">
             <Clock className="w-4 h-4 text-premium-text-secondary" /> {match.time || '10:00 AM'}

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -39,16 +38,17 @@ export default function Navbar() {
   };
 
   return (
+    <>
     <header className="sticky top-0 z-30 w-full bg-premium-background/80 backdrop-blur-xl border-b border-premium-border transition-all">
       <div className="max-w-[1500px] mx-auto px-6 lg:px-8 h-20 flex items-center justify-between gap-8">
         
         {/* BRAND IDENTITY */}
         <Link href="/" className="flex items-center gap-3 group shrink-0">
-          <div className="h-10 w-10 bg-white rounded-xl border border-premium-border flex items-center justify-center shadow-premium-soft transition-transform group-hover:scale-105">
+          <div className="h-10 w-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
             <img
-              src="/images/nit-logo-icon.png"
-              alt="NIT Esports"
-              className="h-6 w-auto object-contain opacity-80"
+              src="/images/bgmi-portal-logo.png"
+              alt="BGMI Portal"
+              className="h-10 w-10 object-contain"
             />
           </div>
           <div className="flex flex-col">
@@ -83,7 +83,6 @@ export default function Navbar() {
 
         {/* RIGHT CONTROLS & CTA */}
         <div className="hidden lg:flex items-center gap-4 shrink-0">
-          <ThemeToggle />
           <Link
             href="/register"
             className="px-5 py-2.5 bg-premium-text hover:bg-black text-white text-sm font-medium rounded-full shadow-premium-soft transition-all flex items-center gap-1.5 hover:-translate-y-0.5"
@@ -95,7 +94,6 @@ export default function Navbar() {
 
         {/* MOBILE HAMBURGER TOGGLE */}
         <div className="flex lg:hidden items-center gap-3">
-          <ThemeToggle className="scale-90" />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-premium-text bg-premium-surface border border-premium-border rounded-xl focus:outline-none shadow-sm"
@@ -106,10 +104,11 @@ export default function Navbar() {
         </div>
 
       </div>
+    </header>
 
-      {/* MOBILE NAVIGATION */}
+      {/* MOBILE NAVIGATION — rendered outside header to avoid z-index stacking issues */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-20 bg-premium-background z-50 p-6 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-top-4 duration-200">
+        <div className="lg:hidden fixed inset-0 top-20 bg-premium-background z-[999] p-6 flex flex-col justify-between overflow-y-auto">
           <div className="space-y-6">
             <div className="text-[11px] text-premium-text-secondary uppercase tracking-widest border-b border-premium-border pb-3 font-semibold">
               Menu
@@ -147,6 +146,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

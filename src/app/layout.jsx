@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
-        <link rel="icon" href="https://img.icons8.com/color/48/000000/controller.png" type="image/png" />
+        <link rel="icon" href="/images/bgmi-portal-logo.png" type="image/png" />
       </head>
       <body className="bg-premium-background text-premium-text min-h-screen flex flex-col antialiased selection:bg-premium-sage selection:text-white">
         <ThemeProvider>

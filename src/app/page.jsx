@@ -64,20 +64,20 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="space-y-24 pb-24 overflow-x-hidden font-sans">
+    <div className="space-y-16 sm:space-y-24 pb-16 sm:pb-24 overflow-x-hidden font-sans">
       
       {/* 1. HERO SECTION */}
-      <section className="relative w-full max-w-[1500px] mx-auto px-6 lg:px-8 pt-20">
+      <section className="relative w-full max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-20">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="flex-1 space-y-8 text-center lg:text-left z-10">
             <div className="inline-flex items-center gap-2 text-[10px] font-bold text-premium-sage uppercase tracking-widest bg-premium-sage-soft px-3 py-1.5 rounded-full border border-premium-sage/30">
               <Trophy className="w-3.5 h-3.5" /> Official BGMI Tournament Platform
             </div>
-            <h1 className="font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-[80px] text-premium-text tracking-tight leading-[1.05]">
+            <h1 className="font-bold text-3xl sm:text-5xl lg:text-7xl xl:text-[80px] text-premium-text tracking-tight leading-[1.1] sm:leading-[1.05]">
               MORE THAN A GAME.<br />
               <span className="text-premium-sage">A STRONGER COMMUNITY.</span>
             </h1>
-            <p className="text-lg sm:text-xl text-premium-text-secondary max-w-2xl mx-auto lg:mx-0 font-medium">
+            <p className="text-base sm:text-xl text-premium-text-secondary max-w-2xl mx-auto lg:mx-0 font-medium">
               Join the ultimate college esports experience. Register your squad, track live matches, and dominate the leaderboards.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
@@ -125,9 +125,9 @@ export default function HomePage() {
 
       {/* 4. UPCOMING MATCHES */}
       {upcomingMatches.length > 0 && (
-        <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+        <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between border-b border-premium-border pb-4 mb-8">
-            <h2 className="font-bold text-3xl text-premium-text tracking-tight">Upcoming Matches</h2>
+            <h2 className="font-bold text-2xl sm:text-3xl text-premium-text tracking-tight">Upcoming Matches</h2>
             <Link href="/matches?tab=schedule" className="text-sm font-bold text-premium-text hover:text-premium-sage uppercase tracking-widest transition-colors flex items-center gap-1">
               View All <ArrowRight className="w-4 h-4" />
             </Link>
@@ -141,36 +141,36 @@ export default function HomePage() {
       )}
 
       {/* 5. QUICK ACCESS */}
-      <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
-        <h2 className="font-bold text-3xl text-premium-text tracking-tight mb-8">Tournament Portal</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Link href="/matches" className="group p-8 bg-premium-surface border border-premium-border rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
+      <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="font-bold text-2xl sm:text-3xl text-premium-text tracking-tight mb-6 sm:mb-8">Tournament Portal</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <Link href="/matches" className="group p-5 sm:p-8 bg-premium-surface border border-premium-border rounded-[20px] sm:rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
             <div className="w-12 h-12 bg-premium-surface-soft text-premium-text rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <Gamepad2 className="w-6 h-6" />
+              <Gamepad2 className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-bold text-xl text-premium-text mb-2">Matches</h3>
-            <p className="text-sm text-premium-text-secondary font-medium">Live schedules, results, standings, and MVP leaderboards.</p>
+            <h3 className="font-bold text-base sm:text-xl text-premium-text mb-1 sm:mb-2">Matches</h3>
+            <p className="text-xs sm:text-sm text-premium-text-secondary font-medium">Live schedules, results, standings, and MVP leaderboards.</p>
           </Link>
-          <Link href="/teams" className="group p-8 bg-premium-surface border border-premium-border rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
+          <Link href="/teams" className="group p-5 sm:p-8 bg-premium-surface border border-premium-border rounded-[20px] sm:rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
             <div className="w-12 h-12 bg-premium-surface-soft text-premium-text rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <Users className="w-6 h-6" />
+              <Users className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-bold text-xl text-premium-text mb-2">Teams</h3>
-            <p className="text-sm text-premium-text-secondary font-medium">Explore the verified college squads and rosters competing.</p>
+            <h3 className="font-bold text-base sm:text-xl text-premium-text mb-1 sm:mb-2">Teams</h3>
+            <p className="text-xs sm:text-sm text-premium-text-secondary font-medium">Explore the verified college squads and rosters competing.</p>
           </Link>
-          <Link href="/rules" className="group p-8 bg-premium-surface border border-premium-border rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
+          <Link href="/rules" className="group p-5 sm:p-8 bg-premium-surface border border-premium-border rounded-[20px] sm:rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
             <div className="w-12 h-12 bg-premium-surface-soft text-premium-text rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <ShieldCheck className="w-6 h-6" />
+              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-bold text-xl text-premium-text mb-2">Rules</h3>
-            <p className="text-sm text-premium-text-secondary font-medium">Official tournament directives, scoring, and anti-cheat policies.</p>
+            <h3 className="font-bold text-base sm:text-xl text-premium-text mb-1 sm:mb-2">Rules</h3>
+            <p className="text-xs sm:text-sm text-premium-text-secondary font-medium">Official tournament directives, scoring, and anti-cheat policies.</p>
           </Link>
-          <Link href="/register" className="group p-8 bg-premium-sage-soft border border-premium-sage/30 rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
+          <Link href="/register" className="group p-5 sm:p-8 bg-premium-sage-soft border border-premium-sage/30 rounded-[20px] sm:rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
             <div className="w-12 h-12 bg-white text-premium-sage rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <Trophy className="w-6 h-6" />
+              <Trophy className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-bold text-xl text-premium-text mb-2">Register</h3>
-            <p className="text-sm text-premium-text-secondary font-medium">Secure your squad's slot in the upcoming championship.</p>
+            <h3 className="font-bold text-base sm:text-xl text-premium-text mb-1 sm:mb-2">Register</h3>
+            <p className="text-xs sm:text-sm text-premium-text-secondary font-medium">Secure your squad's slot in the upcoming championship.</p>
           </Link>
         </div>
       </section>
@@ -227,9 +227,9 @@ export default function HomePage() {
 
       {/* 8. COMMUNITY / FINAL CTA */}
       <section className="max-w-[1500px] mx-auto px-6 lg:px-8 pt-12">
-        <div className="bg-premium-text text-white rounded-[32px] p-12 lg:p-24 text-center relative overflow-hidden shadow-2xl">
+        <div className="bg-premium-text text-white rounded-[24px] sm:rounded-[32px] p-8 sm:p-12 lg:p-24 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 space-y-8">
-            <h2 className="font-bold text-5xl sm:text-6xl lg:text-[80px] tracking-tight leading-none">
+            <h2 className="font-bold text-3xl sm:text-5xl lg:text-[80px] tracking-tight leading-none">
               Play. Compete.<br />Connect.
             </h2>
             <p className="text-lg text-white/70 max-w-xl mx-auto font-medium">

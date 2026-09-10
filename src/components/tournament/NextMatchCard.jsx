@@ -72,10 +72,10 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
 
   return (
     <>
-      <div className="relative overflow-hidden bg-white border border-premium-border rounded-[24px] p-6 sm:p-8 shadow-sm space-y-8">
+      <div className="relative overflow-hidden bg-white border border-premium-border rounded-[20px] sm:rounded-[24px] p-4 sm:p-6 md:p-8 shadow-sm space-y-6 sm:space-y-8">
         
         {/* 1. MATCH SPOTLIGHT HEADER */}
-        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-premium-border pb-6">
+        <div className="relative z-10 flex flex-col gap-3 border-b border-premium-border pb-4 sm:pb-6">
           <div className="flex items-center gap-3">
             {isLive ? (
               <Badge variant="live" size="md">
@@ -89,7 +89,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
                 UPCOMING MATCH
               </span>
             )}
-            <span className="font-bold text-xl text-premium-text tracking-tight">
+            <span className="font-bold text-base sm:text-xl text-premium-text tracking-tight">
               Match #{match.matchNumber || 1} / <span className="text-amber-600">{match.map || 'Erangel'}</span>
             </span>
           </div>
@@ -156,13 +156,13 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
             </div>
 
             {/* SQUAD CHIPS GRID */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-56 overflow-y-auto custom-scrollbar pr-2">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 max-h-56 overflow-y-auto custom-scrollbar pr-1 sm:pr-2">
               {participatingSquads.map((sq, idx) => (
                 <div
                   key={idx}
-                  className="p-3 bg-white rounded-[12px] border border-premium-border flex items-center gap-3 transition-colors shadow-sm min-w-0"
+                  className="p-2 sm:p-3 bg-white rounded-[10px] sm:rounded-[12px] border border-premium-border flex items-center gap-2 sm:gap-3 transition-colors shadow-sm min-w-0"
                 >
-                  <div className="w-8 h-8 rounded-[8px] bg-premium-surface-soft border border-premium-border flex items-center justify-center text-xs font-bold text-amber-600 shrink-0">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[6px] sm:rounded-[8px] bg-premium-surface-soft border border-premium-border flex items-center justify-center text-xs font-bold text-amber-600 shrink-0">
                     {sq.logo ? (
                       <img src={sq.logo} alt={sq.teamName || sq.name} className="w-full h-full object-cover rounded-[6px]" />
                     ) : (
@@ -170,7 +170,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
                     )}
                   </div>
                   <div className="truncate text-left">
-                    <p className="font-bold text-sm text-premium-text truncate">
+                    <p className="font-bold text-xs sm:text-sm text-premium-text truncate">
                       {sq.teamName || sq.name}
                     </p>
                     <p className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
@@ -231,7 +231,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white border border-premium-border rounded-[24px] max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-8 relative"
+            className="bg-white border border-premium-border rounded-[20px] sm:rounded-[24px] max-w-2xl w-full p-4 sm:p-6 md:p-8 shadow-2xl space-y-6 sm:space-y-8 relative max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* CLOSE BUTTON */}
@@ -313,7 +313,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
             </div>
 
             {/* LOBBY SPECIFICATIONS GRID */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-sm">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 text-center text-xs sm:text-sm">
               <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
                 <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">MAP</span>
                 <span className="font-bold text-premium-text">{roomDetails.map}</span>

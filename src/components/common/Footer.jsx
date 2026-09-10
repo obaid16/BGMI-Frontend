@@ -13,11 +13,11 @@ export default function Footer() {
           {/* COL 1: BRAND */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="h-12 w-12 bg-white rounded-xl border border-premium-border flex items-center justify-center shadow-premium-soft">
+              <div className="h-12 w-12 rounded-xl overflow-hidden flex items-center justify-center">
                 <img
-                  src="/images/nit-logo-icon.png"
-                  alt="NIT Esports"
-                  className="h-7 w-auto object-contain opacity-80"
+                  src="/images/bgmi-portal-logo.png"
+                  alt="BGMI Portal"
+                  className="h-12 w-12 object-contain"
                 />
               </div>
               <div className="flex flex-col">
