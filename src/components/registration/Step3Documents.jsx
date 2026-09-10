@@ -21,7 +21,8 @@ export default function Step3Documents({ formData, updateFormData, onNext, onPre
     const missingProofIdx = formData.players.findIndex(p => !p.studentProof || !p.studentProof.trim());
     if (missingProofIdx !== -1) {
       const playerNum = missingProofIdx + 1;
-      setError(`Please provide a Student ID/Proof URL for Player ${playerNum}.`);
+      const isSub = formData.players[missingProofIdx].isSub;
+      setError(`Please provide a Student ID/Proof URL for Player ${playerNum} (${isSub ? 'Substitute' : 'Starter'}).`);
       return;
     }
     
@@ -29,18 +30,18 @@ export default function Step3Documents({ formData, updateFormData, onNext, onPre
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-300">
-      <div className="border-b border-bgmi-border/60 pb-4 mb-6">
-        <h3 className="text-xl font-bold font-display text-white uppercase flex items-center gap-2">
-          <FileCheck className="w-5 h-5 text-emerald-400" /> Step 3: Student Verification Proof
+    <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-300">
+      <div className="border-b border-premium-border pb-6">
+        <h3 className="text-2xl font-bold text-premium-text tracking-tight flex items-center gap-3">
+          <FileCheck className="w-6 h-6 text-premium-text-secondary" /> Step 3: Student Verification Proof
         </h3>
-        <p className="text-xs text-slate-400">
+        <p className="text-sm text-premium-text-secondary font-medium mt-2">
           Provide a valid student ID card or portal verification link for every squad member.
         </p>
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl flex items-center gap-3 text-rose-400 text-xs font-semibold">
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-rose-700 text-sm font-semibold shadow-sm">
           <ShieldAlert className="w-5 h-5 flex-shrink-0" />
           <span>{error}</span>
         </div>
@@ -50,29 +51,29 @@ export default function Step3Documents({ formData, updateFormData, onNext, onPre
         {formData.players.map((player, idx) => (
           <div 
             key={idx}
-            className="p-5 bg-bgmi-surface/70 border border-bgmi-border/80 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 clip-tactical"
+            className="p-5 bg-premium-surface border border-premium-border rounded-[20px] flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-bgmi-dark border border-bgmi-border overflow-hidden flex-shrink-0">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-[14px] bg-premium-background border border-premium-border overflow-hidden flex-shrink-0 flex items-center justify-center">
                 {player.photo ? (
-                  <img src={player.photo} alt={player.ign} className="w-full h-full object-cover rounded-lg" />
+                  <img src={player.photo} alt={player.ign} className="w-full h-full object-cover" />
                 ) : (
-                  <span className="font-display font-black text-xs text-bgmi-gold flex items-center justify-center h-full">P0{idx + 1}</span>
+                  <span className="font-bold text-sm text-premium-text-secondary">P0{idx + 1}</span>
                 )}
               </div>
               <div>
-                <p className="font-display font-bold text-xs text-white uppercase">
+                <p className="font-bold text-sm text-premium-text uppercase">
                   {player.ign || `Player 0${idx + 1}`}
                 </p>
-                <p className="text-[10px] text-slate-400">
+                <p className="text-[11px] font-medium text-premium-text-secondary mt-0.5">
                   {player.name || 'Unnamed Player'} &bull; {player.role}
                 </p>
               </div>
             </div>
 
-            <div className="flex-1 max-w-md space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                <LinkIcon className="w-3 h-3 text-bgmi-cyan" /> Student ID / Proof Link <span className="text-bgmi-gold">*</span>
+            <div className="flex-1 max-w-md space-y-1.5 w-full">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-premium-text-secondary flex items-center gap-1.5">
+                <LinkIcon className="w-3.5 h-3.5 text-premium-text-secondary" /> Student ID / Proof Link <span className="text-amber-600">*</span>
               </label>
               <input
                 type="url"
@@ -80,19 +81,19 @@ export default function Step3Documents({ formData, updateFormData, onNext, onPre
                 placeholder="e.g. https://college.edu/portal/verify/student.jpg"
                 value={player.studentProof || ''}
                 onChange={(e) => handlePlayerChange(idx, 'studentProof', e.target.value)}
-                className="w-full px-3 py-2 bg-bgmi-dark border border-bgmi-border rounded-lg text-white text-xs focus:outline-none focus:border-bgmi-gold transition-colors"
+                className="w-full px-4 py-2.5 bg-white border border-premium-border rounded-[12px] text-premium-text text-sm focus:outline-none focus:border-premium-text transition-colors shadow-sm"
               />
             </div>
           </div>
         ))}
       </div>
 
-      <div className="pt-6 border-t border-bgmi-border/60 flex items-center justify-between">
-        <Button type="button" variant="secondary" size="md" onClick={onPrev}>
-          ← Back
+      <div className="pt-8 border-t border-premium-border flex items-center justify-between">
+        <Button type="button" variant="outline" size="md" onClick={onPrev}>
+          Back
         </Button>
         <Button type="submit" variant="primary" size="md">
-          Review Roster Details →
+          Review Roster Details
         </Button>
       </div>
     </form>

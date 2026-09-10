@@ -44,11 +44,11 @@ export default function HeroVideo({
   }, [videoSrc]);
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0B0E14] z-0">
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-premium-background z-0">
       {/* 1. STATIC FALLBACK POSTER */}
       {(!isLoaded || hasError) && (
         <div 
-          className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700 ease-in-out opacity-40"
+          className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700 ease-in-out opacity-20"
           style={{ backgroundImage: `url(${posterImage})` }}
         />
       )}
@@ -64,8 +64,8 @@ export default function HeroVideo({
           playsInline
           onCanPlayThrough={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
-          className={`absolute inset-0 w-full h-full object-cover object-[60%_center] md:object-center transition-opacity duration-1000 ease-in-out ${
-            isLoaded ? 'opacity-60 md:opacity-55' : 'opacity-0'
+          className={`absolute inset-0 w-full h-full object-cover object-[60%_center] md:object-center transition-opacity duration-1000 ease-in-out mix-blend-multiply ${
+            isLoaded ? 'opacity-30' : 'opacity-0'
           }`}
         >
           Your browser does not support the video tag.
@@ -74,15 +74,13 @@ export default function HeroVideo({
 
       {/* 3. BROADCAST OVERLAY LAYERS */}
       {/* Soft Dark Color Grade Overlay */}
-      <div className="absolute inset-0 bg-[#0B0E14]/55 mix-blend-multiply z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-premium-background/40 mix-blend-multiply z-10 pointer-events-none" />
 
       {/* Left-to-Right Gradient for Editorial Left Typography Readability */}
-      <div className="absolute inset-0 bg-hero-left-dark z-10 pointer-events-none opacity-80" />
+      <div className="absolute inset-0 bg-gradient-to-r from-premium-background via-premium-background/80 to-transparent z-10 pointer-events-none opacity-90" />
 
       {/* Radial Vignette */}
-      <div className="absolute inset-0 bg-vignette z-10 pointer-events-none opacity-60" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,rgba(247,245,239,0.92)_100%)] z-10 pointer-events-none opacity-80" />
     </div>
   );
 }
-
-

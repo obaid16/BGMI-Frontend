@@ -5,8 +5,8 @@ import { Check } from 'lucide-react';
 
 export default function StepIndicator({ currentStep, steps }) {
   return (
-    <div className="w-full mb-8 overflow-x-auto pb-2 font-sans">
-      <div className="flex items-center justify-between min-w-[300px] max-w-3xl mx-auto px-4">
+    <div className="w-full overflow-x-auto pb-4 hide-scrollbar">
+      <div className="flex items-center justify-between min-w-[400px] max-w-4xl mx-auto px-2">
         {steps.map((step, idx) => {
           const stepNum = idx + 1;
           const isCompleted = currentStep > stepNum;
@@ -15,25 +15,25 @@ export default function StepIndicator({ currentStep, steps }) {
           return (
             <React.Fragment key={step.title}>
               {/* Step item */}
-              <div className="flex flex-col items-center gap-2 group shrink-0">
+              <div className="flex flex-col items-center gap-3 group flex-shrink-0 w-24">
                 <div
-                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center font-display font-black text-xs sm:text-sm transition-all duration-200 ${
+                  className={`w-12 h-12 rounded-[16px] flex items-center justify-center font-bold text-sm transition-all duration-300 ${
                     isCompleted
-                      ? 'bg-amber-500 text-slate-950 shadow-editorial-sm font-bold'
+                      ? 'bg-emerald-500 text-white shadow-sm'
                       : isCurrent
-                      ? 'bg-slate-950 dark:bg-bgmi-red text-white shadow-editorial scale-105'
-                      : 'bg-white dark:bg-[#121620] text-slate-500 dark:text-slate-400 border border-[#E7E3DA] dark:border-[#1E2638]'
+                      ? 'bg-black text-white shadow-premium-soft scale-105'
+                      : 'bg-premium-surface text-premium-text-secondary border border-premium-border'
                   }`}
                 >
-                  {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : stepNum}
+                  {isCompleted ? <Check className="w-6 h-6 stroke-[3]" /> : stepNum}
                 </div>
                 <span
-                  className={`text-[10px] sm:text-xs font-display font-bold uppercase tracking-wider ${
+                  className={`text-[10px] font-bold uppercase tracking-widest text-center transition-colors ${
                     isCurrent
-                      ? 'text-slate-950 dark:text-white'
+                      ? 'text-black'
                       : isCompleted
-                      ? 'text-amber-700 dark:text-amber-400'
-                      : 'text-slate-400 dark:text-slate-600'
+                      ? 'text-premium-text'
+                      : 'text-premium-text-secondary'
                   }`}
                 >
                   {step.title}
@@ -42,11 +42,13 @@ export default function StepIndicator({ currentStep, steps }) {
 
               {/* Connecting Line */}
               {idx < steps.length - 1 && (
-                <div
-                  className={`flex-1 h-0.5 mx-2 sm:mx-4 rounded-full transition-colors duration-200 ${
-                    currentStep > stepNum ? 'bg-amber-500' : 'bg-[#E7E3DA] dark:bg-[#1E2638]'
-                  }`}
-                />
+                <div className="flex-1 px-4 relative -top-3">
+                  <div
+                    className={`h-[3px] rounded-full transition-colors duration-500 ${
+                      currentStep > stepNum ? 'bg-emerald-500' : 'bg-premium-border'
+                    }`}
+                  />
+                </div>
               )}
             </React.Fragment>
           );

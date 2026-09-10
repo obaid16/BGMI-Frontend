@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import MediaLightbox from '@/components/tournament/MediaLightbox';
-import { getMedia, updateMediaStatus, deleteMedia, bulkDeleteMedia, getMediaImageUrl, DEFAULT_GAMING_IMAGE } from '@/services/api';
+import { getMedia, updateMediaStatus, deleteMedia, getMediaImageUrl, DEFAULT_GAMING_IMAGE } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { Video, Globe, Check, X, Eye, Search, UserCheck, Trash2 } from 'lucide-react';
 
@@ -16,8 +16,6 @@ export default function AdminMediaPage() {
   const [selectedPlayer, setSelectedPlayer] = useState('All Players');
   const [selectedItem, setSelectedItem] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedMedia, setSelectedMedia] = useState([]);
-  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   async function loadData() {
     try {
@@ -68,7 +66,6 @@ export default function AdminMediaPage() {
         const res = await deleteMedia(targetId);
         if (res && res.success) {
           setMediaList((prev) => prev.filter((m) => (m.id || m._id) !== targetId));
-          setSelectedMedia((prev) => prev.filter((id) => id !== targetId));
           showToast('Media proof deleted permanently!', 'info');
         } else {
           showToast('Failed to delete media', 'error');
@@ -110,84 +107,32 @@ export default function AdminMediaPage() {
     });
   }, [mediaList, statusFilter, playerSearch, selectedPlayer]);
 
-  const allFilteredSelected = filteredMedia.length > 0 && filteredMedia.every((m) => selectedMedia.includes(m.id || m._id));
-
-  const toggleSelectAll = () => {
-    if (allFilteredSelected) {
-      const filteredIds = new Set(filteredMedia.map((m) => m.id || m._id));
-      setSelectedMedia((prev) => prev.filter((id) => !filteredIds.has(id)));
-    } else {
-      const newIds = new Set([...selectedMedia, ...filteredMedia.map((m) => m.id || m._id)]);
-      setSelectedMedia(Array.from(newIds));
-    }
-  };
-
-  const toggleSelectMedia = (id) => {
-    setSelectedMedia((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  const handleBulkDelete = async () => {
-    if (selectedMedia.length === 0) return;
-    if (window.confirm(`Are you sure you want to permanently delete all ${selectedMedia.length} selected media proof(s)?`)) {
-      try {
-        setBulkDeleting(true);
-        const res = await bulkDeleteMedia(selectedMedia);
-        if (res && res.success) {
-          setMediaList((prev) => prev.filter((m) => !selectedMedia.includes(m.id || m._id)));
-          showToast(`Successfully deleted ${selectedMedia.length} media proof(s)`, 'success');
-          setSelectedMedia([]);
-        } else {
-          showToast('Failed to bulk delete media proofs', 'error');
-        }
-      } catch (err) {
-        showToast(err.message || 'Error bulk deleting media', 'error');
-      } finally {
-        setBulkDeleting(false);
-      }
-    }
-  };
-
   return (
-    <div className="space-y-6 max-w-full overflow-hidden font-sans">
+    <div className="space-y-8 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
-        <div>
-          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
-            /// CONTENT MODERATION
-          </span>
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
-            <Video className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
-            Media &amp; POV Proof Moderation
-          </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
-            Review uploaded match score screenshots and kill proof clips submitted by teams.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] text-xs font-mono font-bold text-slate-700 dark:text-slate-300 shadow-editorial-sm">
-          <span className="text-amber-600 dark:text-bgmi-gold">{mediaList.length}</span>
-          <span className="text-slate-500 dark:text-slate-400 uppercase">Submissions</span>
-        </div>
+      <div className="border-b border-premium-border pb-6">
+        <h1 className="font-bold text-3xl text-premium-text tracking-tight flex items-center gap-3">
+          <Video className="w-8 h-8 text-amber-600" /> Media Approvals
+        </h1>
+        <p className="text-sm text-premium-text-secondary font-medium mt-2">Verify player match screenshots, approve media entries, and publish highlights to the Home Page.</p>
       </div>
 
       {/* FILTER & PLAYER VERIFICATION TOOLBAR */}
-      <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] p-4 rounded-2xl space-y-4 shadow-editorial-sm">
+      <div className="bg-premium-surface border border-premium-border p-6 rounded-[24px] space-y-6 shadow-sm">
         
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6">
           
           {/* STATUS TABS */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
             {['All', 'Pending Review', 'Published', 'Approved', 'Rejected'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setStatusFilter(tab)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all whitespace-nowrap shadow-editorial-sm ${
+                className={`px-4 py-2 rounded-[12px] text-[11px] font-bold uppercase tracking-widest transition-all whitespace-nowrap border ${
                   statusFilter === tab
-                    ? 'bg-slate-950 text-white dark:bg-bgmi-red dark:text-white'
-                    : 'bg-white text-slate-700 border border-[#E7E3DA] dark:bg-[#181E2C] dark:text-slate-400 dark:border-[#1E2638] hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-black text-white border-black shadow-premium-soft'
+                    : 'bg-premium-background text-premium-text-secondary border-premium-border hover:border-premium-text/30 hover:text-premium-text'
                 }`}
               >
                 {tab}
@@ -196,24 +141,24 @@ export default function AdminMediaPage() {
           </div>
 
           {/* PLAYER NAME SEARCH & FILTER DROPDOWN */}
-          <div className="flex flex-col sm:flex-row items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
             
             {/* Player Search Input */}
             <div className="relative w-full sm:w-64">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-premium-text-secondary" />
               <input
                 type="text"
-                placeholder="Filter by Player / IGN..."
+                placeholder="Search Player or Title..."
                 value={playerSearch}
                 onChange={(e) => setPlayerSearch(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-amber-500"
+                className="w-full pl-10 pr-10 py-2.5 bg-white border border-premium-border rounded-[12px] text-sm text-premium-text font-bold focus:outline-none focus:border-premium-text shadow-sm transition-all"
               />
               {playerSearch && (
                 <button
                   onClick={() => setPlayerSearch('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-premium-text-secondary hover:text-black transition-colors"
                 >
-                  <X className="w-3.5 h-3.5" />
+                  <X className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -222,9 +167,9 @@ export default function AdminMediaPage() {
             <select
               value={selectedPlayer}
               onChange={(e) => setSelectedPlayer(e.target.value)}
-              className="w-full sm:w-auto px-3 py-2 bg-slate-50 dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-amber-500"
+              className="w-full sm:w-auto px-4 py-2.5 bg-white border border-premium-border rounded-[12px] text-sm text-premium-text font-bold focus:outline-none focus:border-premium-text shadow-sm appearance-none cursor-pointer"
             >
-              <option value="All Players">All Players ({mediaList.length})</option>
+              <option value="All Players">All Players ({mediaList.length} Proofs)</option>
               {uniquePlayers.map((p) => (
                 <option key={p} value={p}>
                   Player: {p}
@@ -236,152 +181,142 @@ export default function AdminMediaPage() {
 
         </div>
 
+        {/* QUICK PLAYER SUBMISSION STATUS BADGES */}
+        {uniquePlayers.length > 0 && (
+          <div className="pt-4 border-t border-premium-border flex items-center gap-3 overflow-x-auto hide-scrollbar">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-premium-text-secondary flex items-center gap-1.5 shrink-0">
+              <UserCheck className="w-4 h-4 text-emerald-500" /> Filter by Player:
+            </span>
+            <button
+              onClick={() => { setSelectedPlayer('All Players'); setPlayerSearch(''); }}
+              className={`px-3 py-1.5 rounded-[10px] text-[11px] font-bold transition-all shrink-0 border ${
+                selectedPlayer === 'All Players' && !playerSearch
+                  ? 'bg-black text-white border-black'
+                  : 'bg-premium-background text-premium-text-secondary border-premium-border hover:border-premium-text/30 hover:text-black'
+              }`}
+            >
+              All Players
+            </button>
+            {uniquePlayers.map((player) => {
+              const playerMedia = mediaList.filter((m) => m.player && m.player.toLowerCase() === player.toLowerCase());
+              const hasVerified = playerMedia.some((m) => m.status === 'Published' || m.status === 'Approved' || m.verified);
+
+              return (
+                <button
+                  key={player}
+                  onClick={() => { setSelectedPlayer(player); setPlayerSearch(''); }}
+                  className={`px-3 py-1.5 rounded-[10px] text-[11px] font-bold transition-all shrink-0 flex items-center gap-2 border ${
+                    selectedPlayer === player
+                      ? 'bg-amber-50 text-amber-900 border-amber-300'
+                      : 'bg-premium-background text-premium-text-secondary border-premium-border hover:border-premium-text/30 hover:text-black'
+                  }`}
+                >
+                  <span>{player}</span>
+                  <span className={`w-2 h-2 rounded-full ${hasVerified ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                </button>
+              );
+            })}
+          </div>
+        )}
+
       </div>
 
-      {/* BULK ACTION BAR */}
-      {selectedMedia.length > 0 && (
-        <div className="bg-red-500/10 dark:bg-red-950/30 border border-red-500/30 rounded-2xl p-3.5 px-5 flex items-center justify-between gap-4 shadow-editorial-sm animate-fadeIn">
-          <div className="flex items-center gap-3 text-xs font-mono font-bold text-red-700 dark:text-red-400">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-            <span>{selectedMedia.length} of {mediaList.length} submission(s) selected</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSelectedMedia([])}
-              className="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors underline underline-offset-2"
-            >
-              Deselect All
-            </button>
-            <Button
-              variant="danger"
-              size="sm"
-              icon={Trash2}
-              onClick={handleBulkDelete}
-              disabled={bulkDeleting}
-            >
-              {bulkDeleting ? 'Deleting...' : `Delete Selected (${selectedMedia.length})`}
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* MEDIA TABLE CONTAINER */}
-      <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl shadow-editorial-sm overflow-hidden">
+      {/* MEDIA TABLE CONTAINER WITH SIDEWAYS TOUCH SCROLL */}
+      <div className="bg-premium-surface border border-premium-border rounded-[24px] shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-12 text-center text-xs font-mono text-slate-400">Loading proof submissions...</div>
+          <div className="py-16 text-center text-sm font-bold text-premium-text-secondary">Loading proof submissions...</div>
         ) : filteredMedia.length === 0 ? (
-          <div className="py-12 text-center text-xs font-mono text-slate-500 dark:text-slate-400">
-            No media submissions found for &quot;{playerSearch || selectedPlayer || statusFilter}&quot;.
+          <div className="py-16 text-center text-sm font-bold text-premium-text-secondary">
+            No media submissions found for "{playerSearch || selectedPlayer || statusFilter}".
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse min-w-[1050px]">
-              <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
+            <table className="w-full text-left text-sm whitespace-nowrap min-w-[1100px]">
+              <thead className="bg-premium-background text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest border-b border-premium-border">
                 <tr>
-                  <th className="p-4 w-12 text-center">
-                    <input
-                      type="checkbox"
-                      checked={allFilteredSelected}
-                      onChange={toggleSelectAll}
-                      className="w-4 h-4 rounded text-bgmi-red accent-bgmi-red cursor-pointer"
-                      title="Select all filtered media"
-                    />
-                  </th>
-                  <th className="p-4 whitespace-nowrap min-w-[200px]">Media Preview &amp; Title</th>
-                  <th className="p-4 whitespace-nowrap min-w-[100px]">Type</th>
-                  <th className="p-4 whitespace-nowrap min-w-[150px]">Team / Player</th>
-                  <th className="p-4 whitespace-nowrap min-w-[90px]">Match</th>
-                  <th className="p-4 whitespace-nowrap min-w-[110px]">Status</th>
-                  <th className="p-4 whitespace-nowrap text-right min-w-[480px]">Actions</th>
+                  <th className="px-6 py-4">Media Preview & Title</th>
+                  <th className="px-6 py-4">Type</th>
+                  <th className="px-6 py-4">Team / Player Name</th>
+                  <th className="px-6 py-4">Match</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
-              {filteredMedia.map((m) => {
-                const mId = m.id || m._id;
-                const previewImg = getMediaImageUrl(m);
-                const isSelected = selectedMedia.includes(mId);
+              <tbody className="divide-y divide-premium-border bg-white">
+                {filteredMedia.map((m) => {
+                  const mId = m.id || m._id;
+                  const previewImg = getMediaImageUrl(m);
 
-                return (
-                  <tr
-                    key={mId}
-                    className={`transition-colors ${
-                      isSelected
-                        ? 'bg-red-50/60 dark:bg-red-950/20'
-                        : 'hover:bg-slate-50 dark:hover:bg-[#1A2131]'
-                    }`}
-                  >
-                    <td className="p-4 text-center">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleSelectMedia(mId)}
-                        className="w-4 h-4 rounded text-bgmi-red accent-bgmi-red cursor-pointer"
-                      />
-                    </td>
-                    <td className="p-4 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={previewImg}
-                          alt={m.title || 'Proof'}
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = DEFAULT_GAMING_IMAGE;
-                          }}
-                          className="w-12 h-9 object-cover rounded border border-slate-300 dark:border-bgmi-border shrink-0"
-                        />
-                        <div>
-                          <span className="font-bold text-slate-900 dark:text-white block line-clamp-1">{m.title}</span>
+                  return (
+                    <tr key={mId} className="hover:bg-premium-surface-soft transition-colors">
+                      <td className="px-6 py-5">
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={previewImg}
+                            alt={m.title || 'Proof'}
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = DEFAULT_GAMING_IMAGE;
+                            }}
+                            className="w-16 h-12 object-cover rounded-[10px] border border-premium-border shrink-0 shadow-sm"
+                          />
+                          <div>
+                            <span className="font-bold text-base text-premium-text tracking-tight block max-w-[200px] truncate">{m.title}</span>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="p-4 whitespace-nowrap"><Badge variant="default" size="sm">{m.type || 'Screenshot'}</Badge></td>
-                    <td className="p-4 whitespace-nowrap text-slate-800 dark:text-slate-300">
-                      <p className="font-bold text-slate-900 dark:text-white">{m.team || 'N/A'}</p>
-                      <p className="text-[11px] text-amber-600 dark:text-bgmi-gold font-bold font-mono">PLAYER: {m.player || 'Unknown Player'}</p>
-                    </td>
-                    <td className="p-4 whitespace-nowrap text-amber-600 dark:text-bgmi-gold font-bold font-mono">{m.match || 'Match #01'}</td>
-                    <td className="p-4 whitespace-nowrap">
-                      <Badge variant={m.status === 'Published' || m.status === 'Approved' ? 'green' : m.status === 'Rejected' ? 'rejected' : 'pending'} size="sm">
-                        {m.status || 'Pending Review'}
-                      </Badge>
-                    </td>
-                    <td className="p-4 whitespace-nowrap text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button variant="secondary" size="sm" icon={Eye} onClick={() => setSelectedItem(m)}>
-                          Preview
-                        </Button>
-                        <Button
-                          variant={m.status === 'Approved' || m.status === 'Verified' || m.status === 'Published' || m.verified ? 'success' : 'primary'}
-                          size="sm"
-                          icon={Check}
-                          onClick={() => handleUpdateStatus(m, 'Approved')}
-                        >
-                          {m.status === 'Approved' || m.status === 'Verified' || m.status === 'Published' || m.verified ? 'Approved' : 'Approve'}
-                        </Button>
-                        <Button
-                          variant={m.status === 'Published' ? 'success' : 'primary'}
-                          size="sm"
-                          icon={Globe}
-                          onClick={() => handleUpdateStatus(m, 'Published')}
-                        >
-                          {m.status === 'Published' ? 'Published' : 'Publish to Home'}
-                        </Button>
-                        {m.status !== 'Rejected' && (
-                          <Button variant="secondary" size="sm" icon={X} onClick={() => handleUpdateStatus(m, 'Rejected')}>
-                            Reject
+                      </td>
+                      <td className="px-6 py-5"><Badge variant="default" size="sm">{m.type || 'Screenshot'}</Badge></td>
+                      <td className="px-6 py-5">
+                        <p className="font-bold text-premium-text">{m.team || 'N/A'}</p>
+                        <p className="text-[11px] text-premium-text-secondary font-bold mt-0.5">PLAYER: {m.player || 'Unknown Player'}</p>
+                      </td>
+                      <td className="px-6 py-5 font-bold text-amber-700">{m.match || 'Match #01'}</td>
+                      <td className="px-6 py-5">
+                        <Badge variant={m.status === 'Published' || m.status === 'Approved' ? 'green' : m.status === 'Rejected' ? 'rejected' : 'pending'} size="sm">
+                          {m.status || 'Pending Review'}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="secondary" size="sm" icon={Eye} onClick={() => setSelectedItem(m)}>
+                            Preview
                           </Button>
-                        )}
-                        <Button variant="danger" size="sm" icon={Trash2} onClick={() => handleDelete(m)}>
-                          Delete
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                          <Button
+                            variant={m.status === 'Approved' || m.status === 'Verified' || m.status === 'Published' || m.verified ? 'success' : 'primary'}
+                            size="sm"
+                            icon={Check}
+                            onClick={() => handleUpdateStatus(m, 'Approved')}
+                          >
+                            {m.status === 'Approved' || m.status === 'Verified' || m.status === 'Published' || m.verified ? 'Approved' : 'Approve'}
+                          </Button>
+                          <Button
+                            variant={m.status === 'Published' ? 'success' : 'primary'}
+                            size="sm"
+                            icon={Globe}
+                            onClick={() => handleUpdateStatus(m, 'Published')}
+                          >
+                            {m.status === 'Published' ? 'Published' : 'Publish'}
+                          </Button>
+                          {m.status !== 'Rejected' && (
+                            <Button variant="secondary" size="sm" icon={X} onClick={() => handleUpdateStatus(m, 'Rejected')}>
+                              Reject
+                            </Button>
+                          )}
+                          <button
+                            onClick={() => handleDelete(m)}
+                            className="w-9 h-9 flex items-center justify-center rounded-[10px] text-rose-500 bg-white border border-premium-border hover:border-rose-300 hover:bg-rose-50 transition-colors shadow-sm"
+                            title="Delete Media"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 

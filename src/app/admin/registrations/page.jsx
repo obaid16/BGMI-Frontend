@@ -6,7 +6,7 @@ import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import { getTeams, updateTeamStatus, deleteTeam } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { ClipboardList, Check, X, Eye, Trash2 } from 'lucide-react';
+import { ClipboardList, Search, Check, X, Eye, Trash2 } from 'lucide-react';
 
 export default function AdminRegistrationsPage() {
   const { showToast } = useToast();
@@ -92,33 +92,27 @@ export default function AdminRegistrationsPage() {
   const filteredTeams = filter === 'All' ? teams : teams.filter((t) => t.status === filter);
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden font-sans">
+    <div className="space-y-8 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-premium-border pb-6">
         <div>
-          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
-            /// OPERATIONS CONTROL
-          </span>
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
-            <ClipboardList className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
-            Registration Approvals
+          <h1 className="font-bold text-3xl text-premium-text tracking-tight flex items-center gap-3">
+            <ClipboardList className="w-8 h-8 text-amber-600" /> Registration Approvals
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
-            Review submitted squad rosters, verify player details, and approve official entry into tournaments.
-          </p>
+          <p className="text-sm text-premium-text-secondary font-medium mt-2">Review submitted squad applications, college IDs, and approve tournament entry.</p>
         </div>
 
         {/* Status Filters */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar w-full sm:w-auto">
           {['All', 'Pending', 'Approved', 'Rejected'].map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
-              className={`px-3.5 py-1.5 text-xs font-display font-bold uppercase rounded-xl border transition-all whitespace-nowrap shadow-editorial-sm ${
+              className={`px-4 py-2 text-[11px] font-bold uppercase tracking-widest rounded-[12px] border transition-all whitespace-nowrap ${
                 filter === status
-                  ? 'bg-slate-950 text-white border-slate-950 dark:bg-bgmi-red dark:text-white dark:border-bgmi-red'
-                  : 'bg-white text-slate-700 border-[#E7E3DA] dark:bg-[#121620] dark:text-slate-400 dark:border-[#1E2638] hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-black text-white border-black shadow-premium-soft'
+                  : 'bg-premium-background text-premium-text-secondary border-premium-border hover:border-premium-text/30 hover:text-premium-text'
               }`}
             >
               {status}
@@ -127,72 +121,64 @@ export default function AdminRegistrationsPage() {
         </div>
       </div>
 
-      {/* TABLE WITH EDITORIAL CARD CONTAINER */}
-      <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl shadow-editorial-sm overflow-hidden">
+      {/* TABLE WITH SIDEWAYS TOUCH SCROLL */}
+      <div className="bg-premium-surface border border-premium-border rounded-[24px] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse min-w-[720px]">
-            <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
+          <table className="w-full text-left text-sm whitespace-nowrap min-w-[900px]">
+            <thead className="bg-premium-background text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest border-b border-premium-border">
               <tr>
-                <th className="p-4 whitespace-nowrap min-w-[150px]">Team</th>
-                <th className="p-4 whitespace-nowrap min-w-[160px]">Captain Contact</th>
-                <th className="p-4 whitespace-nowrap min-w-[130px]">Reg ID</th>
-                <th className="p-4 whitespace-nowrap min-w-[120px]">Applied Date</th>
-                <th className="p-4 whitespace-nowrap min-w-[100px]">Status</th>
-                <th className="p-4 whitespace-nowrap text-right min-w-[200px]">Actions</th>
+                <th className="px-6 py-4 min-w-[200px]">Team</th>
+                <th className="px-6 py-4 min-w-[200px]">Captain Contact</th>
+                <th className="px-6 py-4 min-w-[140px]">Reg ID</th>
+                <th className="px-6 py-4 min-w-[140px]">Applied Date</th>
+                <th className="px-6 py-4 min-w-[120px]">Status</th>
+                <th className="px-6 py-4 text-right min-w-[220px]">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
-              {filteredTeams.length > 0 ? (
-                filteredTeams.map((team) => {
-                  const tId = team.id || team._id;
-                  return (
-                    <tr
-                      key={tId}
-                      className="hover:bg-slate-50/70 dark:hover:bg-[#181E2C]/50 transition-colors"
-                    >
-                      <td className="p-4 whitespace-nowrap">
-                        <p className="font-display font-bold text-slate-900 dark:text-white text-sm">{team.name}</p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">{team.college || 'College Squad'}</p>
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-slate-800 dark:text-slate-300">
-                        <p className="font-bold">{team.captain?.name || 'N/A'}</p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">{team.captain?.phone || team.captain?.email || ''}</p>
-                      </td>
-                      <td className="p-4 whitespace-nowrap font-mono font-bold text-amber-600 dark:text-bgmi-gold">{team.registrationId}</td>
-                      <td className="p-4 whitespace-nowrap text-slate-600 dark:text-slate-400">{team.registrationDate || 'Recent'}</td>
-                      <td className="p-4 whitespace-nowrap">
-                        <Badge variant={team.status === 'Approved' ? 'green' : team.status === 'Rejected' ? 'rejected' : 'pending'} size="sm">
-                          {team.status}
-                        </Badge>
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <Button variant="secondary" size="sm" icon={Eye} onClick={() => setSelectedTeam(team)}>
-                            View
+            <tbody className="divide-y divide-premium-border bg-white">
+              {filteredTeams.map((team) => (
+                <tr key={team.id} className="hover:bg-premium-surface-soft transition-colors">
+                  <td className="px-6 py-5">
+                    <p className="font-bold text-base text-premium-text tracking-tight">{team.name}</p>
+                  </td>
+                  <td className="px-6 py-5">
+                    <p className="font-semibold text-premium-text">{team.captain?.name || 'N/A'}</p>
+                    <p className="text-[11px] text-premium-text-secondary font-medium mt-0.5">{team.captain?.phone || ''}</p>
+                  </td>
+                  <td className="px-6 py-5 font-semibold text-premium-sage">{team.registrationId}</td>
+                  <td className="px-6 py-5 font-medium text-premium-text-secondary">{team.registrationDate}</td>
+                  <td className="px-6 py-5">
+                    <Badge variant={team.status === 'Approved' ? 'green' : team.status === 'Rejected' ? 'rejected' : 'pending'} size="sm">
+                      {team.status}
+                    </Badge>
+                  </td>
+                  <td className="px-6 py-5 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button variant="secondary" size="sm" icon={Eye} onClick={() => setSelectedTeam(team)}>
+                        View
+                      </Button>
+                      {team.status === 'Pending' ? (
+                        <>
+                          <Button variant="primary" size="sm" icon={Check} onClick={() => handleApprove(team.id)}>
+                            Approve
                           </Button>
-                          {team.status === 'Pending' ? (
-                            <>
-                              <Button variant="primary" size="sm" icon={Check} onClick={() => handleApprove(team)}>
-                                Approve
-                              </Button>
-                              <Button variant="danger" size="sm" icon={X} onClick={() => handleReject(team)}>
-                                Reject
-                              </Button>
-                            </>
-                          ) : (
-                            <Button variant="danger" size="sm" icon={Trash2} onClick={() => handleDelete(team)}>
-                              Delete
-                            </Button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
+                          <Button variant="danger" size="sm" icon={X} onClick={() => handleReject(team.id)}>
+                            Reject
+                          </Button>
+                        </>
+                      ) : (
+                        <Button variant="danger" size="sm" icon={Trash2} onClick={() => handleDelete(team.id)}>
+                          Delete
+                        </Button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {filteredTeams.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-500 dark:text-slate-400 font-mono text-xs">
-                    No squad registrations found matching &quot;{filter}&quot;.
+                  <td colSpan="6" className="px-6 py-12 text-center text-sm font-medium text-premium-text-secondary bg-white">
+                    No registrations found for this status.
                   </td>
                 </tr>
               )}

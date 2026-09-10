@@ -2,18 +2,18 @@ import React from 'react';
 
 export function SkeletonCard() {
   return (
-    <div className="bg-bgmi-surface/60 border border-bgmi-border/60 rounded-xl p-5 animate-pulse">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="w-12 h-12 bg-bgmi-border/50 rounded-lg"></div>
-        <div className="flex-1 space-y-2">
-          <div className="h-4 bg-bgmi-border/60 rounded w-2/3"></div>
-          <div className="h-3 bg-bgmi-border/40 rounded w-1/3"></div>
+    <div className="bg-premium-surface border border-premium-border rounded-2xl p-6 animate-pulse shadow-sm">
+      <div className="flex items-center gap-4 mb-5">
+        <div className="w-14 h-14 bg-premium-surface-soft rounded-xl"></div>
+        <div className="flex-1 space-y-2.5">
+          <div className="h-4 bg-premium-border rounded-md w-2/3"></div>
+          <div className="h-3 bg-premium-border/50 rounded-md w-1/3"></div>
         </div>
       </div>
-      <div className="h-20 bg-bgmi-border/30 rounded-lg mb-4"></div>
+      <div className="h-24 bg-premium-surface-soft rounded-xl mb-5"></div>
       <div className="flex justify-between items-center">
-        <div className="h-4 bg-bgmi-border/50 rounded w-20"></div>
-        <div className="h-8 bg-bgmi-border/60 rounded w-24"></div>
+        <div className="h-4 bg-premium-border rounded-md w-20"></div>
+        <div className="h-10 bg-premium-surface-soft rounded-full w-28"></div>
       </div>
     </div>
   );
@@ -21,16 +21,16 @@ export function SkeletonCard() {
 
 export function SkeletonTableRow() {
   return (
-    <tr className="border-b border-bgmi-border/40 animate-pulse">
-      <td className="p-4"><div className="w-6 h-4 bg-bgmi-border/60 rounded"></div></td>
-      <td className="p-4 flex items-center gap-3">
-        <div className="w-8 h-8 bg-bgmi-border/60 rounded-full"></div>
-        <div className="w-32 h-4 bg-bgmi-border/60 rounded"></div>
+    <tr className="border-b border-premium-border animate-pulse">
+      <td className="p-4"><div className="w-6 h-4 bg-premium-border rounded"></div></td>
+      <td className="p-4 flex items-center gap-4">
+        <div className="w-10 h-10 bg-premium-surface-soft rounded-full border border-premium-border"></div>
+        <div className="w-32 h-4 bg-premium-border rounded"></div>
       </td>
-      <td className="p-4"><div className="w-12 h-4 bg-bgmi-border/40 rounded"></div></td>
-      <td className="p-4"><div className="w-12 h-4 bg-bgmi-border/40 rounded"></div></td>
-      <td className="p-4"><div className="w-12 h-4 bg-bgmi-border/40 rounded"></div></td>
-      <td className="p-4"><div className="w-16 h-5 bg-bgmi-gold/20 rounded"></div></td>
+      <td className="p-4"><div className="w-12 h-4 bg-premium-border/70 rounded"></div></td>
+      <td className="p-4"><div className="w-12 h-4 bg-premium-border/70 rounded"></div></td>
+      <td className="p-4"><div className="w-12 h-4 bg-premium-border/70 rounded"></div></td>
+      <td className="p-4"><div className="w-16 h-5 bg-premium-sage-soft rounded-full"></div></td>
     </tr>
   );
 }

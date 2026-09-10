@@ -2,93 +2,58 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import Hero from '@/components/tournament/Hero';
-import TournamentStats from '@/components/tournament/TournamentStats';
-import Top3Leaderboard from '@/components/tournament/Top3Leaderboard';
-import StandingRow from '@/components/tournament/StandingRow';
-import RankingCard from '@/components/tournament/RankingCard';
 import MatchCard from '@/components/tournament/MatchCard';
+import NextMatchCard from '@/components/tournament/NextMatchCard';
 import MediaCard from '@/components/tournament/MediaCard';
 import MediaLightbox from '@/components/tournament/MediaLightbox';
-import EmptyState from '@/components/common/EmptyState';
 import { SkeletonGrid } from '@/components/common/Skeleton';
-import { getMatches, getStandings, getResults, getMedia, getAnnouncements, getTeamById, getTeams } from '@/services/api';
-import { Trophy, Swords, Video, ArrowRight, Crown } from 'lucide-react';
+import { getMatches, getMedia, getAnnouncements, getTeams } from '@/services/api';
+import { Trophy, Swords, Users, ShieldAlert, ArrowRight, Video, Calendar, ShieldCheck, MapPin, Gamepad2, Mic, Crown } from 'lucide-react';
 
 export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [nextMatch, setNextMatch] = useState(null);
-  const [matchesList, setMatchesList] = useState([]);
-  const [topStandings, setTopStandings] = useState([]);
-  const [recentResults, setRecentResults] = useState([]);
+  const [upcomingMatches, setUpcomingMatches] = useState([]);
   const [mediaItems, setMediaItems] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState(null);
-  const [championTeam, setChampionTeam] = useState(null);
-  const [isComplete, setIsComplete] = useState(false);
-  const [teamsStats, setTeamsStats] = useState({
-    registeredSquads: 0,
-    verifiedPlayers: 0,
-    totalMatches: 0,
-    currentRound: 0
-  });
+  const [teamsCount, setTeamsCount] = useState(24);
 
   useEffect(() => {
     async function loadHomeData() {
       try {
         setLoading(true);
-        const [matchesRes, standingsRes, resultsRes, mediaRes, annsRes, teamsRes] = await Promise.all([
+        const [matchesRes, mediaRes, annsRes, teamsRes] = await Promise.all([
           getMatches().catch(() => []),
-          getStandings().catch(() => []),
-          getResults().catch(() => []),
           getMedia('All', 'Published').catch(() => []),
-          getAnnouncements ? getAnnouncements().catch(() => []) : Promise.resolve([]),
+          getAnnouncements().catch(() => []),
           getTeams().catch(() => [])
         ]);
 
         const matches = Array.isArray(matchesRes) ? matchesRes : [];
-        const standings = Array.isArray(standingsRes) ? standingsRes : [];
-        const results = Array.isArray(resultsRes) ? resultsRes : [];
         const media = Array.isArray(mediaRes) ? mediaRes : [];
+        const anns = Array.isArray(annsRes) ? annsRes : [];
         const teams = Array.isArray(teamsRes) ? teamsRes : [];
 
-        const registered = teams.length;
-        const verified = teams.reduce((acc, t) => acc + (t.players ? t.players.length : 0), 0);
-        const totMatches = matches.length;
-        const currRound = matches.length > 0
-          ? (matches.filter((m) => m && (m.status === 'Completed' || m.status === 'Live')).length || 1)
-          : 0;
+        setTeamsCount(teams.length > 0 ? teams.length : 24);
 
-        setTeamsStats({
-          registeredSquads: registered,
-          verifiedPlayers: verified,
-          totalMatches: totMatches,
-          currentRound: currRound
-        });
+        // Find live or next match
+        const liveOrNext = matches.find((m) => m && (m.status === 'Live' || m.status === 'Upcoming'));
+        setNextMatch(liveOrNext || matches[0] || null);
 
-        setMatchesList(matches);
-        setNextMatch(matches.find((m) => m && (m.status === 'Live' || m.status === 'Upcoming')) || matches[0] || null);
-        setTopStandings(standings.slice(0, 5));
-        setRecentResults(results.slice(0, 3));
+        // Upcoming matches excluding the spotlight one
+        const upMatches = matches
+          .filter(m => m && m.status === 'Upcoming' && m.id !== liveOrNext?.id)
+          .slice(0, 4);
+        setUpcomingMatches(upMatches.length > 0 ? upMatches : matches.slice(1, 4));
 
         const publishedMediaOnly = media.filter((item) => item && (item.status === 'Published' || item.verified === true));
         setMediaItems(publishedMediaOnly.slice(0, 4));
 
-        const isTournamentComplete = matches.length > 0 && !matches.some((m) => m && (m.status === 'Live' || m.status === 'Upcoming'));
-        setIsComplete(isTournamentComplete);
+        // Published announcements
+        const publishedAnns = anns.filter(a => a.status === 'Published');
+        setAnnouncements(publishedAnns.slice(0, 3));
 
-        if (isTournamentComplete && standings.length > 0) {
-          const topTeam = standings[0];
-          const fullTeamDetails = await getTeamById(topTeam.teamId).catch(() => null);
-          if (fullTeamDetails) {
-            setChampionTeam({
-              ...topTeam,
-              players: fullTeamDetails.players
-            });
-          } else {
-            setChampionTeam(topTeam);
-          }
-        }
       } catch (err) {
         console.error('Failed to load homepage data', err);
       } finally {
@@ -99,186 +64,191 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="space-y-12 sm:space-y-16 pb-20 overflow-x-hidden font-sans">
+    <div className="space-y-24 pb-24 overflow-x-hidden font-sans">
       
-      {/* 1. ASYMMETRIC EDITORIAL HERO */}
-      <Hero nextMatch={nextMatch} registeredSquads={teamsStats.registeredSquads} />
-
-      {/* 2. BROADCAST TELEMETRY STATS CARD */}
-      <TournamentStats
-        registeredSquads={teamsStats.registeredSquads}
-        verifiedPlayers={teamsStats.verifiedPlayers}
-        totalMatches={teamsStats.totalMatches}
-        currentRound={teamsStats.currentRound}
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-
-        {/* 3. GRAND CHAMPION CROWN STAGE (IF COMPLETED) */}
-        {isComplete && championTeam && (
-          <motion.section 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="relative bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 rounded-3xl p-6 sm:p-8 shadow-editorial-lg overflow-hidden"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-slate-950 text-amber-400 rounded-2xl flex items-center justify-center font-black text-2xl shadow-editorial">
-                  <Crown className="w-8 h-8" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest bg-slate-950 text-amber-400 px-3 py-0.5 rounded-full">
-                    OFFICIAL COLLEGE CHAMPION 2026
-                  </span>
-                  <h3 className="font-display font-black text-3xl uppercase tracking-tight mt-1">
-                    {championTeam.teamName}
-                  </h3>
-                </div>
-              </div>
-              <div className="font-mono text-right">
-                <span className="font-display font-black text-3xl text-slate-950 block">
-                  {championTeam.totalPoints || championTeam.points || 0} PTS
-                </span>
-                <span className="text-xs font-bold text-slate-900">🍗 {championTeam.wwcd || 0} WWCD VICTORIES</span>
-              </div>
+      {/* 1. HERO SECTION */}
+      <section className="relative w-full max-w-[1500px] mx-auto px-6 lg:px-8 pt-20">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          <div className="flex-1 space-y-8 text-center lg:text-left z-10">
+            <div className="inline-flex items-center gap-2 text-[10px] font-bold text-premium-sage uppercase tracking-widest bg-premium-sage-soft px-3 py-1.5 rounded-full border border-premium-sage/30">
+              <Trophy className="w-3.5 h-3.5" /> Official BGMI Tournament Platform
             </div>
-          </motion.section>
+            <h1 className="font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-[80px] text-premium-text tracking-tight leading-[1.05]">
+              MORE THAN A GAME.<br />
+              <span className="text-premium-sage">A STRONGER COMMUNITY.</span>
+            </h1>
+            <p className="text-lg sm:text-xl text-premium-text-secondary max-w-2xl mx-auto lg:mx-0 font-medium">
+              Join the ultimate college esports experience. Register your squad, track live matches, and dominate the leaderboards.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              <Link
+                href="/register"
+                className="w-full sm:w-auto px-8 py-4 bg-premium-text hover:bg-black text-white text-base font-bold rounded-2xl shadow-premium-float transition-all hover:-translate-y-1 text-center"
+              >
+                Register Your Squad
+              </Link>
+              <Link
+                href="/matches"
+                className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-premium-surface-soft border border-premium-border text-premium-text text-base font-bold rounded-2xl shadow-sm transition-all hover:-translate-y-1 text-center"
+              >
+                View Matches
+              </Link>
+            </div>
+          </div>
+          <div className="flex-1 w-full relative z-0 mt-8 lg:mt-0">
+            <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-square max-h-[600px] rounded-[32px] overflow-hidden shadow-premium-float bg-premium-surface border-[8px] border-white">
+              <img 
+                src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1600&auto=format&fit=crop&q=80" 
+                alt="BGMI Cinematic Tournament"
+                className="w-full h-full object-cover object-center scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. LIVE MATCH SPOTLIGHT */}
+      <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-[11px] font-bold text-premium-text-secondary uppercase tracking-widest flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> MATCH SPOTLIGHT
+          </h2>
+        </div>
+        {loading ? (
+          <SkeletonGrid count={1} />
+        ) : (
+          <NextMatchCard match={nextMatch} registeredSquadsCount={teamsCount} />
         )}
+      </section>
 
-        {/* 4. MATCH SCOREBARS STACK */}
-        <section className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-4">
-            <div>
-              <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
-                /// LIVE MATCH SCHEDULE & SCOREBOARDS
-              </span>
-              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight">
-                Tournament Schedule
-              </h2>
-            </div>
-            <Link
-              href="/matches"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-[#121620] hover:bg-slate-50 dark:hover:bg-[#181E2C] text-slate-900 dark:text-white border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-editorial-sm transition-all"
-            >
-              <span>All Matches & Lobbies</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+
+      {/* 4. UPCOMING MATCHES */}
+      {upcomingMatches.length > 0 && (
+        <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between border-b border-premium-border pb-4 mb-8">
+            <h2 className="font-bold text-3xl text-premium-text tracking-tight">Upcoming Matches</h2>
+            <Link href="/matches?tab=schedule" className="text-sm font-bold text-premium-text hover:text-premium-sage uppercase tracking-widest transition-colors flex items-center gap-1">
+              View All <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-
-          {matchesList.length > 0 ? (
-            <div className="space-y-3">
-              {matchesList.slice(0, 4).map((m) => (
-                <MatchCard key={m.id || m.matchNumber} match={{ ...m, registeredSquadsCount: teamsStats.registeredSquads }} />
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              title="No Matches Scheduled Yet"
-              message="Official tournament matches and custom room lobbies will appear here once scheduled."
-              icon={Swords}
-            />
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {upcomingMatches.map((m) => (
+              <MatchCard key={m.id || m.matchNumber} match={{ ...m, registeredSquadsCount: teamsCount }} />
+            ))}
+          </div>
         </section>
+      )}
 
-        {/* 5. TOP 3 PODIUM & SCOREBOARD TABLE */}
-        <section className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-4">
-            <div>
-              <span className="text-[10px] font-mono text-amber-600 dark:text-bgmi-gold font-bold uppercase tracking-widest block">
-                /// OFFICIAL TOURNAMENT RANKINGS
-              </span>
-              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight">
-                Standings Leaderboard
-              </h2>
+      {/* 5. QUICK ACCESS */}
+      <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+        <h2 className="font-bold text-3xl text-premium-text tracking-tight mb-8">Tournament Portal</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link href="/matches" className="group p-8 bg-premium-surface border border-premium-border rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
+            <div className="w-12 h-12 bg-premium-surface-soft text-premium-text rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Gamepad2 className="w-6 h-6" />
             </div>
-            <Link
-              href="/standings"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-[#121620] hover:bg-slate-50 dark:hover:bg-[#181E2C] text-slate-900 dark:text-white border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-editorial-sm transition-all"
-            >
-              <span>Full Standings Table</span>
-              <Trophy className="w-3.5 h-3.5 text-amber-500" />
+            <h3 className="font-bold text-xl text-premium-text mb-2">Matches</h3>
+            <p className="text-sm text-premium-text-secondary font-medium">Live schedules, results, standings, and MVP leaderboards.</p>
+          </Link>
+          <Link href="/teams" className="group p-8 bg-premium-surface border border-premium-border rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
+            <div className="w-12 h-12 bg-premium-surface-soft text-premium-text rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Users className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-xl text-premium-text mb-2">Teams</h3>
+            <p className="text-sm text-premium-text-secondary font-medium">Explore the verified college squads and rosters competing.</p>
+          </Link>
+          <Link href="/rules" className="group p-8 bg-premium-surface border border-premium-border rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
+            <div className="w-12 h-12 bg-premium-surface-soft text-premium-text rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-xl text-premium-text mb-2">Rules</h3>
+            <p className="text-sm text-premium-text-secondary font-medium">Official tournament directives, scoring, and anti-cheat policies.</p>
+          </Link>
+          <Link href="/register" className="group p-8 bg-premium-sage-soft border border-premium-sage/30 rounded-[24px] shadow-sm hover:shadow-premium-float transition-all hover:-translate-y-1">
+            <div className="w-12 h-12 bg-white text-premium-sage rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Trophy className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-xl text-premium-text mb-2">Register</h3>
+            <p className="text-sm text-premium-text-secondary font-medium">Secure your squad's slot in the upcoming championship.</p>
+          </Link>
+        </div>
+      </section>
+
+      {/* 6. MEDIA HIGHLIGHT */}
+      {mediaItems.length > 0 && (
+        <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between border-b border-premium-border pb-4 mb-8">
+            <h2 className="font-bold text-3xl text-premium-text tracking-tight">Media Highlights</h2>
+            <Link href="/media" className="text-sm font-bold text-premium-text hover:text-premium-sage uppercase tracking-widest transition-colors flex items-center gap-1">
+              View Gallery <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {mediaItems.map((item) => (
+              <MediaCard key={item.id} item={item} onClick={(selected) => setSelectedMedia(selected)} />
+            ))}
+          </div>
+        </section>
+      )}
 
-          {topStandings.length > 0 ? (
-            <>
-              {/* PODIUM CARDS */}
-              <Top3Leaderboard standings={topStandings} />
-
-              {/* DESKTOP SCOREBOARD TABLE */}
-              <div className="hidden md:block overflow-x-auto bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl shadow-editorial-sm overflow-hidden">
-                <table className="w-full text-left border-collapse font-mono text-xs">
-                  <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-700 dark:text-slate-300 font-display font-bold uppercase text-xs border-b border-[#E7E3DA] dark:border-[#1E2638]">
-                    <tr>
-                      <th className="py-3.5 px-4 text-center">RANK</th>
-                      <th className="py-3.5 px-4">SQUAD NAME</th>
-                      <th className="py-3.5 px-4 text-center">PLAYED</th>
-                      <th className="py-3.5 px-4 text-center">WWCD</th>
-                      <th className="py-3.5 px-4 text-center">PLACEMENT</th>
-                      <th className="py-3.5 px-4 text-center">KILLS</th>
-                      <th className="py-3.5 px-4 text-center">TOTAL PTS</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
-                    {topStandings.map((standing) => (
-                      <StandingRow key={standing.teamId || standing.rank} standing={standing} />
-                    ))}
-                  </tbody>
-                </table>
+      {/* 7. LATEST ANNOUNCEMENTS */}
+      {announcements.length > 0 && (
+        <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between border-b border-premium-border pb-4 mb-8">
+            <h2 className="font-bold text-3xl text-premium-text tracking-tight">Latest Announcements</h2>
+            <Link href="/announcements" className="text-sm font-bold text-premium-text hover:text-premium-sage uppercase tracking-widest transition-colors flex items-center gap-1">
+              All News <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {announcements.map((ann, idx) => (
+              <div key={idx} className="bg-premium-surface border border-premium-border rounded-[24px] p-8 shadow-sm flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-premium-sage uppercase tracking-widest bg-premium-sage-soft px-2.5 py-1 rounded-md">
+                      {ann.type || 'Update'}
+                    </span>
+                    <span className="text-xs font-semibold text-premium-text-secondary">{ann.date || 'Recent'}</span>
+                  </div>
+                  <h3 className="font-bold text-xl text-premium-text leading-tight">{ann.title}</h3>
+                  <p className="text-sm text-premium-text-secondary line-clamp-3 leading-relaxed">{ann.content}</p>
+                </div>
+                <div className="pt-6 mt-6 border-t border-premium-border">
+                  <span className="text-[11px] font-bold text-premium-text-secondary uppercase tracking-widest flex items-center gap-2">
+                    <Mic className="w-3.5 h-3.5" /> Official Broadcast
+                  </span>
+                </div>
               </div>
-
-              {/* MOBILE RANKING CARDS */}
-              <div className="md:hidden space-y-3">
-                {topStandings.map((standing) => (
-                  <RankingCard key={standing.teamId || standing.rank} standing={standing} />
-                ))}
-              </div>
-            </>
-          ) : (
-            <EmptyState
-              title="No Standings Recorded Yet"
-              message="Official rankings will populate automatically as match scorecards are submitted by referees."
-              icon={Trophy}
-            />
-          )}
+            ))}
+          </div>
         </section>
+      )}
 
-        {/* 6. MEDIA GALLERY */}
-        <section className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-4">
-            <div>
-              <span className="text-[10px] font-mono text-sky-600 dark:text-sky-400 font-bold uppercase tracking-widest block">
-                /// PLAYER POVs & REPLAY HIGHLIGHTS
-              </span>
-              <h2 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight">
-                Tournament Media
-              </h2>
-            </div>
+      {/* 8. COMMUNITY / FINAL CTA */}
+      <section className="max-w-[1500px] mx-auto px-6 lg:px-8 pt-12">
+        <div className="bg-premium-text text-white rounded-[32px] p-12 lg:p-24 text-center relative overflow-hidden shadow-2xl">
+          <div className="relative z-10 space-y-8">
+            <h2 className="font-bold text-5xl sm:text-6xl lg:text-[80px] tracking-tight leading-none">
+              Play. Compete.<br />Connect.
+            </h2>
+            <p className="text-lg text-white/70 max-w-xl mx-auto font-medium">
+              The battlefield awaits. Register your squad and become part of the most prestigious college tournament of the year.
+            </p>
             <Link
-              href="/media"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-[#121620] hover:bg-slate-50 dark:hover:bg-[#181E2C] text-slate-900 dark:text-white border border-[#E7E3DA] dark:border-[#1E2638] font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-editorial-sm transition-all"
+              href="/register"
+              className="inline-block px-10 py-5 bg-white text-premium-text hover:bg-premium-surface-soft text-lg font-bold rounded-2xl shadow-xl transition-all hover:-translate-y-1"
             >
-              <span>Explore Gallery</span>
-              <Video className="w-3.5 h-3.5 text-sky-500" />
+              Register Now
             </Link>
           </div>
-
-          {mediaItems.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {mediaItems.map((item) => (
-                <MediaCard key={item.id} item={item} onClick={(selected) => setSelectedMedia(selected)} />
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              title="No Media Published Yet"
-              message="Screenshots and player recordings uploaded during matches will appear here."
-              icon={Video}
-            />
-          )}
-        </section>
-
-      </div>
+          {/* Decorative elements */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <div className="absolute -top-24 -left-24 w-96 h-96 bg-white rounded-full blur-[100px]"></div>
+            <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white rounded-full blur-[100px]"></div>
+          </div>
+        </div>
+      </section>
 
       {/* MEDIA LIGHTBOX MODAL */}
       <MediaLightbox

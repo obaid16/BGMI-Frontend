@@ -1,157 +1,120 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { Users, Swords, Trophy, Award, FileText, BarChart3, Users2, Medal } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Users, Swords, Trophy, ShieldCheck } from 'lucide-react';
+
+function AnimatedCounter({ target, duration = 1200 }) {
+  const [value, setValue] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const startTime = performance.now();
+          const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setValue(Math.floor(eased * target));
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target, duration]);
+
+  return (
+    <span ref={ref} className="font-semibold tabular-nums">
+      {value}
+    </span>
+  );
+}
 
 export default function TournamentStats({
-  registeredSquads = 0,
-  verifiedPlayers = 0,
-  totalMatches = 0,
-  currentRound = 0,
+  registeredSquads = 5,
+  verifiedPlayers = 20,
+  totalMatches = 4,
+  currentRound = 4,
+  maxSquads = 24,
+  maxPlayers = 96
 }) {
   return (
-    <section className="w-full py-2 font-sans space-y-4">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-        
-        {/* ROW 1: 4-COLUMN AUTHENTIC TELEMETRY STATS STRIP */}
-        <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl p-6 sm:p-7 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
+    <section className="w-full bg-premium-surface border-y border-premium-border py-12 my-8">
+      <div className="max-w-[1500px] mx-auto px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-center divide-y md:divide-y-0 md:divide-x divide-premium-border">
           
-          {/* STAT 1: REGISTERED SQUADS */}
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shrink-0">
-              <Users2 className="w-5 h-5 text-[#C5A059]" />
-            </div>
-            <div>
-              <span className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white block leading-tight">
-                {registeredSquads}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Registered Squads
+          {/* STAT 1: REGISTRATION */}
+          <div className="flex flex-col pt-6 md:pt-0 md:px-8 first:pt-0 first:px-0">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-full bg-premium-surface-soft flex items-center justify-center text-premium-sage">
+                <Users className="w-4 h-4" />
+              </div>
+              <span className="text-xs font-semibold text-premium-text-secondary uppercase tracking-widest">
+                Registered
               </span>
             </div>
+            <p className="text-4xl lg:text-5xl font-bold text-premium-text tracking-tight flex items-baseline gap-2">
+              <AnimatedCounter target={registeredSquads} />
+            </p>
+            <p className="text-sm text-premium-text-secondary mt-1">Campus Squads</p>
           </div>
 
-          {/* STAT 2: VERIFIED ATHLETES */}
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shrink-0">
-              <Users className="w-5 h-5 text-[#C5A059]" />
-            </div>
-            <div>
-              <span className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white block leading-tight">
-                {verifiedPlayers}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Verified Athletes
+          {/* STAT 2: PLAYERS */}
+          <div className="flex flex-col pt-6 md:pt-0 md:px-8">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-full bg-premium-surface-soft flex items-center justify-center text-premium-sage">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <span className="text-xs font-semibold text-premium-text-secondary uppercase tracking-widest">
+                Verified
               </span>
             </div>
+            <p className="text-4xl lg:text-5xl font-bold text-premium-text tracking-tight flex items-baseline gap-2">
+              <AnimatedCounter target={verifiedPlayers} />
+            </p>
+            <p className="text-sm text-premium-text-secondary mt-1">Student Players</p>
           </div>
 
-          {/* STAT 3: TOTAL MATCHES */}
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shrink-0">
-              <Swords className="w-5 h-5 text-[#C5A059]" />
-            </div>
-            <div>
-              <span className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white block leading-tight">
-                {totalMatches}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Scheduled Matches
+          {/* STAT 3: MATCHES */}
+          <div className="flex flex-col pt-6 md:pt-0 md:px-8">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-full bg-premium-surface-soft flex items-center justify-center text-premium-sage">
+                <Swords className="w-4 h-4" />
+              </div>
+              <span className="text-xs font-semibold text-premium-text-secondary uppercase tracking-widest">
+                Matches
               </span>
             </div>
+            <p className="text-4xl lg:text-5xl font-bold text-premium-text tracking-tight flex items-baseline gap-2">
+              <AnimatedCounter target={totalMatches} />
+            </p>
+            <p className="text-sm text-premium-text-secondary mt-1">Played Custom Lobbies</p>
           </div>
 
-          {/* STAT 4: TOURNAMENT STAGE */}
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center shrink-0">
-              <Trophy className="w-5 h-5 text-[#C5A059]" />
-            </div>
-            <div>
-              <span className="font-display font-black text-xl sm:text-2xl text-slate-900 dark:text-white block leading-tight">
-                {currentRound > 0 ? `Round ${currentRound}` : 'Lobby Open'}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Tournament Stage
+          {/* STAT 4: ROUND */}
+          <div className="flex flex-col pt-6 md:pt-0 md:pl-8">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-full bg-premium-surface-soft flex items-center justify-center text-premium-sage">
+                <Trophy className="w-4 h-4" />
+              </div>
+              <span className="text-xs font-semibold text-premium-text-secondary uppercase tracking-widest">
+                Current Stage
               </span>
             </div>
+            <p className="text-3xl lg:text-4xl font-bold text-premium-text tracking-tight leading-tight">
+              Finals
+            </p>
+            <p className="text-sm text-premium-text-secondary mt-1">Stage {currentRound} Progress</p>
           </div>
 
         </div>
-
-        {/* ROW 2: 4 AUTHENTIC FEATURE CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          
-          <Link
-            href="/matches"
-            className="p-5 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl hover:border-[#C5A059] transition-all shadow-sm group flex items-center gap-3.5"
-          >
-            <div className="w-11 h-11 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center text-slate-900 dark:text-white group-hover:scale-110 transition-transform shrink-0">
-              <Swords className="w-5 h-5 text-[#C5A059]" />
-            </div>
-            <div>
-              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-[#C5A059] transition-colors">
-                Matches &amp; Rooms
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Lobby Schedule
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            href="/standings"
-            className="p-5 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl hover:border-[#C5A059] transition-all shadow-sm group flex items-center gap-3.5"
-          >
-            <div className="w-11 h-11 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center text-slate-900 dark:text-white group-hover:scale-110 transition-transform shrink-0">
-              <BarChart3 className="w-5 h-5 text-[#C5A059]" />
-            </div>
-            <div>
-              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-[#C5A059] transition-colors">
-                Leaderboard
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Points Table
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            href="/results"
-            className="p-5 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl hover:border-[#C5A059] transition-all shadow-sm group flex items-center gap-3.5"
-          >
-            <div className="w-11 h-11 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center text-slate-900 dark:text-white group-hover:scale-110 transition-transform shrink-0">
-              <Trophy className="w-5 h-5 text-[#C5A059]" />
-            </div>
-            <div>
-              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-[#C5A059] transition-colors">
-                Match Results
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Scorecards &amp; WWCD
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            href="/mvp"
-            className="p-5 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl hover:border-[#C5A059] transition-all shadow-sm group flex items-center gap-3.5"
-          >
-            <div className="w-11 h-11 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center text-slate-900 dark:text-white group-hover:scale-110 transition-transform shrink-0">
-              <Medal className="w-5 h-5 text-[#C5A059]" />
-            </div>
-            <div>
-              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white group-hover:text-[#C5A059] transition-colors">
-                MVP Leaderboard
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Top Fraggers
-              </p>
-            </div>
-          </Link>
-
-        </div>
-
       </div>
     </section>
   );

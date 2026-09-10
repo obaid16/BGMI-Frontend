@@ -2,8 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Radio, Clock, MapPin, ChevronRight, Swords, Trophy, Users } from 'lucide-react';
-import Badge from '@/components/common/Badge';
+import { Clock, MapPin, ChevronRight, Trophy, Users } from 'lucide-react';
+import Badge from '../common/Badge';
 
 export default function MatchCard({ match }) {
   if (!match) return null;
@@ -19,106 +19,111 @@ export default function MatchCard({ match }) {
     return null;
   };
 
-  const winnerName = getTeamName(match.winner) || match.winnerName || getTeamName(match.teamA) || 'GODLIKE ESPORTS';
+  const winnerName = getTeamName(match.winner) || match.winnerName || getTeamName(match.teamA) || 'Godlike Esports';
   const teamAName = getTeamName(match.teamA) || getTeamName(match.teams?.[0]) || null;
   const teamBName = getTeamName(match.teamB) || getTeamName(match.teams?.[1]) || null;
 
   return (
-    <div className="w-full bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] hover:border-slate-400 dark:hover:border-slate-600 transition-all duration-200 rounded-2xl p-4 sm:p-5 shadow-editorial-sm hover:shadow-editorial flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 font-sans group">
+    <div className="w-full bg-premium-surface border border-premium-border hover:border-premium-text transition-all rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 group">
       
-      {/* LEFT: MATCH NUMBER & MAP ARENA */}
-      <div className="flex items-center gap-4 min-w-[210px]">
-        <div className="w-12 h-12 bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-900 dark:text-white font-display font-black text-sm flex flex-col items-center justify-center rounded-xl border border-[#E7E3DA] dark:border-[#1E2638] shrink-0">
-          <span className="text-[9px] font-mono text-bgmi-red leading-none">MATCH</span>
-          <span className="text-base text-slate-900 dark:text-white leading-none mt-0.5">#{String(match.matchNumber || 1).padStart(2, '0')}</span>
+      {/* LEFT: MATCH NUMBER & MAP */}
+      <div className="flex items-center gap-4 min-w-[220px]">
+        <div className="w-14 h-14 bg-premium-surface-soft text-premium-text font-bold text-lg flex flex-col items-center justify-center rounded-xl flex-shrink-0">
+          <span className="text-[9px] font-semibold text-premium-text-secondary uppercase tracking-widest leading-none mb-0.5">Match</span>
+          <span className="leading-none">{String(match.matchNumber || 1).padStart(2, '0')}</span>
         </div>
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mb-1.5">
             {isLive ? (
-              <Badge variant="live" size="sm">LIVE</Badge>
+              <Badge variant="live" size="sm">Live</Badge>
             ) : isUpcoming ? (
-              <Badge variant="default" size="sm">UPCOMING</Badge>
+              <Badge variant="cyan" size="sm">Upcoming</Badge>
             ) : (
-              <Badge variant="gold" size="sm">COMPLETED</Badge>
+              <Badge variant="default" size="sm">Completed</Badge>
             )}
-            <span className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase font-bold">{match.round || 'Grand Finals'}</span>
+            {match.round && !match.round.toLowerCase().includes('match') && (
+              <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">{match.round}</span>
+            )}
           </div>
-          <h4 className="font-display font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase flex items-center gap-1.5 mt-0.5">
-            <MapPin className="w-4 h-4 text-bgmi-red" /> {match.map || 'Erangel'}
+          <h4 className="font-bold text-base text-premium-text flex items-center gap-1.5">
+            <MapPin className="w-4 h-4 text-premium-sage" /> {match.map || 'Erangel'}
           </h4>
         </div>
       </div>
 
-      {/* CENTER: DYNAMIC MATCH CONTENT BASED ON STATUS */}
-      <div className="flex-1 max-w-md bg-[#FAF8F5] dark:bg-[#0B0E14] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl p-3 flex items-center justify-between font-mono text-xs">
+      {/* CENTER: DYNAMIC CONTENT */}
+      <div className="flex-1 max-w-md bg-premium-background rounded-xl p-3 sm:px-4 sm:py-3 flex items-center justify-between border border-premium-border">
+        
         {isUpcoming ? (
-          <div className="w-full flex items-center justify-between px-2 text-slate-700 dark:text-slate-300">
-            <span className="flex items-center gap-1.5 font-bold uppercase text-[11px]">
-              <Users className="w-3.5 h-3.5 text-bgmi-red" /> {match.registeredSquadsCount ?? match.participatingSquads?.length ?? 4} Registered Squads
+          <div className="w-full flex items-center justify-between px-2 text-premium-text-secondary whitespace-nowrap gap-4">
+            <span className="flex items-center gap-1.5 font-semibold text-xs">
+              <Users className="w-4 h-4 text-premium-sage" /> {match.registeredSquadsCount ?? match.participatingSquads?.length ?? 4} Squads
             </span>
-            <span className="text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-              TPP Battle Royale
+            <span className="text-[10px] font-bold text-premium-text uppercase tracking-widest">
+              TPP SQUAD
             </span>
           </div>
         ) : isLive ? (
           <div className="w-full flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-900 dark:text-white uppercase truncate max-w-[100px]">
-                {teamAName || 'SQUAD A'}
+              <span className="font-bold text-premium-text text-sm truncate max-w-[100px]">
+                {teamAName || 'Squad A'}
               </span>
               {match.killsA !== undefined && (
-                <span className="px-2 py-0.5 bg-bgmi-red/10 text-bgmi-red font-black text-[11px] rounded">
-                  {match.killsA} KILLS
+                <span className="px-2 py-0.5 bg-premium-surface text-premium-text font-semibold text-[11px] rounded-md border border-premium-border">
+                  {match.killsA} Kills
                 </span>
               )}
             </div>
-            <span className="font-display font-black text-bgmi-red text-xs px-2 animate-pulse">VS</span>
+            <span className="font-bold text-premium-text-secondary text-xs px-2">VS</span>
             <div className="flex items-center gap-2">
               {match.killsB !== undefined && (
-                <span className="px-2 py-0.5 bg-amber-500/15 text-amber-800 dark:text-amber-400 font-black text-[11px] rounded">
-                  {match.killsB} KILLS
+                <span className="px-2 py-0.5 bg-premium-surface text-premium-text font-semibold text-[11px] rounded-md border border-premium-border">
+                  {match.killsB} Kills
                 </span>
               )}
-              <span className="font-bold text-slate-900 dark:text-white uppercase truncate max-w-[100px]">
-                {teamBName || 'SQUAD B'}
+              <span className="font-bold text-premium-text text-sm truncate max-w-[100px]">
+                {teamBName || 'Squad B'}
               </span>
             </div>
           </div>
         ) : (
           <div className="w-full flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-amber-500 shrink-0" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-full bg-amber-50 flex items-center justify-center shrink-0">
+                <Trophy className="w-3.5 h-3.5 text-amber-600" />
+              </div>
               <div>
-                <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase font-bold">WWCD VICTOR</span>
-                <span className="font-display font-black text-slate-900 dark:text-white uppercase text-sm truncate max-w-[140px] block">
-                  {winnerName || 'GODLIKE ESPORTS'}
+                <span className="text-[10px] text-premium-text-secondary block font-semibold uppercase tracking-widest">WWCD Winner</span>
+                <span className="font-bold text-premium-text text-sm truncate max-w-[140px] block">
+                  {winnerName}
                 </span>
               </div>
             </div>
             <div className="text-right">
-              <span className="px-2.5 py-1 bg-amber-500/10 text-amber-800 dark:text-amber-300 font-black text-xs rounded border border-amber-500/20 block">
-                {match.totalKills || match.kills || 18} KILLS
+              <span className="px-2.5 py-1 bg-premium-surface text-premium-text font-semibold text-xs rounded-md border border-premium-border block">
+                {match.totalKills || match.kills || 18} Kills
               </span>
             </div>
           </div>
         )}
       </div>
 
-      {/* RIGHT: TIME & SCORECARD LINK */}
-      <div className="flex items-center justify-between md:justify-end gap-4 min-w-[190px] border-t md:border-t-0 pt-3 md:pt-0 border-[#E7E3DA] dark:border-[#1E2638]">
-        <div className="text-right font-mono text-xs">
-          <p className="font-bold text-slate-900 dark:text-white flex items-center justify-end gap-1">
-            <Clock className="w-3.5 h-3.5 text-bgmi-red" /> {match.time || '10:00 AM'}
+      {/* RIGHT: TIME & CTA */}
+      <div className="flex items-center justify-between md:justify-end gap-5 min-w-[200px] border-t md:border-t-0 pt-4 md:pt-0 border-premium-border">
+        <div className="text-right">
+          <p className="font-semibold text-premium-text flex items-center justify-end gap-1.5 text-sm">
+            <Clock className="w-4 h-4 text-premium-text-secondary" /> {match.time || '10:00 AM'}
           </p>
-          <p className="text-[10px] text-slate-500 font-medium uppercase">{match.date || '2026-09-02'}</p>
+          <p className="text-xs text-premium-text-secondary font-medium mt-0.5">{match.date || '2026-09-02'}</p>
         </div>
 
         <Link
           href={`/matches/${match.matchNumber || match.id}`}
-          className="px-4 py-2 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-950 font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-editorial-sm flex items-center gap-1 shrink-0"
+          className="px-4 py-2.5 bg-premium-surface-soft text-premium-text hover:bg-premium-text hover:text-white font-medium text-xs uppercase tracking-wide rounded-full transition-colors flex items-center gap-1 shrink-0 shadow-sm"
         >
-          <span>{isUpcoming ? 'LOBBY' : isLive ? 'LIVE' : 'SCORECARD'}</span>
-          <ChevronRight className="w-3.5 h-3.5" />
+          <span>{isUpcoming ? 'Details' : isLive ? 'Score' : 'Results'}</span>
+          <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
 

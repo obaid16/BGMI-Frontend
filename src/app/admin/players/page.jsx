@@ -6,7 +6,7 @@ import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
 import { getTeams, verifyPlayerStatus, deletePlayer, updatePlayer } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { UserCheck, Search, Trash2, Edit3, Flame, Check, X } from 'lucide-react';
+import { UserCheck, Search, Trash2, Edit3, Flame, Award, Check, X } from 'lucide-react';
 
 export default function AdminPlayersPage() {
   const { showToast } = useToast();
@@ -109,7 +109,6 @@ export default function AdminPlayersPage() {
         setDeletingId(playerId);
         const res = await deletePlayer(playerId);
         if (res) {
-          setSelectedPlayerIds((prev) => prev.filter((id) => id !== playerId));
           setAllPlayers((prev) => prev.filter((p) => (p.id || p._id) !== playerId));
           showToast('Player removed from roster successfully', 'success');
         } else {
@@ -123,163 +122,161 @@ export default function AdminPlayersPage() {
     }
   };
 
-  const filteredPlayers = allPlayers.filter((player) =>
-    player.teamName?.toLowerCase().includes(squadFilter.toLowerCase()) ||
-    player.ign?.toLowerCase().includes(squadFilter.toLowerCase()) ||
-    player.name?.toLowerCase().includes(squadFilter.toLowerCase())
-  );
-
   return (
-    <div className="space-y-6 max-w-full overflow-hidden font-sans">
+    <div className="space-y-8 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
-        <div>
-          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
-            /// ATHLETE ROSTER
-          </span>
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
-            <UserCheck className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
-            Player Roster &amp; Stats Manager
-          </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
-            Verify player tournament credentials, manage active athletes, and update kill statistics.
-          </p>
-        </div>
+      <div className="border-b border-premium-border pb-6">
+        <h1 className="font-bold text-3xl text-premium-text tracking-tight flex items-center gap-3">
+          <UserCheck className="w-8 h-8 text-amber-600" /> Player Rosters & MVP Stats
+        </h1>
+        <p className="text-sm text-premium-text-secondary font-medium mt-2">Update player kills, matches played, and auto-calculate K/D ratio.</p>
+      </div>
 
-        {/* SEARCH FILTER */}
-        <div className="relative w-full sm:w-72">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="h-4 w-4 text-slate-400" />
+      {/* FILTER CONTROLS */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-premium-surface border border-premium-border rounded-[24px] p-5 shadow-sm">
+        <div className="relative w-full sm:w-80">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <Search className="h-4 w-4 text-premium-text-secondary" />
           </span>
           <input
             type="text"
-            placeholder="Search by Squad or IGN..."
+            placeholder="Search Player or Squad..."
             value={squadFilter}
             onChange={(e) => setSquadFilter(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-xl text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-amber-500 transition-colors shadow-editorial-sm"
+            className="w-full pl-11 pr-4 py-2.5 bg-white border border-premium-border rounded-[12px] text-premium-text text-sm font-bold focus:outline-none focus:border-premium-text shadow-sm transition-all"
           />
         </div>
+        {squadFilter && (
+          <button
+            onClick={() => setSquadFilter('')}
+            className="text-xs font-bold text-premium-text-secondary hover:text-black uppercase tracking-widest transition-colors"
+          >
+            Clear Filter
+          </button>
+        )}
       </div>
 
-      {/* PLAYERS TABLE WITH EDITORIAL CARD CONTAINER */}
-      <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl shadow-editorial-sm overflow-hidden">
+      {/* PLAYERS TABLE WITH HORIZONTAL SCROLL */}
+      <div className="bg-premium-surface border border-premium-border rounded-[24px] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse min-w-[850px]">
-            <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
+          <table className="w-full text-left text-sm whitespace-nowrap min-w-[950px]">
+            <thead className="bg-premium-background text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest border-b border-premium-border">
               <tr>
-                <th className="p-4 whitespace-nowrap min-w-[180px]">Player &amp; IGN</th>
-                <th className="p-4 whitespace-nowrap min-w-[140px]">Squad</th>
-                <th className="p-4 whitespace-nowrap min-w-[100px]">Role</th>
-                <th className="p-4 whitespace-nowrap text-center min-w-[90px]">Matches</th>
-                <th className="p-4 whitespace-nowrap text-center min-w-[100px]">Total Kills</th>
-                <th className="p-4 whitespace-nowrap text-center min-w-[90px]">K/D Ratio</th>
-                <th className="p-4 whitespace-nowrap min-w-[120px]">Status</th>
-                <th className="p-4 whitespace-nowrap text-right min-w-[220px]">Actions</th>
+                <th className="px-6 py-4">Player & IGN</th>
+                <th className="px-6 py-4">Squad</th>
+                <th className="px-6 py-4">Role</th>
+                <th className="px-6 py-4 text-center">Matches</th>
+                <th className="px-6 py-4 text-center">Total Kills</th>
+                <th className="px-6 py-4 text-center">K/D Ratio</th>
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-          <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
-            {filteredPlayers.length > 0 ? (
-              filteredPlayers.map((player) => {
-                const pId = player.id || player._id;
-                const isVerified = player.verificationStatus === 'Verified' || player.verified;
-                const isRejected = player.verificationStatus === 'Rejected';
-                const statusLabel = player.verificationStatus || (player.verified ? 'Verified' : 'Pending Verification');
-                const pKills = player.kills || 0;
-                const pMatches = player.matchesPlayed || 1;
-                const pKd = player.kdRatio || (pKills / Math.max(1, pMatches));
-                
-                return (
-                  <tr
-                    key={pId}
-                    className="hover:bg-slate-50/70 dark:hover:bg-[#181E2C]/50 transition-colors"
-                  >
-                    <td className="p-4 whitespace-nowrap">
-                      <p className="font-display font-bold text-slate-900 dark:text-white text-sm">{player.ign}</p>
-                    <p className="text-slate-500 dark:text-slate-400 text-[11px]">{player.name}</p>
-                  </td>
-                  <td className="p-4 whitespace-nowrap">
-                    <p className="font-bold text-slate-900 dark:text-white">{player.teamName}</p>
-                  </td>
-                  <td className="p-4 whitespace-nowrap"><Badge variant="default" size="sm">{player.role || 'Player'}</Badge></td>
+            <tbody className="divide-y divide-premium-border bg-white">
+              {allPlayers
+                .filter((player) =>
+                  player.teamName?.toLowerCase().includes(squadFilter.toLowerCase()) ||
+                  player.ign?.toLowerCase().includes(squadFilter.toLowerCase()) ||
+                  player.name?.toLowerCase().includes(squadFilter.toLowerCase())
+                )
+                .map((player) => {
+                  const pId = player.id || player._id;
+                  const isVerified = player.verificationStatus === 'Verified' || player.verified;
+                  const isRejected = player.verificationStatus === 'Rejected';
+                  const statusLabel = player.verificationStatus || (player.verified ? 'Verified' : 'Pending');
+                  const pKills = player.kills || 0;
+                  const pMatches = player.matchesPlayed || 1;
+                  const pKd = player.kdRatio || (pKills / Math.max(1, pMatches));
                   
-                  {/* MATCHES PLAYED COLUMN */}
-                  <td className="p-4 whitespace-nowrap text-center font-mono font-bold text-slate-600 dark:text-slate-300">
-                    {pMatches} M
-                  </td>
+                  return (
+                    <tr key={pId} className="hover:bg-premium-surface-soft transition-colors">
+                      <td className="px-6 py-5">
+                        <p className="font-bold text-base text-premium-text tracking-tight">{player.ign}</p>
+                        <p className="text-xs text-premium-text-secondary font-medium mt-0.5">{player.name}</p>
+                      </td>
+                      <td className="px-6 py-5">
+                        <p className="font-semibold text-premium-text">{player.teamName}</p>
+                      </td>
+                      <td className="px-6 py-5"><Badge variant="default" size="sm">{player.role || 'Player'}</Badge></td>
+                      
+                      {/* MATCHES PLAYED COLUMN */}
+                      <td className="px-6 py-5 text-center font-semibold text-premium-text-secondary">
+                        {pMatches} M
+                      </td>
 
-                  {/* KILLS COLUMN */}
-                  <td className="p-4 whitespace-nowrap text-center">
-                    <span className="font-mono font-bold text-amber-600 dark:text-bgmi-gold text-sm inline-flex items-center justify-center gap-1">
-                      <Flame className="w-3.5 h-3.5 text-bgmi-red" /> {pKills}
-                    </span>
-                  </td>
+                      {/* KILLS COLUMN */}
+                      <td className="px-6 py-5 text-center">
+                        <span className="font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full text-sm inline-flex items-center gap-1.5 border border-amber-200">
+                          <Flame className="w-3.5 h-3.5 text-amber-600" /> {pKills}
+                        </span>
+                      </td>
 
-                  {/* AUTO-CALCULATED K/D RATIO COLUMN */}
-                  <td className="p-4 whitespace-nowrap text-center font-mono font-bold text-sky-600 dark:text-sky-400">
-                    {pKd.toFixed(2)}
-                  </td>
+                      {/* AUTO-CALCULATED K/D RATIO COLUMN */}
+                      <td className="px-6 py-5 text-center font-bold text-sky-700">
+                        {pKd.toFixed(2)}
+                      </td>
 
-                  <td className="p-4 whitespace-nowrap">
-                    <Badge variant={isVerified ? 'green' : isRejected ? 'rejected' : 'pending'} size="sm">
-                      {statusLabel}
-                    </Badge>
-                  </td>
+                      <td className="px-6 py-5">
+                        <Badge variant={isVerified ? 'green' : isRejected ? 'rejected' : 'pending'} size="sm">
+                          {statusLabel}
+                        </Badge>
+                      </td>
 
-                  <td className="p-4 whitespace-nowrap text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon={Edit3}
-                        onClick={() => handleOpenEdit(player)}
-                      >
-                        Edit
-                      </Button>
-                      {!isVerified && (
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          icon={Check}
-                          onClick={() => handleUpdateStatus(pId, 'Verified')}
-                        >
-                          Verify
-                        </Button>
-                      )}
-                      {!isRejected && (
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          icon={X}
-                          onClick={() => handleUpdateStatus(pId, 'Rejected')}
-                        >
-                          Reject
-                        </Button>
-                      )}
-                      <button
-                        onClick={() => handleDeletePlayer(pId)}
-                        disabled={deletingId === pId}
-                        className={`inline-flex items-center justify-center p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors ${
-                          deletingId === pId ? 'opacity-40 cursor-not-allowed' : ''
-                        }`}
-                        title="Delete Player"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td colSpan={8} className="p-8 text-center text-slate-500 dark:text-slate-400 font-mono text-xs">
-                No players found matching your filter.
-              </td>
-            </tr>
-          )}
-        </tbody>
-        </table>
+                      <td className="px-6 py-5 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            icon={Edit3}
+                            onClick={() => handleOpenEdit(player)}
+                          >
+                            Edit
+                          </Button>
+                          {!isVerified && (
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              icon={Check}
+                              onClick={() => handleUpdateStatus(pId, 'Verified')}
+                            >
+                              Verify
+                            </Button>
+                          )}
+                          {!isRejected && (
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              icon={X}
+                              onClick={() => handleUpdateStatus(pId, 'Rejected')}
+                            >
+                              Reject
+                            </Button>
+                          )}
+                          <button
+                            onClick={() => handleDeletePlayer(pId)}
+                            disabled={deletingId === pId}
+                            className={`w-9 h-9 flex items-center justify-center rounded-[10px] text-rose-500 bg-white border border-premium-border hover:border-rose-300 hover:bg-rose-50 transition-colors shadow-sm ${
+                              deletingId === pId ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            title="Delete Player"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {allPlayers.length === 0 && (
+                  <tr>
+                    <td colSpan="8" className="px-6 py-12 text-center text-sm font-medium text-premium-text-secondary bg-white">
+                      No players found.
+                    </td>
+                  </tr>
+                )}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -288,39 +285,39 @@ export default function AdminPlayersPage() {
         <Modal
           isOpen={!!editingPlayer}
           onClose={() => setEditingPlayer(null)}
-          title={`Update Stats for ${editingPlayer.ign} (${editingPlayer.teamName})`}
+          title={`Update Stats: ${editingPlayer.ign}`}
           maxWidth="max-w-md"
         >
-          <form onSubmit={handleSavePlayerStats} className="space-y-4 text-xs">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">In-Game Name (IGN)</label>
+          <form onSubmit={handleSavePlayerStats} className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">In-Game Name (IGN)</label>
                 <input
                   type="text"
                   required
                   value={editIgn}
                   onChange={(e) => setEditIgn(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
+                  className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text text-sm font-bold focus:outline-none focus:border-premium-text shadow-sm"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Full Name</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Full Name</label>
                 <input
                   type="text"
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
+                  className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text text-sm font-bold focus:outline-none focus:border-premium-text shadow-sm"
                 />
               </div>
             </div>
 
-            <div className="space-y-1">
-              <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Role</label>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Role</label>
               <select
                 value={editRole}
                 onChange={(e) => setEditRole(e.target.value)}
-                className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
+                className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text text-sm font-bold focus:outline-none focus:border-premium-text shadow-sm appearance-none cursor-pointer"
               >
                 <option value="Assaulter">Assaulter</option>
                 <option value="IGL">IGL (In-Game Leader)</option>
@@ -331,57 +328,57 @@ export default function AdminPlayersPage() {
             </div>
 
             {/* MATCH STATS INPUTS & LIVE AUTO K/D CALCULATION */}
-            <div className="p-4 bg-slate-100 dark:bg-[#0a0b0e] rounded-xl border border-amber-500/40 dark:border-bgmi-gold/40 space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
-                <span className="font-bold text-amber-600 dark:text-bgmi-gold uppercase text-[10px] flex items-center gap-1.5">
-                  <Flame className="w-4 h-4 text-bgmi-red" /> MATCH STATS & K/D CALCULATION
+            <div className="p-5 bg-premium-background rounded-[16px] border border-premium-border space-y-4">
+              <div className="flex items-center justify-between border-b border-premium-border pb-3">
+                <span className="font-bold text-premium-text text-sm flex items-center gap-2">
+                  <Flame className="w-4 h-4 text-amber-500" /> Match Stats
                 </span>
-                <span className="text-[10px] font-mono text-sky-600 dark:text-sky-400 font-bold">LIVE AUTO-CALCULATED</span>
+                <span className="text-[9px] font-bold text-sky-700 bg-sky-50 px-2 py-1 rounded uppercase tracking-widest border border-sky-100">Live Auto-Calculated</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="font-bold text-amber-600 dark:text-bgmi-gold uppercase text-[10px]">TOTAL KILLS</label>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Total Kills</label>
                   <input
                     type="number"
                     min="0"
                     value={editKills}
                     onChange={(e) => setEditKills(e.target.value)}
-                    className="w-full p-2.5 bg-white dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded text-amber-600 dark:text-bgmi-gold font-mono font-bold text-center text-lg"
+                    className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-amber-700 font-bold text-center text-lg focus:outline-none focus:border-amber-400 shadow-sm"
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="font-bold text-slate-700 dark:text-slate-300 uppercase text-[10px]">MATCHES PLAYED</label>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Matches Played</label>
                   <input
                     type="number"
                     min="1"
                     value={editMatchesPlayed}
                     onChange={(e) => setEditMatchesPlayed(e.target.value)}
-                    className="w-full p-2.5 bg-white dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded text-slate-900 dark:text-white font-mono font-bold text-center text-lg"
+                    className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-center text-lg focus:outline-none focus:border-premium-text shadow-sm"
                   />
                 </div>
               </div>
 
               {/* AUTO-COMPUTED K/D RATIO PREVIEW */}
-              <div className="p-3 bg-white dark:bg-slate-900/90 rounded border border-sky-500/30 flex items-center justify-between font-mono">
-                <span className="text-[11px] text-slate-700 dark:text-slate-300 font-bold uppercase">COMPUTED K/D RATIO:</span>
-                <span className="font-broadcast font-bold text-xl text-sky-600 dark:text-sky-400">
+              <div className="p-4 bg-white rounded-[12px] border border-sky-200 shadow-sm flex items-center justify-between">
+                <span className="text-[11px] text-premium-text-secondary font-bold uppercase tracking-widest">Computed K/D Ratio</span>
+                <span className="font-bold text-2xl text-sky-700 tracking-tight">
                   {computedKdRatio}
                 </span>
               </div>
             </div>
 
-            <div className="pt-4 flex justify-end gap-3">
+            <div className="pt-6 flex justify-end gap-3">
               <Button
-                variant="secondary"
+                variant="outline"
                 size="md"
                 onClick={() => setEditingPlayer(null)}
               >
                 Cancel
               </Button>
               <Button type="submit" variant="primary" size="md">
-                Save & Update MVP Standings
+                Save & Update
               </Button>
             </div>
           </form>

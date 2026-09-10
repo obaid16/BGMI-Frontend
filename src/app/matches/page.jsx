@@ -1,86 +1,76 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import MatchCard from '@/components/tournament/MatchCard';
-import EmptyState from '@/components/common/EmptyState';
-import { SkeletonGrid } from '@/components/common/Skeleton';
-import { getMatches, getTeams } from '@/services/api';
-import { Swords } from 'lucide-react';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import ScheduleTab from '@/components/tournament/tabs/ScheduleTab';
+import ResultsTab from '@/components/tournament/tabs/ResultsTab';
+import StandingsTab from '@/components/tournament/tabs/StandingsTab';
+import MVPTab from '@/components/tournament/tabs/MVPTab';
 
-export default function MatchesPage() {
-  const [matches, setMatches] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('All');
-  const [teamsCount, setTeamsCount] = useState(4);
+function MatchesHubContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  const [activeTab, setActiveTab] = useState('schedule');
 
+  // Read initial tab from URL or set default
   useEffect(() => {
-    async function fetchMatches() {
-      setLoading(true);
-      const [data, tData] = await Promise.all([
-        getMatches(filter).catch(() => []),
-        getTeams().catch(() => [])
-      ]);
-      const sortedData = [...data].sort((a, b) => (a.matchNumber || 0) - (b.matchNumber || 0));
-      setMatches(sortedData);
-      if (Array.isArray(tData) && tData.length > 0) {
-        setTeamsCount(tData.length);
-      }
-      setLoading(false);
+    const tab = searchParams.get('tab');
+    if (tab && ['schedule', 'results', 'standings', 'mvp'].includes(tab)) {
+      setActiveTab(tab);
     }
-    fetchMatches();
-  }, [filter]);
+  }, [searchParams]);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    router.push(`/matches?tab=${tabId}`, { scroll: false });
+  };
+
+  const tabs = [
+    { id: 'schedule', label: 'Schedule' },
+    { id: 'results', label: 'Results' },
+    { id: 'standings', label: 'Standings' },
+    { id: 'mvp', label: 'MVP' }
+  ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 font-sans">
-      
-      {/* PAGE HEADER */}
-      <div className="border-b border-[#E7E3DA] dark:border-[#1E2638] pb-6 space-y-2">
-        <div className="inline-flex items-center gap-2 text-xs font-mono font-bold text-bgmi-red uppercase tracking-widest">
-          <Swords className="w-4 h-4" /> BROADCAST SCHEDULE & ROOM LOBBIES
+    <div className="w-full">
+      {/* GLOBAL TOURNAMENT TABS */}
+      <div className="sticky top-20 z-20 bg-premium-background/95 backdrop-blur-md border-b border-premium-border pt-4 px-6 lg:px-8">
+        <div className="max-w-[1500px] mx-auto">
+          <div className="flex items-center gap-6 overflow-x-auto hide-scrollbar">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
+                className={`pb-4 text-sm font-bold uppercase tracking-widest transition-colors border-b-2 whitespace-nowrap ${
+                  activeTab === tab.id
+                    ? 'border-premium-text text-premium-text'
+                    : 'border-transparent text-premium-text-secondary hover:text-premium-text hover:border-premium-border'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <h1 className="font-display font-black text-3xl sm:text-5xl text-slate-900 dark:text-white uppercase tracking-tight">
-          Match Lobby Schedule
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium max-w-2xl">
-          Tournament map rotations, live custom lobbies, match scorebars, and referee room launches.
-        </p>
       </div>
 
-      {/* FILTER TABS */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[#E7E3DA] dark:border-[#1E2638]">
-        {['All', 'Upcoming', 'Live', 'Completed'].map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-5 py-2 text-xs font-display font-bold uppercase tracking-wider rounded-xl border transition-all whitespace-nowrap ${
-              filter === f
-                ? 'bg-slate-950 text-white border-slate-950 dark:bg-bgmi-red dark:border-bgmi-red shadow-editorial'
-                : 'bg-white dark:bg-[#121620] text-slate-700 dark:text-slate-300 border-[#E7E3DA] dark:border-[#1E2638] hover:border-slate-400 dark:hover:border-white/20'
-            }`}
-          >
-            {f}
-          </button>
-        ))}
+      {/* TAB CONTENT */}
+      <div className="w-full animate-in fade-in duration-300">
+        {activeTab === 'schedule' && <ScheduleTab />}
+        {activeTab === 'results' && <ResultsTab />}
+        {activeTab === 'standings' && <StandingsTab />}
+        {activeTab === 'mvp' && <MVPTab />}
       </div>
-
-      {/* HORIZONTAL MATCH SCOREBARS STACK */}
-      {loading ? (
-        <SkeletonGrid count={4} />
-      ) : matches.length === 0 ? (
-        <EmptyState
-          title="No Matches Found"
-          message="No scheduled match scorebars found for this filter."
-          actionLabel="View All Matches"
-          onAction={() => setFilter('All')}
-        />
-      ) : (
-        <div className="space-y-3">
-          {matches.map((match) => (
-            <MatchCard key={match.id || match.matchNumber} match={{ ...match, registeredSquadsCount: teamsCount }} />
-          ))}
-        </div>
-      )}
-
     </div>
+  );
+}
+
+export default function MatchesHub() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-premium-background p-16 flex justify-center"><div className="w-8 h-8 rounded-full border-4 border-premium-border border-t-premium-text animate-spin"></div></div>}>
+      <MatchesHubContent />
+    </Suspense>
   );
 }

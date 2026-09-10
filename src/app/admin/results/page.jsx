@@ -109,90 +109,79 @@ export default function AdminResultsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden font-sans">
+    <div className="space-y-8 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-premium-border pb-6">
         <div>
-          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
-            /// MATCH AUDIT & SCORING
-          </span>
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
-            <Trophy className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
-            Result Entry &amp; Scorecards
+          <h1 className="font-bold text-3xl text-premium-text tracking-tight flex items-center gap-3">
+            <Trophy className="w-8 h-8 text-amber-600" /> Scorecard Calculator
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
-            Submit official match scorecards, calculate placement points and kills, and publish live leaderboards.
-          </p>
+          <p className="text-sm text-premium-text-secondary font-medium mt-2">Enter placement rank and kills with live points preview.</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <Button variant="danger" size="md" icon={Trash2} onClick={handleClearAllDemoData}>
+            Clear Demo Data
+          </Button>
+
           <Button variant="primary" size="md" icon={Plus} onClick={handleOpenNew}>
-            Enter Match Scorecard
+            New Scorecard
           </Button>
         </div>
       </div>
 
-      {/* PUBLISHED RESULTS LIST WITH EDITORIAL CONTAINER */}
-      <div className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl shadow-editorial-sm overflow-hidden">
+      {/* PUBLISHED RESULTS LIST WITH HORIZONTAL SCROLL */}
+      <div className="bg-premium-surface border border-premium-border rounded-[24px] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse min-w-[850px]">
-            <thead className="bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-600 dark:text-slate-400 font-mono font-bold uppercase text-[10px] border-b border-[#E7E3DA] dark:border-[#1E2638]">
+          <table className="w-full text-left text-sm whitespace-nowrap min-w-[950px]">
+            <thead className="bg-premium-background text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest border-b border-premium-border">
               <tr>
-                <th className="p-4 whitespace-nowrap">Match Number</th>
-                <th className="p-4 whitespace-nowrap">WWCD Winner</th>
-                <th className="p-4 whitespace-nowrap">Kills</th>
-                <th className="p-4 whitespace-nowrap">Winner Points</th>
-                <th className="p-4 whitespace-nowrap">Top Fragger MVP</th>
-                <th className="p-4 whitespace-nowrap text-center">Status</th>
-                <th className="p-4 whitespace-nowrap text-right min-w-[160px]">Actions</th>
+                <th className="px-6 py-4">Match Number</th>
+                <th className="px-6 py-4">WWCD Winner</th>
+                <th className="px-6 py-4">Kills</th>
+                <th className="px-6 py-4">Winner Points</th>
+                <th className="px-6 py-4">Top Fragger MVP</th>
+                <th className="px-6 py-4 text-center">Status</th>
+                <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
-              {results.length > 0 ? (
-                results.map((res) => {
-                  const resId = res.id || res._id;
-                  return (
-                    <tr key={resId} className="hover:bg-slate-50/70 dark:hover:bg-[#181E2C]/50 transition-colors">
-                      <td className="p-4 whitespace-nowrap font-display font-bold text-slate-900 dark:text-white text-sm">
-                        Match #{res.matchNumber} {res.map ? `(${res.map})` : ''}
-                      </td>
-                      <td className="p-4 whitespace-nowrap font-display font-bold text-amber-600 dark:text-bgmi-gold">
-                        {res.winner?.teamName || res.winnerTeam || 'TBA'}
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-sky-600 dark:text-sky-400 font-mono font-bold">
-                        {res.winner?.kills ?? 0} Kills
-                      </td>
-                      <td className="p-4 whitespace-nowrap font-mono font-bold text-slate-900 dark:text-white">
-                        {res.winner?.totalPoints ?? 0} PTS
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-slate-700 dark:text-slate-300 font-medium">
-                        {res.mvp?.ign && res.mvp?.name && res.mvp.ign !== res.mvp.name
-                          ? `${res.mvp.ign} (${res.mvp.name})`
-                          : (res.mvp?.ign || res.mvp?.name || 'N/A')}
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-center">
-                        <Badge variant="green" size="sm">
-                          <CheckCircle2 className="w-3 h-3 mr-1 inline" /> Published
-                        </Badge>
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button variant="secondary" size="sm" icon={Edit3} onClick={() => handleEdit(res)}>
-                            Edit
-                          </Button>
-                          <Button variant="danger" size="sm" icon={Trash2} onClick={() => handleDelete(res)}>
-                            Delete
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
+            <tbody className="divide-y divide-premium-border bg-white">
+              {results.map((res) => {
+                const resId = res.id || res._id;
+                return (
+                  <tr key={resId} className="hover:bg-premium-surface-soft transition-colors">
+                    <td className="px-6 py-5 font-bold text-premium-text text-base">Match #{res.matchNumber} <span className="text-sm text-premium-text-secondary font-medium ml-1">({res.map})</span></td>
+                    <td className="px-6 py-5 font-bold text-amber-700">{res.winner?.teamName}</td>
+                    <td className="px-6 py-5 font-bold text-sky-700">{res.winner?.kills} Kills</td>
+                    <td className="px-6 py-5 font-bold text-premium-text">{res.winner?.totalPoints} PTS</td>
+                    <td className="px-6 py-5 text-premium-text-secondary font-semibold">
+                      {res.mvp?.ign && res.mvp?.name && res.mvp.ign !== res.mvp.name
+                        ? `${res.mvp.ign} (${res.mvp.name})`
+                        : (res.mvp?.ign || res.mvp?.name || 'N/A')}
+                    </td>
+                    <td className="px-6 py-5 text-center">
+                      <Badge variant="green" size="sm">
+                        Published
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-5 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button variant="secondary" size="sm" icon={Edit3} onClick={() => handleEdit(res)}>
+                          Edit
+                        </Button>
+                        <Button variant="danger" size="sm" icon={Trash2} onClick={() => handleDelete(res)}>
+                          Delete
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+              {results.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-500 dark:text-slate-400 font-mono text-xs">
-                    No match scorecards published yet.
+                  <td colSpan="7" className="px-6 py-12 text-center text-sm font-medium text-premium-text-secondary bg-white">
+                    No results published yet.
                   </td>
                 </tr>
               )}

@@ -14,11 +14,11 @@ export default function MediaCard({ item, onClick }) {
   return (
     <div
       onClick={() => onClick && onClick(item)}
-      className="group relative bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] hover:border-slate-400 dark:hover:border-slate-600 rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 transform hover:-translate-y-1 shadow-editorial-sm hover:shadow-editorial flex flex-col justify-between"
+      className="group relative bg-premium-surface border border-premium-border hover:border-premium-text rounded-[24px] overflow-hidden cursor-pointer transition-all duration-300 transform hover:-translate-y-1 shadow-sm flex flex-col justify-between"
     >
       <div>
         {/* Media Thumbnail Container */}
-        <div className="relative aspect-video w-full bg-slate-900 dark:bg-[#0B0E14] overflow-hidden">
+        <div className="relative aspect-[4/3] w-full bg-premium-surface-soft overflow-hidden">
           <img
             src={imageSrc}
             alt={item.title || 'Media Highlight'}
@@ -26,63 +26,59 @@ export default function MediaCard({ item, onClick }) {
               e.currentTarget.onerror = null;
               e.currentTarget.src = DEFAULT_GAMING_IMAGE;
             }}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-95 group-hover:opacity-100"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 group-hover:opacity-100"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
 
           {/* Type Badge */}
-          <div className="absolute top-3 left-3 z-10">
-            <Badge variant={isVideo ? 'live' : 'gold'} size="sm">
-              {isVideo ? <Video className="w-3 h-3 mr-1 inline" /> : <Image className="w-3 h-3 mr-1 inline" />}
-              {item.type || 'Screenshot'}
+          <div className="absolute top-4 left-4 z-10">
+            <Badge variant={isVideo ? 'live' : 'default'} size="sm" className="bg-white/90 backdrop-blur-sm border-none shadow-sm text-premium-text">
+              {isVideo ? <Video className="w-3 h-3 mr-1.5 inline text-red-500" /> : <Image className="w-3 h-3 mr-1.5 inline text-premium-sage" />}
+              <span className="font-semibold">{item.type || 'Screenshot'}</span>
             </Badge>
           </div>
 
           {/* Play Overlay Icon for Videos */}
           {isVideo && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-11 h-11 rounded-full bg-bgmi-red text-white flex items-center justify-center shadow-editorial group-hover:scale-110 transition-transform">
-                <Play className="w-5 h-5 fill-current ml-0.5" />
+              <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center border border-white/40 group-hover:bg-white group-hover:text-black transition-all">
+                <Play className="w-6 h-6 fill-current ml-1" />
               </div>
             </div>
           )}
         </div>
 
         {/* Info Body */}
-        <div className="p-4 sm:p-5 space-y-3">
+        <div className="p-5 space-y-4">
           <div>
-            <h4 className="font-display font-black text-base text-slate-900 dark:text-white line-clamp-1 group-hover:text-bgmi-red transition-colors">
+            <h4 className="font-semibold text-lg text-premium-text line-clamp-1 group-hover:text-black transition-colors leading-tight">
               {item.title}
             </h4>
-            <span className="text-[10px] font-mono text-slate-500 font-medium">{item.date}</span>
+            <span className="text-xs text-premium-text-secondary font-medium mt-1 inline-block">{item.date}</span>
           </div>
 
-          <div className="pt-2 border-t border-[#E7E3DA] dark:border-[#1E2638] grid grid-cols-2 gap-x-2 gap-y-1.5 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+          <div className="pt-4 border-t border-premium-border grid grid-cols-2 gap-x-3 gap-y-3 text-xs text-premium-text-secondary font-medium">
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 block font-mono">Squad</span>
-              <span className="text-slate-900 dark:text-slate-200 font-bold line-clamp-1">{item.team || 'N/A'}</span>
+              <span className="text-[10px] uppercase font-semibold text-premium-text-secondary block mb-0.5">Squad</span>
+              <span className="text-premium-text font-semibold line-clamp-1">{item.team || 'N/A'}</span>
             </div>
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 block font-mono">Match</span>
-              <span className="text-bgmi-red font-bold line-clamp-1">{item.match || 'Match #01'}</span>
+              <span className="text-[10px] uppercase font-semibold text-premium-text-secondary block mb-0.5">Match</span>
+              <span className="text-premium-sage font-semibold line-clamp-1">{item.match || 'Match #01'}</span>
             </div>
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 block font-mono">
-                {item.player ? 'Player' : 'Proof Type'}
-              </span>
-              <span className="text-slate-900 dark:text-slate-200 line-clamp-1">
-                {item.player || item.type || 'Screenshot'}
-              </span>
+              <span className="text-[10px] uppercase font-semibold text-premium-text-secondary block mb-0.5">Player</span>
+              <span className="text-premium-text line-clamp-1">{item.player || 'Player'}</span>
             </div>
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 block font-mono">Referee Check</span>
+              <span className="text-[10px] uppercase font-semibold text-premium-text-secondary block mb-0.5">Status</span>
               {item.verified ? (
-                <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-0.5">
-                  <ShieldCheck className="w-3 h-3" /> Verified
+                <span className="text-emerald-600 font-semibold flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5" /> Verified
                 </span>
               ) : (
-                <span className="text-amber-700 dark:text-amber-400 font-semibold">Pending</span>
+                <span className="text-amber-600 font-semibold">Pending</span>
               )}
             </div>
           </div>

@@ -10,81 +10,81 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
   if (!team) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Registration Dossier — ${team.name || team.teamName}`} maxWidth="max-w-3xl">
-      <div className="space-y-6">
+    <Modal isOpen={isOpen} onClose={onClose} title={`Registration: ${team.name}`} maxWidth="max-w-4xl">
+      <div className="space-y-8">
         
-        {/* Header Summary Strip */}
-        <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-white/10">
+        {/* Header Summary */}
+        <div className="flex flex-wrap items-center justify-between gap-6 p-6 bg-premium-surface-soft rounded-[20px] border border-premium-border shadow-sm">
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-widest font-bold text-slate-500 dark:text-slate-400">Registration ID</span>
-            <p className="font-broadcast font-bold text-xl text-amber-600 dark:text-bgmi-gold">{team.registrationId || team.regId}</p>
+            <span className="text-[10px] uppercase font-bold text-premium-text-secondary tracking-widest">Registration ID</span>
+            <p className="font-bold text-2xl text-premium-text mt-1">{team.registrationId}</p>
           </div>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-widest font-bold text-slate-500 dark:text-slate-400">Status</span>
-            <div className="mt-1">
+            <span className="text-[10px] uppercase font-bold text-premium-text-secondary tracking-widest">Status</span>
+            <div className="mt-2">
               <Badge variant={team.status === 'Approved' ? 'green' : team.status === 'Rejected' ? 'rejected' : 'pending'}>
-                {team.status || 'Pending'}
+                {team.status}
               </Badge>
             </div>
           </div>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-widest font-bold text-slate-500 dark:text-slate-400">Applied Date</span>
-            <p className="text-xs font-mono font-bold text-slate-900 dark:text-white mt-1">{team.registrationDate || '2026-08-01'}</p>
+            <span className="text-[10px] uppercase font-bold text-premium-text-secondary tracking-widest">Applied Date</span>
+            <p className="text-sm font-bold text-premium-text mt-2">{team.registrationDate}</p>
           </div>
         </div>
 
         {/* Team & Captain Details */}
-        <div className="space-y-2">
-          <h4 className="font-broadcast font-bold text-xs text-sky-600 dark:text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
-            <Users className="w-4 h-4" /> Squad & Captain Contact
+        <div className="space-y-3">
+          <h4 className="text-[11px] font-bold text-premium-text-secondary uppercase tracking-widest flex items-center gap-2">
+            <Users className="w-4 h-4" /> Team & Captain Details
           </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-mono">
-            <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[10px] block uppercase font-bold">Captain Name</span>
-              <strong className="text-slate-900 dark:text-white font-bold">{team.captain?.name || team.captainName || 'N/A'}</strong>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-5 bg-premium-background rounded-[16px] border border-premium-border text-sm">
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Captain Name</span>
+              <strong className="text-premium-text">{team.captain?.name}</strong>
             </div>
-            <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[10px] block uppercase font-bold">Phone</span>
-              <strong className="text-slate-900 dark:text-white font-bold">{team.captain?.phone || team.captainPhone || 'N/A'}</strong>
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Phone</span>
+              <strong className="text-premium-text">{team.captain?.phone}</strong>
             </div>
-            <div>
-              <span className="text-slate-500 dark:text-slate-400 text-[10px] block uppercase font-bold">Email</span>
-              <strong className="text-slate-900 dark:text-white font-bold break-all">{team.captain?.email || team.captainEmail || 'N/A'}</strong>
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Email</span>
+              <strong className="text-premium-text truncate block">{team.captain?.email}</strong>
             </div>
           </div>
         </div>
 
         {/* Player Roster Table */}
-        <div className="space-y-2">
-          <h4 className="font-broadcast font-bold text-xs text-amber-600 dark:text-bgmi-gold uppercase tracking-wider flex items-center gap-1.5">
-            <Shield className="w-4 h-4" /> Submitted Player Roster
+        <div className="space-y-3">
+          <h4 className="text-[11px] font-bold text-premium-text-secondary uppercase tracking-widest flex items-center gap-2">
+            <Shield className="w-4 h-4" /> Player Roster
           </h4>
-          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/30">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-100 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 uppercase font-broadcast font-bold text-[10px] border-b border-slate-200 dark:border-white/10">
+          <div className="overflow-x-auto rounded-[16px] border border-premium-border">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-premium-background text-premium-text-secondary uppercase font-bold text-[10px] tracking-widest border-b border-premium-border">
                 <tr>
-                  <th className="p-3">Player IGN / Name</th>
-                  <th className="p-3">BGMI Character ID</th>
-                  <th className="p-3">Role</th>
-                  <th className="p-3 text-center">Status</th>
+                  <th className="px-5 py-3.5">Player IGN / Name</th>
+                  <th className="px-5 py-3.5">Character ID</th>
+                  <th className="px-5 py-3.5">Sub ID</th>
+                  <th className="px-5 py-3.5">Role</th>
+                  <th className="px-5 py-3.5 text-right">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-white/5 font-mono">
+              <tbody className="divide-y divide-premium-border bg-white">
                 {team.players?.map((p, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
-                    <td className="p-3">
-                      <p className="font-broadcast font-bold text-slate-900 dark:text-white text-xs">{p.ign || p.name}</p>
-                      <p className="text-slate-500 dark:text-slate-400 text-[10px] font-sans">{p.name}</p>
+                  <tr key={idx} className="hover:bg-premium-surface-soft transition-colors">
+                    <td className="px-5 py-4">
+                      <p className="font-bold text-premium-text">{p.ign || p.name}</p>
+                      <p className="text-premium-text-secondary text-xs mt-0.5 font-medium">{p.name}</p>
                     </td>
-                    <td className="p-3 font-bold text-sky-600 dark:text-sky-400">
+                    <td className="px-5 py-4 font-semibold text-premium-text">
                       {p.bgmiId || 'N/A'}
                     </td>
-                    <td className="p-3">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300">
-                        {p.role || 'Player'}
-                      </span>
+                    <td className="px-5 py-4 font-semibold text-premium-text-secondary">
+                      {p.substituteId || p.subId || 'N/A'}
                     </td>
-                    <td className="p-3 text-center">
+                    <td className="px-5 py-4"><Badge variant="default" size="sm">{p.role}</Badge></td>
+                    <td className="px-5 py-4 text-right">
                       <Badge variant={p.verificationStatus === 'Verified' || p.verified ? 'green' : p.verificationStatus === 'Rejected' ? 'rejected' : 'pending'} size="sm">
                         {p.verificationStatus || (p.verified ? 'Verified' : 'Pending Verification')}
                       </Badge>
@@ -97,19 +97,19 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-end gap-3">
+        <div className="pt-6 border-t border-premium-border flex items-center justify-end gap-4">
           {team.status === 'Pending' ? (
             <>
               <Button variant="danger" size="md" icon={X} onClick={() => onReject(team.id || team._id)}>
                 Reject Application
               </Button>
               <Button variant="primary" size="md" icon={Check} onClick={() => onApprove(team.id || team._id)}>
-                Approve Team & Dispatch Email
+                Approve Team
               </Button>
             </>
           ) : (
             <Button variant="danger" size="md" icon={Trash2} onClick={() => onDelete && onDelete(team.id || team._id)}>
-              Delete Team Roster
+              Delete Team
             </Button>
           )}
         </div>

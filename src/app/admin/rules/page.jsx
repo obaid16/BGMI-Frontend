@@ -56,76 +56,75 @@ export default function AdminRulesPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden font-sans">
+    <div className="space-y-8 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-premium-border pb-6">
         <div>
-          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
-            /// RULEBOOK & POLICIES
-          </span>
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
-            <BookOpen className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
-            Official Rulebook Manager
+          <h1 className="font-bold text-3xl text-premium-text tracking-tight flex items-center gap-3">
+            <BookOpen className="w-8 h-8 text-amber-600" /> Rulebook Manager
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
-            Edit, publish, or remove official tournament handbook sections and competitive guidelines.
-          </p>
+          <p className="text-sm text-premium-text-secondary font-medium mt-2">Edit, add, or reorder tournament rules and anti-cheat policies.</p>
         </div>
 
         <Button variant="primary" size="md" icon={Plus} onClick={() => setIsModalOpen(true)}>
-          Add Rule Section
+          Add New Rule
         </Button>
       </div>
 
       {/* RULES LIST */}
       <div className="space-y-4">
         {rules.map((rule) => (
-          <div key={rule.id} className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl p-5 sm:p-6 space-y-3 shadow-editorial-sm transition-all">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white">{rule.title}</h3>
+          <div key={rule.id} className="bg-premium-surface border border-premium-border rounded-[20px] p-6 space-y-3 shadow-sm hover:border-premium-text/20 transition-all">
+            <div className="flex items-start justify-between gap-4">
+              <h3 className="font-bold text-lg text-premium-text">{rule.title}</h3>
               <button
                 onClick={() => handleDeleteRule(rule.id)}
-                className="text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1 font-display font-bold uppercase tracking-wider"
+                className="w-9 h-9 flex items-center justify-center shrink-0 rounded-[10px] text-rose-500 bg-rose-50 hover:bg-rose-100 transition-colors shadow-sm"
+                title="Remove Rule"
               >
-                <Trash2 className="w-3.5 h-3.5" /> 
-                <span>Remove</span>
+                <Trash2 className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line font-normal">{rule.content}</p>
+            <p className="text-sm text-premium-text-secondary leading-relaxed whitespace-pre-line font-medium pr-12">{rule.content}</p>
           </div>
         ))}
+        {rules.length === 0 && (
+          <div className="text-center py-16 bg-premium-surface border border-premium-border rounded-[24px]">
+            <p className="text-sm font-bold text-premium-text-secondary">No rules established yet.</p>
+          </div>
+        )}
       </div>
 
       {/* CREATE RULE MODAL */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add Tournament Rule" maxWidth="max-w-md">
-        <form onSubmit={handleAddRule} className="space-y-4 text-xs">
-          <div className="space-y-1">
-            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Rule Heading</label>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add Tournament Rule" maxWidth="max-w-xl">
+        <form onSubmit={handleAddRule} className="space-y-6">
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Rule Heading</label>
             <input
               type="text"
               required
               placeholder="e.g. Device Restrictions & Emulator Bans"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
+              className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-sm focus:outline-none focus:border-premium-text shadow-sm"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Rule Body Text</label>
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Rule Body Text</label>
             <textarea
-              rows={4}
+              rows={5}
               required
               placeholder="Enter rule guidelines..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-medium"
+              className="w-full p-4 bg-white border border-premium-border rounded-[12px] text-premium-text font-medium text-sm focus:outline-none focus:border-premium-text shadow-sm resize-y custom-scrollbar"
             ></textarea>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3">
-            <Button variant="secondary" size="md" onClick={() => setIsModalOpen(false)}>
+          <div className="pt-6 border-t border-premium-border flex justify-end gap-3">
+            <Button variant="outline" size="md" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="md">

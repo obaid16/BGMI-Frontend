@@ -47,76 +47,73 @@ export default function AdminAnnouncementsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden font-sans">
+    <div className="space-y-8 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7E3DA] dark:border-[#1E2638] pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-premium-border pb-6">
         <div>
-          <span className="text-[10px] font-mono text-bgmi-red font-bold uppercase tracking-widest block">
-            /// OFFICIAL COMMUNICATIONS
-          </span>
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2.5 mt-1">
-            <Bell className="w-6 h-6 text-amber-600 dark:text-bgmi-gold" /> 
-            Bulletins &amp; News Manager
+          <h1 className="font-bold text-3xl text-premium-text tracking-tight flex items-center gap-3">
+            <Bell className="w-8 h-8 text-amber-600" /> Announcements & News
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-normal mt-1">
-            Publish broadcast bulletins, schedule advisories, and tournament status updates.
-          </p>
+          <p className="text-sm text-premium-text-secondary font-medium mt-2">Post tournament updates, registration reminders, and lobby schedule bulletins.</p>
         </div>
 
         <Button variant="primary" size="md" icon={Plus} onClick={() => setIsModalOpen(true)}>
-          Add Announcement
+          New Announcement
         </Button>
       </div>
 
       {/* ANNOUNCEMENTS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {announcements.map((ann) => (
-          <div key={ann.id} className="bg-white dark:bg-[#121620] border border-[#E7E3DA] dark:border-[#1E2638] rounded-2xl p-5 sm:p-6 space-y-3 shadow-editorial-sm transition-all flex flex-col justify-between">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Badge variant="gold" size="sm">{ann.category}</Badge>
-                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold uppercase">{ann.date}</span>
-              </div>
-
-              <h3 className="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white">{ann.title}</h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">{ann.content}</p>
+          <div key={ann.id} className="bg-premium-surface border border-premium-border rounded-[24px] p-6 space-y-4 shadow-sm hover:shadow-md transition-all hover:border-premium-text/20 flex flex-col">
+            <div className="flex items-center justify-between">
+              <Badge variant="gold" size="sm">{ann.category}</Badge>
+              <span className="text-[10px] text-premium-text-secondary font-bold uppercase tracking-widest">{ann.date}</span>
             </div>
 
-            <div className="pt-3 border-t border-[#E7E3DA] dark:border-[#1E2638] flex justify-end">
+            <h3 className="font-bold text-lg text-premium-text leading-tight">{ann.title}</h3>
+            <p className="text-sm text-premium-text-secondary leading-relaxed font-medium flex-grow whitespace-pre-line">{ann.content}</p>
+
+            <div className="pt-4 border-t border-premium-border flex justify-end">
               <button
                 onClick={() => handleDelete(ann.id)}
-                className="text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1 font-display font-bold uppercase tracking-wider"
+                className="w-9 h-9 flex items-center justify-center rounded-[10px] text-rose-500 bg-rose-50 hover:bg-rose-100 transition-colors shadow-sm"
+                title="Remove Announcement"
               >
-                <Trash2 className="w-3.5 h-3.5" /> 
-                <span>Remove</span>
+                <Trash2 className="w-4 h-4" />
               </button>
             </div>
           </div>
         ))}
+        {announcements.length === 0 && (
+          <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-16 bg-premium-surface border border-premium-border rounded-[24px]">
+            <p className="text-sm font-bold text-premium-text-secondary">No announcements published yet.</p>
+          </div>
+        )}
       </div>
 
       {/* CREATE MODAL */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create Official Bulletin" maxWidth="max-w-md">
-        <form onSubmit={handleCreate} className="space-y-4 text-xs">
-          <div className="space-y-1">
-            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Bulletin Headline Title</label>
+        <form onSubmit={handleCreate} className="space-y-6">
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Bulletin Headline</label>
             <input
               type="text"
               required
-              placeholder="e.g. Lobby credentials for Match #07 dispatched"
+              placeholder="e.g. Match #07 Lobby details updated"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
+              className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-sm focus:outline-none focus:border-premium-text shadow-sm"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Category</label>
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-bold"
+              className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-sm focus:outline-none focus:border-premium-text shadow-sm appearance-none cursor-pointer"
             >
               <option value="Schedule">Schedule</option>
               <option value="Registration">Registration</option>
@@ -125,20 +122,20 @@ export default function AdminAnnouncementsPage() {
             </select>
           </div>
 
-          <div className="space-y-1">
-            <label className="font-bold text-slate-700 dark:text-slate-300 uppercase">Bulletin Body Content</label>
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Bulletin Content</label>
             <textarea
-              rows={4}
+              rows={5}
               required
               placeholder="Enter announcement details..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-bgmi-dark border border-slate-300 dark:border-bgmi-border rounded-lg text-slate-900 dark:text-white font-medium"
+              className="w-full p-4 bg-white border border-premium-border rounded-[12px] text-premium-text font-medium text-sm focus:outline-none focus:border-premium-text shadow-sm resize-y custom-scrollbar"
             ></textarea>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3">
-            <Button variant="secondary" size="md" onClick={() => setIsModalOpen(false)}>
+          <div className="pt-6 border-t border-premium-border flex justify-end gap-3">
+            <Button variant="outline" size="md" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" variant="primary" size="md">

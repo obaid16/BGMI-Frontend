@@ -10,24 +10,23 @@ export default function Button({
   className = '',
   icon: Icon,
 }) {
-  const baseStyles = 'group relative inline-flex items-center justify-center font-display font-bold uppercase tracking-wider transition-all duration-200 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none rounded-xl active:scale-[0.98]';
+  const baseStyles = 'group relative inline-flex items-center justify-center font-medium tracking-wide transition-all duration-300 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none rounded-full hover:-translate-y-0.5 active:translate-y-0 shadow-sm';
 
   const sizeStyles = {
-    sm: 'px-3.5 py-1.5 text-xs gap-1.5',
-    md: 'px-5 py-2.5 text-xs gap-2',
-    lg: 'px-7 py-3 sm:py-3.5 text-xs sm:text-sm gap-2.5',
+    sm: 'px-4 py-2 text-xs gap-1.5',
+    md: 'px-6 py-2.5 text-sm gap-2',
+    lg: 'px-8 py-3.5 text-base gap-2.5',
   };
 
   const variantStyles = {
-    primary: 'bg-slate-950 hover:bg-slate-800 dark:bg-bgmi-red dark:hover:bg-bgmi-red-hover text-white shadow-editorial hover:shadow-editorial-lg',
-    red: 'bg-bgmi-red hover:bg-bgmi-red-hover text-white shadow-editorial shadow-red-500/20',
-    gold: 'bg-bgmi-gold hover:bg-amber-500 text-slate-950 font-black shadow-editorial shadow-amber-500/20',
-    secondary: 'bg-white dark:bg-[#181E2C] text-slate-900 dark:text-white border border-[#E7E3DA] dark:border-[#1E2638] hover:border-slate-400 dark:hover:border-slate-600 shadow-editorial-sm',
-    cyan: 'bg-slate-900 hover:bg-slate-800 dark:bg-bgmi-red dark:hover:bg-bgmi-red-hover text-white shadow-editorial',
-    danger: 'bg-bgmi-red hover:bg-bgmi-red-hover text-white shadow-editorial',
-    outline: 'bg-transparent text-slate-800 dark:text-slate-200 border border-[#E7E3DA] dark:border-[#1E2638] hover:border-slate-400 dark:hover:border-white/40',
-    'outline-gold': 'bg-transparent text-amber-700 dark:text-bgmi-gold border border-amber-400/60 dark:border-bgmi-gold/60 hover:bg-amber-500/10',
-    ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white',
+    primary: 'bg-premium-text hover:bg-black text-white shadow-premium-soft',
+    gold: 'bg-premium-champagne hover:opacity-90 text-premium-text shadow-premium-soft',
+    secondary: 'bg-premium-surface-soft text-premium-text border border-premium-border hover:bg-premium-border',
+    cyan: 'bg-premium-sage hover:opacity-90 text-white shadow-premium-soft',
+    danger: 'bg-red-500 hover:bg-red-600 text-white shadow-premium-soft',
+    outline: 'bg-transparent text-premium-text border border-premium-border hover:border-premium-text',
+    'outline-gold': 'bg-transparent text-premium-champagne border border-premium-champagne hover:bg-premium-champagne/10',
+    ghost: 'bg-transparent hover:bg-premium-surface-soft text-premium-text-secondary hover:text-premium-text shadow-none hover:shadow-none',
   };
 
   return (
@@ -35,10 +34,13 @@ export default function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant] || variantStyles.primary} ${className}`}
+      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
     >
-      {Icon && <Icon className="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-105" />}
+      {Icon && <Icon className="w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:translate-x-0.5" />}
       <span>{children}</span>
     </button>
   );
 }
+
+
+

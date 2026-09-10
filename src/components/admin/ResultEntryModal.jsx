@@ -235,17 +235,17 @@ export default function ResultEntryModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Match Result Dossier & Scorecard Entry" maxWidth="max-w-4xl">
-      <div className="space-y-5 text-xs max-h-[80vh] overflow-y-auto pr-1">
+    <Modal isOpen={isOpen} onClose={onClose} title="Scorecard & Leaderboard Editor" maxWidth="max-w-5xl">
+      <div className="space-y-6 max-h-[85vh] overflow-y-auto pr-2 custom-scrollbar">
 
         {/* TOP CONTROLS: MATCH SELECTOR & WWCD HIGHLIGHT */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-white/10">
-          <div className="space-y-1">
-            <label className="font-broadcast font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider text-[11px]">1. Select Target Match</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-premium-surface-soft p-5 rounded-[20px] border border-premium-border">
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">1. Select Target Match</label>
             <select
               value={selectedMatchId}
               onChange={(e) => setSelectedMatchId(e.target.value)}
-              className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg text-slate-900 dark:text-white font-bold text-xs"
+              className="w-full p-3.5 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-sm focus:outline-none focus:border-premium-text shadow-sm appearance-none cursor-pointer"
             >
               {matches.map((m) => (
                 <option key={m.id || m._id} value={m.id || m._id}>
@@ -255,88 +255,88 @@ export default function ResultEntryModal({
             </select>
           </div>
 
-          <div className="space-y-1 bg-white dark:bg-slate-900 p-3 rounded-lg border border-amber-500/40 flex items-center justify-between">
+          <div className="bg-amber-50 p-4 rounded-[16px] border border-amber-200 flex items-center justify-between shadow-sm">
             <div>
-              <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-bgmi-gold uppercase tracking-widest block">WWCD Champion (Rank #1)</span>
-              <p className="font-broadcast font-bold text-sm text-slate-900 dark:text-white">{winnerTeamScore?.teamName || 'N/A'}</p>
+              <span className="text-[10px] font-bold text-amber-700 uppercase tracking-widest block">WWCD Champion (Rank #1)</span>
+              <p className="font-bold text-lg text-amber-900 mt-0.5">{winnerTeamScore?.teamName || 'N/A'}</p>
             </div>
-            <div className="text-right font-mono">
-              <span className="text-xs font-bold text-sky-600 dark:text-sky-400">{winnerTeamScore?.kills || 0} Kills</span>
-              <p className="text-sm font-black text-amber-600 dark:text-bgmi-gold">{winnerTeamScore?.total || 0} PTS</p>
+            <div className="text-right">
+              <span className="text-xs font-bold text-emerald-700">{winnerTeamScore?.kills || 0} Kills</span>
+              <p className="text-xl font-bold text-amber-800">{winnerTeamScore?.total || 0} PTS</p>
             </div>
           </div>
         </div>
 
         {/* FULL MULTI-TEAM SCORECARD BREAKDOWN EDITOR */}
-        <div className="space-y-3">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h3 className="font-broadcast font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-                <Trophy className="w-4 h-4 text-amber-600 dark:text-bgmi-gold" /> All Teams Match Scorecard Table
+              <h3 className="font-bold text-base text-premium-text flex items-center gap-2">
+                <Calculator className="w-5 h-5 text-premium-text-secondary" /> Every Team Scorecard
               </h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans">Enter Rank and Kills for every team. Placement & Total Points update automatically.</p>
+              <p className="text-[11px] font-medium text-premium-text-secondary mt-1">Enter Rank and Kills. Placement & Total Points update automatically.</p>
             </div>
             <Button variant="secondary" size="sm" icon={ArrowUpDown} onClick={handleAutoRank}>
               Auto-Rank by Total Pts
             </Button>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/40">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead className="bg-slate-100 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 font-broadcast font-bold uppercase text-[10px] border-b border-slate-200 dark:border-white/10">
+          <div className="overflow-x-auto rounded-[16px] border border-premium-border shadow-sm">
+            <table className="w-full text-left border-collapse text-sm">
+              <thead className="bg-premium-background text-premium-text-secondary font-bold uppercase text-[10px] tracking-widest border-b border-premium-border">
                 <tr>
-                  <th className="p-3 text-center w-20">Rank</th>
-                  <th className="p-3">Team / Squad Name</th>
-                  <th className="p-3 text-center w-28">Kills</th>
-                  <th className="p-3 text-center w-28">Placement Pts</th>
-                  <th className="p-3 text-center w-28">Total Points</th>
+                  <th className="px-4 py-3.5 text-center w-24">Rank</th>
+                  <th className="px-4 py-3.5">Team / Squad Name</th>
+                  <th className="px-4 py-3.5 text-center w-32">Kills</th>
+                  <th className="px-4 py-3.5 text-center w-32">Placement Pts</th>
+                  <th className="px-4 py-3.5 text-center w-32">Total Points</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-white/5 font-mono">
+              <tbody className="divide-y divide-premium-border bg-white">
                 {teamScores.map((ts) => {
                   const isWinner = Number(ts.rank) === 1;
                   return (
-                    <tr key={ts.teamId} className={isWinner ? 'bg-amber-500/10 font-bold' : 'hover:bg-slate-50 dark:hover:bg-white/5'}>
+                    <tr key={ts.teamId} className={isWinner ? 'bg-amber-50/30' : 'hover:bg-premium-surface-soft transition-colors'}>
                       {/* RANK INPUT */}
-                      <td className="p-2 text-center">
+                      <td className="px-4 py-2.5 text-center">
                         <input
                           type="number"
                           min="1"
                           max="24"
                           value={ts.rank}
                           onChange={(e) => handleScoreChange(ts.teamId, 'rank', e.target.value)}
-                          className={`w-14 p-1 text-center font-bold rounded border ${
+                          className={`w-16 p-2 text-center font-bold rounded-[8px] border outline-none ${
                             isWinner
-                              ? 'bg-amber-500 text-slate-950 border-amber-400 font-black'
-                              : 'bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white border-slate-300 dark:border-white/10'
+                              ? 'bg-amber-100 text-amber-900 border-amber-300 focus:border-amber-500'
+                              : 'bg-white text-premium-text border-premium-border focus:border-premium-text'
                           }`}
                         />
                       </td>
 
                       {/* TEAM NAME */}
-                      <td className="p-3 font-sans font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        {isWinner && <Trophy className="w-4 h-4 text-amber-500 shrink-0" />}
+                      <td className="px-4 py-2.5 font-bold text-premium-text flex items-center gap-2">
+                        {isWinner && <Trophy className="w-4 h-4 text-amber-600 shrink-0" />}
                         <span>{ts.teamName}</span>
                       </td>
 
                       {/* KILLS INPUT */}
-                      <td className="p-2 text-center">
+                      <td className="px-4 py-2.5 text-center">
                         <input
                           type="number"
                           min="0"
                           value={ts.kills}
                           onChange={(e) => handleScoreChange(ts.teamId, 'kills', e.target.value)}
-                          className="w-16 p-1 text-center font-bold rounded bg-slate-100 dark:bg-slate-900 text-sky-600 dark:text-sky-400 border border-slate-300 dark:border-white/10"
+                          className="w-20 p-2 text-center font-bold rounded-[8px] bg-white text-emerald-700 border border-premium-border focus:border-emerald-500 outline-none"
                         />
                       </td>
 
                       {/* PLACEMENT POINTS */}
-                      <td className="p-3 text-center font-bold text-slate-600 dark:text-slate-300">
+                      <td className="px-4 py-2.5 text-center font-bold text-premium-text-secondary">
                         {ts.placementPts} PTS
                       </td>
 
                       {/* TOTAL POINTS */}
-                      <td className="p-3 text-center font-black text-amber-600 dark:text-bgmi-gold text-sm">
+                      <td className="px-4 py-2.5 text-center font-bold text-base text-premium-text">
                         {ts.total} PTS
                       </td>
                     </tr>
@@ -348,17 +348,17 @@ export default function ResultEntryModal({
         </div>
 
         {/* SINGLE MATCH MVP SPOTLIGHT ENTRY */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-amber-500/30 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="font-broadcast font-bold text-amber-600 dark:text-bgmi-gold uppercase text-xs flex items-center gap-1.5">
-              <UserCheck className="w-4 h-4" /> Single Match MVP Spotlight
+        <div className="p-6 bg-premium-surface border border-premium-border rounded-[20px] space-y-4 shadow-sm">
+          <div className="flex items-center justify-between border-b border-premium-border pb-3">
+            <span className="font-bold text-sm text-premium-text flex items-center gap-2">
+              <UserCheck className="w-4 h-4 text-premium-text-secondary" /> Match MVP Spotlight
             </span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">1 MVP PER MATCH</span>
+            <span className="text-[10px] text-premium-text-secondary font-bold uppercase tracking-widest bg-premium-background px-2 py-1 rounded">1 MVP PER MATCH</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="space-y-1 sm:col-span-3">
-              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">Select Registered Player (Dropdown)</label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-1">
+            <div className="space-y-1.5 sm:col-span-3">
+              <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">Select Registered Player</label>
               <select
                 value={
                   allRegisteredPlayers.find(
@@ -378,7 +378,7 @@ export default function ResultEntryModal({
                   ''
                 }
                 onChange={(e) => handleMvpDropdownSelect(e.target.value)}
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded text-slate-900 dark:text-white font-bold text-xs"
+                className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-sm focus:outline-none focus:border-premium-text shadow-sm appearance-none cursor-pointer"
               >
                 <option value="">-- Choose Player from Any Team Roster --</option>
                 {allRegisteredPlayers.map((p, idx) => {
@@ -393,62 +393,59 @@ export default function ResultEntryModal({
               </select>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">MVP Player Name / IGN</label>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">MVP Player Name / IGN</label>
               <input
                 type="text"
                 placeholder="e.g. OBAID (IGL)"
                 value={mvpPlayerName}
                 onChange={(e) => setMvpPlayerName(e.target.value)}
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded text-slate-900 dark:text-white font-bold text-xs"
+                className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-sm focus:outline-none focus:border-premium-text shadow-sm"
               />
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">MVP Team Name</label>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">MVP Team Name</label>
               <input
                 type="text"
                 placeholder="e.g. GodLike Esports"
                 value={mvpTeamName}
                 onChange={(e) => setMvpTeamName(e.target.value)}
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded text-slate-900 dark:text-white font-bold text-xs"
+                className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-sm focus:outline-none focus:border-premium-text shadow-sm"
               />
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase font-mono">MVP Match Kills</label>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">MVP Match Kills</label>
               <input
                 type="number"
                 min="0"
                 placeholder="e.g. 7"
                 value={mvpKills}
                 onChange={(e) => setMvpKills(e.target.value)}
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded text-amber-600 dark:text-bgmi-gold text-center font-bold font-mono text-xs"
+                className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-emerald-700 text-center font-bold text-sm focus:outline-none focus:border-emerald-500 shadow-sm"
               />
             </div>
           </div>
         </div>
 
         {/* LIVE FORMULA PREVIEW */}
-        <div className="p-4 bg-slate-100 dark:bg-slate-900/90 border border-amber-500/30 rounded-xl space-y-2">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-bold uppercase font-broadcast text-[10px]">
-            <span className="flex items-center gap-1.5 text-amber-600 dark:text-bgmi-gold">
-              <Calculator className="w-4 h-4" /> Live Score Formula
-            </span>
-            <span>Official BGMI Scoring Rules</span>
-          </div>
-          <p className="text-xs text-slate-700 dark:text-slate-300 font-mono">
+        <div className="p-4 bg-premium-background rounded-[16px] border border-premium-border flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <span className="flex items-center justify-center sm:justify-start gap-2 text-premium-text font-bold text-xs">
+            <Calculator className="w-4 h-4 text-premium-text-secondary" /> Official Scoring Formula
+          </span>
+          <p className="text-[11px] text-premium-text-secondary font-medium">
             Rank #1 = 10 pts • Rank #2 = 8 pts • Rank #3 = 5 pts • Rank #4 = 3 pts • Rank #5 = 1 pt • 1 Kill = 1 pt
           </p>
         </div>
 
         {/* ACTION BUTTONS */}
-        <div className="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-end gap-3">
-          <Button variant="secondary" size="md" icon={Save} onClick={() => handleSave(false)}>
-            SAVE DRAFT RESULT
+        <div className="pt-6 border-t border-premium-border flex flex-col-reverse sm:flex-row items-center justify-end gap-3">
+          <Button variant="outline" size="md" icon={Save} onClick={() => handleSave(false)} className="w-full sm:w-auto">
+            Save Draft Result
           </Button>
-          <Button variant="primary" size="md" icon={Send} onClick={() => handleSave(true)}>
-            PUBLISH RESULT LIVE
+          <Button variant="primary" size="md" icon={Send} onClick={() => handleSave(true)} className="w-full sm:w-auto">
+            Publish Live Scorecard
           </Button>
         </div>
 
@@ -456,5 +453,3 @@ export default function ResultEntryModal({
     </Modal>
   );
 }
-
-

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Radio, Clock, Swords, Shield, Copy, Check, X, Users, Key, MapPin, Trophy } from 'lucide-react';
+import { Radio, Clock, Swords, Shield, Copy, Check, X, Users, MapPin } from 'lucide-react';
 import Badge from '../common/Badge';
 import Button from '../common/Button';
 
@@ -72,129 +72,108 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
 
   return (
     <>
-      <div className="relative overflow-hidden bg-white dark:bg-[#121620] border border-slate-200 dark:border-white/10 rounded-xl p-6 sm:p-8 clip-tactical shadow-lg dark:shadow-2xl space-y-6">
-        <div className="absolute inset-0 bg-tactical-grid opacity-15 pointer-events-none" />
-
+      <div className="relative overflow-hidden bg-white border border-premium-border rounded-[24px] p-6 sm:p-8 shadow-sm space-y-8">
+        
         {/* 1. MATCH SPOTLIGHT HEADER */}
-        <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-4">
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-premium-border pb-6">
           <div className="flex items-center gap-3">
             {isLive ? (
               <Badge variant="live" size="md">
-                <span className="flex items-center gap-1.5 font-broadcast font-bold">
-                  <Radio className="w-3.5 h-3.5 animate-pulse text-bgmi-red" /> ● LIVE BROADCAST
+                <span className="flex items-center gap-1.5 font-bold uppercase tracking-widest">
+                  <Radio className="w-3.5 h-3.5 animate-pulse text-red-500" /> LIVE
                 </span>
               </Badge>
             ) : (
-              <span className="px-3 py-1 bg-bgmi-gold/10 text-amber-600 dark:text-bgmi-gold border border-amber-500/30 dark:border-bgmi-gold/30 rounded text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-                LIVE MATCH RADAR SPOTLIGHT
+              <span className="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-full text-xs font-bold uppercase tracking-widest flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                UPCOMING MATCH
               </span>
             )}
-            <span className="font-broadcast font-bold text-base sm:text-lg text-slate-900 dark:text-white uppercase">
-              MATCH #{match.matchNumber || 1} / <span className="text-bgmi-red">{match.map || 'Erangel'}</span>
+            <span className="font-bold text-xl text-premium-text tracking-tight">
+              Match #{match.matchNumber || 1} / <span className="text-amber-600">{match.map || 'Erangel'}</span>
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-600 dark:text-slate-400">
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-bgmi-red" /> {match.time || '10:30 AM'}
+          <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-premium-text-secondary">
+            <span className="flex items-center gap-1.5 bg-premium-background px-2.5 py-1 rounded-[8px]">
+              <Clock className="w-4 h-4 text-amber-600" /> {match.time || '10:30 AM'}
             </span>
-            <span className="flex items-center gap-1">
-              <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-bgmi-gold" /> {match.round || 'Grand Finals'}
+            <span className="flex items-center gap-1.5 bg-premium-background px-2.5 py-1 rounded-[8px]">
+              <Shield className="w-4 h-4" /> {match.round || 'Grand Finals'}
             </span>
-            <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-bold">
-              <Users className="w-3.5 h-3.5 text-bgmi-red" /> {totalSquadsCount} / 24 Squads Registered ({totalPlayersCount} Players)
+            <span className="flex items-center gap-1.5 bg-premium-background px-2.5 py-1 rounded-[8px] text-sky-700">
+              <Users className="w-4 h-4" /> {totalSquadsCount} Squads
             </span>
           </div>
         </div>
 
-        {/* 2. BATTLE ROYALE SHOWCASE: RADAR VISUAL, MAP SPECS & PARTICIPATING SQUADS */}
+        {/* 2. BATTLE ROYALE SHOWCASE: MAP SPECS & PARTICIPATING SQUADS */}
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
           {/* MAP DISPLAY BOX (5 COLS) */}
-          <div className="lg:col-span-5 p-5 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-4 relative overflow-hidden">
+          <div className="lg:col-span-5 p-5 bg-premium-background rounded-[16px] border border-premium-border flex flex-col justify-between space-y-6">
             
-            {/* CLEAN MATCH MAP SPOTLIGHT BANNER */}
-            <div className="relative w-full h-36 bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center p-4 group border border-slate-800">
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent z-10" />
-              
-              {/* Map Badge Info */}
-              <div className="relative z-20 text-center space-y-1">
-                <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 uppercase block bg-slate-950/80 px-2 py-0.5 rounded border border-amber-500/30 w-max mx-auto">
-                  LIVE ARENA MAP
-                </span>
-                <span className="text-xl font-broadcast font-black text-white uppercase tracking-wider block">
-                  {match.map || 'ERANGEL'}
-                </span>
-                <span className="text-[10px] font-mono text-slate-400 block">
-                  OFFICIAL BATTLE ROYALE MODE • TPP SQUAD
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-premium-border pb-3">
+                <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4" /> Arena Details
                 </span>
               </div>
-            </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
-                <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-bgmi-gold uppercase tracking-widest flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5" /> BATTLEGROUND MAP
-                </span>
-                <span className="text-xs font-broadcast font-bold text-slate-900 dark:text-white uppercase">{match.map || 'Erangel'}</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-1">
-                <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
-                  <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">MODE</span>
-                  <span className="font-bold text-slate-900 dark:text-white">TPP SQUAD</span>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                  <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">Map</span>
+                  <span className="font-bold text-premium-text">{match.map || 'Erangel'}</span>
                 </div>
-                <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
-                  <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">MATCH TYPE</span>
-                  <span className="font-bold text-bgmi-red">BATTLE ROYALE</span>
+                <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                  <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">Mode</span>
+                  <span className="font-bold text-premium-text">TPP Squad</span>
                 </div>
-                <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
-                  <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">CAPACITY</span>
-                  <span className="font-bold text-slate-900 dark:text-white">{totalSquadsCount} SQUADS</span>
+                <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                  <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">Capacity</span>
+                  <span className="font-bold text-sky-700">{totalSquadsCount} Squads</span>
                 </div>
-                <div className="p-2 bg-slate-100 dark:bg-slate-900/80 rounded border border-slate-200 dark:border-white/5">
-                  <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">ROOM CODE</span>
-                  <span className="font-bold text-amber-600 dark:text-bgmi-gold">LOBBY READY</span>
+                <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                  <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">Status</span>
+                  <span className="font-bold text-amber-600">Lobby Ready</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-200 dark:border-white/10">
-              <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+            <div className="pt-4 border-t border-premium-border">
+              <p className="text-xs font-medium text-premium-text-secondary leading-relaxed">
                 * All {totalSquadsCount} registered squads join the custom lobby 10 minutes prior to drop time.
               </p>
             </div>
           </div>
 
           {/* ALL PARTICIPATING SQUADS GRID (7 COLS) */}
-          <div className="lg:col-span-7 p-5 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 space-y-3 flex flex-col justify-between">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
-              <h4 className="font-broadcast font-bold text-xs uppercase text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                <Swords className="w-4 h-4 text-bgmi-red" /> LOBBY SQUAD MATRIX ({participatingSquads.length}/{totalSquadsCount} SEEDED)
+          <div className="lg:col-span-7 p-5 bg-premium-background rounded-[16px] border border-premium-border space-y-4 flex flex-col justify-between">
+            <div className="flex items-center justify-between border-b border-premium-border pb-3">
+              <h4 className="font-bold text-sm uppercase text-premium-text flex items-center gap-2">
+                <Swords className="w-4 h-4 text-amber-600" /> Participating Squads ({participatingSquads.length}/{totalSquadsCount})
               </h4>
-              <span className="text-[10px] font-mono text-amber-600 dark:text-bgmi-gold font-bold uppercase">LIVE FEED</span>
             </div>
 
             {/* SQUAD CHIPS GRID */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-56 overflow-y-auto pr-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-56 overflow-y-auto custom-scrollbar pr-2">
               {participatingSquads.map((sq, idx) => (
                 <div
                   key={idx}
-                  className="p-2.5 bg-white hover:bg-slate-100 dark:bg-slate-900/80 dark:hover:bg-slate-800 rounded border border-slate-200 dark:border-white/10 flex items-center gap-2 transition-colors min-w-0"
+                  className="p-3 bg-white rounded-[12px] border border-premium-border flex items-center gap-3 transition-colors shadow-sm min-w-0"
                 >
-                  <div className="w-7 h-7 rounded bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-white/15 flex items-center justify-center text-[10px] font-broadcast font-bold text-bgmi-red flex-shrink-0">
+                  <div className="w-8 h-8 rounded-[8px] bg-premium-surface-soft border border-premium-border flex items-center justify-center text-xs font-bold text-amber-600 shrink-0">
                     {sq.logo ? (
-                      <img src={sq.logo} alt={sq.teamName || sq.name} className="w-full h-full object-cover rounded" />
+                      <img src={sq.logo} alt={sq.teamName || sq.name} className="w-full h-full object-cover rounded-[6px]" />
                     ) : (
                       <span>{(sq.teamName || sq.name || 'T').charAt(0).toUpperCase()}</span>
                     )}
                   </div>
                   <div className="truncate text-left">
-                    <p className="font-broadcast font-bold text-xs text-slate-900 dark:text-white uppercase truncate">
+                    <p className="font-bold text-sm text-premium-text truncate">
                       {sq.teamName || sq.name}
                     </p>
-                    <p className="text-[9px] font-mono text-slate-500 dark:text-slate-400">
+                    <p className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
                       Slot #{String(idx + 1).padStart(2, '0')}
                     </p>
                   </div>
@@ -202,30 +181,30 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
               ))}
             </div>
 
-            <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-500 dark:text-slate-400">
-              <span>Points System: WWCD = 10 PTS • Kill = 1 PT</span>
-              <span className="text-bgmi-red font-bold">ANTI-CHEAT MOSAC ENABLED</span>
+            <div className="pt-4 border-t border-premium-border flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-premium-text-secondary">
+              <span>Points: WWCD = 10 PTS • Kill = 1 PT</span>
+              <span className="text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-[8px] border border-emerald-100 uppercase tracking-widest text-[10px]">Anti-Cheat Active</span>
             </div>
           </div>
 
         </div>
 
         {/* 3. FOOTER COUNTDOWN & ACTION STRIP */}
-        <div className="relative z-10 pt-4 border-t border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="relative z-10 pt-6 border-t border-premium-border flex flex-col sm:flex-row items-center justify-between gap-6">
           
           {/* Ticking Timer */}
           <div className="flex items-center gap-3">
-            <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">LOBBY LAUNCH IN:</span>
-            <div className="flex items-center gap-1.5 font-mono font-bold text-base text-bgmi-red">
-              <span className="bg-slate-100 dark:bg-[#0B0E14] px-2.5 py-1 rounded border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white">
+            <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">Launch In:</span>
+            <div className="flex items-center gap-1.5 font-bold text-lg text-amber-600">
+              <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
                 {String(timeLeft.hours).padStart(2, '0')}h
               </span>
-              <span>:</span>
-              <span className="bg-slate-100 dark:bg-[#0B0E14] px-2.5 py-1 rounded border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white">
+              <span className="text-amber-300">:</span>
+              <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
                 {String(timeLeft.minutes).padStart(2, '0')}m
               </span>
-              <span>:</span>
-              <span className="bg-slate-100 dark:bg-[#0B0E14] px-2.5 py-1 rounded border border-slate-200 dark:border-white/10 text-bgmi-red">
+              <span className="text-amber-300">:</span>
+              <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
                 {String(timeLeft.seconds).padStart(2, '0')}s
               </span>
             </div>
@@ -237,9 +216,9 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
             size="md"
             icon={Swords}
             onClick={() => setShowModal(true)}
-            className="px-6 py-2.5 text-xs font-black w-full sm:w-auto"
+            className="w-full sm:w-auto"
           >
-            LOBBY DETAILS & ROOM CODE →
+            Lobby Details & Code
           </Button>
         </div>
 
@@ -248,135 +227,135 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
       {/* LOBBY DETAILS & ROOM CREDENTIALS MODAL */}
       {showModal && (
         <div
-          className="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-premium-background/80 backdrop-blur-md flex items-center justify-center p-4"
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white dark:bg-[#121620] border border-slate-200 dark:border-white/15 rounded-lg max-w-2xl w-full p-6 sm:p-8 clip-tactical shadow-2xl space-y-6 relative text-slate-900 dark:text-white"
+            className="bg-white border border-premium-border rounded-[24px] max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-8 relative"
             onClick={(e) => e.stopPropagation()}
           >
             {/* CLOSE BUTTON */}
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 dark:bg-slate-900 rounded border border-slate-200 dark:border-white/10"
+              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full text-premium-text-secondary hover:bg-premium-surface-soft hover:text-black transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* MODAL HEADER */}
-            <div className="space-y-1 border-b border-slate-200 dark:border-white/10 pb-4">
+            <div className="space-y-2 border-b border-premium-border pb-6">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 bg-bgmi-red/20 text-bgmi-red border border-bgmi-red/40 rounded text-[10px] font-mono font-bold uppercase tracking-widest">
-                  OFFICIAL BATTLE ROYALE LOBBY
+                <span className="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-[8px] text-[10px] font-bold uppercase tracking-widest">
+                  Official Lobby
                 </span>
-                <span className="text-xs font-mono text-slate-500 dark:text-slate-400">{match.round || 'GRAND FINALS'}</span>
+                <span className="text-xs font-bold text-premium-text-secondary uppercase tracking-widest">{match.round || 'GRAND FINALS'}</span>
               </div>
-              <h3 className="font-broadcast font-bold text-2xl uppercase">
-                MATCH #{match.matchNumber || 1} / <span className="text-bgmi-red">{roomDetails.map}</span> CUSTOM ROOM
+              <h3 className="font-bold text-2xl text-premium-text tracking-tight">
+                Match #{match.matchNumber || 1} / <span className="text-amber-600">{roomDetails.map}</span>
               </h3>
             </div>
 
             {/* ROOM CREDENTIALS CARDS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* ROOM ID CARD */}
-              <div className="p-4 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 space-y-3">
+              <div className="p-5 bg-premium-surface rounded-[16px] border border-premium-border space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
                     ROOM STATUS
                   </span>
-                  <span className="text-[11px] font-mono text-emerald-400 font-bold flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> ROOM READY
+                  <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1.5 uppercase tracking-widest">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> READY
                   </span>
                 </div>
 
                 <div className="space-y-1">
-                  <span className="text-[10px] font-mono text-slate-400 uppercase block font-bold">ROOM ID</span>
-                  <span className="font-mono font-black text-2xl tracking-wider text-amber-500 dark:text-amber-400 block">
+                  <span className="text-[10px] text-premium-text-secondary uppercase tracking-widest block font-bold">ROOM ID</span>
+                  <span className="font-bold text-3xl tracking-tight text-amber-600 block">
                     {roomDetails.roomId}
                   </span>
                 </div>
 
                 <button
                   onClick={() => copyToClipboard(roomDetails.roomId, 'id')}
-                  className="w-full py-2 bg-slate-900 hover:bg-bgmi-red dark:bg-slate-800 dark:hover:bg-bgmi-red text-white rounded text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                  className="w-full py-2.5 bg-white hover:bg-premium-background border border-premium-border text-premium-text rounded-[10px] text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
-                  {copiedId ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                  <span>{copiedId ? 'ROOM ID COPIED' : 'COPY ROOM ID'}</span>
+                  {copiedId ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedId ? 'COPIED' : 'COPY ID'}</span>
                 </button>
               </div>
 
               {/* ROOM PASSWORD CARD */}
-              <div className="p-4 bg-slate-50 dark:bg-[#0B0E14] rounded-lg border border-slate-200 dark:border-white/10 space-y-3">
+              <div className="p-5 bg-premium-surface rounded-[16px] border border-premium-border space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
                     SECURITY ACCESS
                   </span>
-                  <span className="text-[11px] font-mono text-sky-400 font-bold flex items-center gap-1">
+                  <span className="text-[10px] text-sky-600 font-bold flex items-center gap-1.5 uppercase tracking-widest">
                     <Shield className="w-3.5 h-3.5" /> VERIFIED
                   </span>
                 </div>
 
                 <div className="space-y-1">
-                  <span className="text-[10px] font-mono text-slate-400 uppercase block font-bold">PASSWORD</span>
-                  <span className="font-mono font-black text-2xl tracking-wider text-sky-400 block">
+                  <span className="text-[10px] text-premium-text-secondary uppercase tracking-widest block font-bold">PASSWORD</span>
+                  <span className="font-bold text-3xl tracking-tight text-sky-600 block">
                     {roomDetails.password}
                   </span>
                 </div>
 
                 <button
                   onClick={() => copyToClipboard(roomDetails.password, 'pass')}
-                  className="w-full py-2 bg-slate-900 hover:bg-sky-600 dark:bg-slate-800 dark:hover:bg-sky-600 text-white rounded text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                  className="w-full py-2.5 bg-white hover:bg-premium-background border border-premium-border text-premium-text rounded-[10px] text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
-                  {copiedPass ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                  <span>{copiedPass ? 'PASSWORD COPIED' : 'COPY PASSWORD'}</span>
+                  {copiedPass ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedPass ? 'COPIED' : 'COPY PASSWORD'}</span>
                 </button>
               </div>
             </div>
 
             {/* LOBBY SPECIFICATIONS GRID */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs font-mono">
-              <div className="p-2.5 bg-slate-50 dark:bg-[#0B0E14] rounded border border-slate-200 dark:border-white/10">
-                <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">MAP</span>
-                <span className="font-bold text-slate-900 dark:text-white">{roomDetails.map}</span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-sm">
+              <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">MAP</span>
+                <span className="font-bold text-premium-text">{roomDetails.map}</span>
               </div>
-              <div className="p-2.5 bg-slate-50 dark:bg-[#0B0E14] rounded border border-slate-200 dark:border-white/10">
-                <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">MODE</span>
-                <span className="font-bold text-amber-600 dark:text-bgmi-gold">{roomDetails.mode}</span>
+              <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">MODE</span>
+                <span className="font-bold text-amber-600">{roomDetails.mode}</span>
               </div>
-              <div className="p-2.5 bg-slate-50 dark:bg-[#0B0E14] rounded border border-slate-200 dark:border-white/10">
-                <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">SERVER</span>
-                <span className="font-bold text-sky-600 dark:text-sky-400">{roomDetails.server}</span>
+              <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">SERVER</span>
+                <span className="font-bold text-sky-700">{roomDetails.server}</span>
               </div>
-              <div className="p-2.5 bg-slate-50 dark:bg-[#0B0E14] rounded border border-slate-200 dark:border-white/10">
-                <span className="text-[9px] text-slate-500 dark:text-slate-400 block uppercase">ANTI-CHEAT</span>
-                <span className="font-bold text-emerald-600 dark:text-emerald-400">MOSAC ACTIVE</span>
+              <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">ANTI-CHEAT</span>
+                <span className="font-bold text-emerald-600">ACTIVE</span>
               </div>
             </div>
 
             {/* ALL PARTICIPATING SQUAD SLOTS TABLE */}
-            <div className="space-y-2">
-              <h4 className="font-broadcast font-bold text-xs uppercase text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-bgmi-red" /> LOBBY SQUAD SLOT MATRIX ({roomDetails.slots.length}/24 SQUADS)
+            <div className="space-y-3">
+              <h4 className="font-bold text-sm uppercase text-premium-text flex items-center gap-2">
+                <Users className="w-4 h-4 text-amber-600" /> LOBBY SQUAD SLOT MATRIX ({roomDetails.slots.length}/24)
               </h4>
-              <div className="max-h-48 overflow-y-auto border border-slate-200 dark:border-white/10 rounded bg-slate-50 dark:bg-[#0B0E14] p-2 text-xs font-mono space-y-1">
+              <div className="max-h-48 overflow-y-auto border border-premium-border rounded-[16px] bg-premium-surface p-3 space-y-2 custom-scrollbar">
                 {roomDetails.slots.map((s) => (
-                  <div key={s.slot} className="flex items-center justify-between px-3 py-1.5 bg-white dark:bg-slate-900/60 rounded border border-slate-200 dark:border-white/5">
-                    <span className="text-slate-500 dark:text-slate-400 font-bold">SLOT #{String(s.slot).padStart(2, '0')}</span>
-                    <span className="text-slate-900 dark:text-white font-bold">{s.team}</span>
-                    <span className="text-[10px] text-amber-600 dark:text-bgmi-gold font-bold">{s.seed}</span>
+                  <div key={s.slot} className="flex items-center justify-between px-4 py-2.5 bg-white rounded-[10px] border border-premium-border shadow-sm">
+                    <span className="text-premium-text-secondary font-bold text-xs uppercase tracking-widest">SLOT #{String(s.slot).padStart(2, '0')}</span>
+                    <span className="text-premium-text font-bold text-sm">{s.team}</span>
+                    <span className="text-[10px] text-amber-600 font-bold uppercase tracking-widest">{s.seed}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* MODAL FOOTER */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-white/10">
-              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-premium-border">
+              <span className="text-[10px] font-medium text-premium-text-secondary">
                 * All 24 squads enter custom room 10 minutes prior to launch.
               </span>
               <Link href={`/matches/${match.matchNumber || match.id}`} onClick={() => setShowModal(false)}>
-                <Button variant="secondary" size="sm" className="w-full sm:w-auto text-xs">
-                  GO TO FULL MATCH PAGE →
+                <Button variant="secondary" size="md" className="w-full sm:w-auto">
+                  Go to Match Page
                 </Button>
               </Link>
             </div>
@@ -387,6 +366,3 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
     </>
   );
 }
-
-
-

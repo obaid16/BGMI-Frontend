@@ -6,7 +6,6 @@ const ThemeContext = createContext({
   theme: 'light',
   toggleTheme: () => {},
   setTheme: () => {},
-  mounted: false,
 });
 
 export function ThemeProvider({ children }) {
@@ -20,11 +19,9 @@ export function ThemeProvider({ children }) {
       setThemeState(savedTheme);
       applyTheme(savedTheme);
     } else {
-      // Default to light theme as inspired by primary editorial reference
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initialTheme = prefersDark ? 'dark' : 'light';
-      setThemeState(initialTheme);
-      applyTheme(initialTheme);
+      // Default to light theme for premium soft-minimal aesthetic
+      setThemeState('light');
+      applyTheme('light');
     }
   }, []);
 
@@ -58,6 +55,7 @@ export function ThemeProvider({ children }) {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
   };
+
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme, mounted }}>

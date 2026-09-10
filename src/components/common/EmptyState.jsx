@@ -10,14 +10,14 @@ export default function EmptyState({
   onAction,
 }) {
   return (
-    <div className="flex flex-col items-center justify-center p-12 text-center bg-white dark:bg-[#121620] border border-dashed border-[#E7E3DA] dark:border-[#1E2638] rounded-3xl my-6 shadow-editorial-sm">
-      <div className="w-16 h-16 rounded-2xl bg-[#FAF8F5] dark:bg-[#181E2C] border border-[#E7E3DA] dark:border-[#1E2638] flex items-center justify-center mb-4 text-bgmi-gold shadow-editorial-sm">
-        <Icon className="w-8 h-8" />
+    <div className="flex flex-col items-center justify-center p-12 text-center bg-premium-surface border border-dashed border-premium-border rounded-2xl my-6">
+      <div className="w-16 h-16 rounded-full bg-premium-surface-soft border border-premium-border flex items-center justify-center mb-5 text-premium-text-secondary">
+        <Icon className="w-8 h-8 opacity-80" />
       </div>
-      <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white mb-2 uppercase">{title}</h3>
-      <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mb-6">{message}</p>
+      <h3 className="text-xl font-semibold tracking-tight text-premium-text mb-2">{title}</h3>
+      <p className="text-premium-text-secondary text-sm max-w-md mb-6">{message}</p>
       {actionLabel && onAction && (
-        <Button variant="secondary" size="sm" onClick={onAction}>
+        <Button variant="outline" size="sm" onClick={onAction}>
           {actionLabel}
         </Button>
       )}

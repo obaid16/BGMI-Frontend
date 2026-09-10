@@ -15,7 +15,7 @@ export default function MediaLightbox({ item, isOpen, onClose }) {
     <Modal isOpen={isOpen} onClose={onClose} title={item.title} maxWidth="max-w-4xl">
       <div className="space-y-4">
         {/* Media Content Display */}
-        <div className="relative aspect-video w-full bg-black rounded-2xl overflow-hidden border border-[#E7E3DA] dark:border-[#1E2638] shadow-editorial-sm">
+        <div className="relative aspect-video w-full bg-premium-background rounded-[16px] overflow-hidden border border-premium-border">
           {isVideo ? (
             <iframe
               src={item.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ'}
@@ -38,20 +38,21 @@ export default function MediaLightbox({ item, isOpen, onClose }) {
         </div>
 
         {/* Media Metadata */}
-        <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-[#FAF8F5] dark:bg-[#0B0E14] rounded-2xl border border-[#E7E3DA] dark:border-[#1E2638] text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-5 bg-premium-surface-soft rounded-[16px] border border-premium-border text-sm">
           <div>
-            <p className="text-slate-500">Squad: <span className="text-slate-900 dark:text-white font-bold">{item.team || 'N/A'}</span></p>
-            {item.player && <p className="text-slate-500">Player: <span className="text-amber-600 dark:text-amber-400 font-bold">{item.player}</span></p>}
+            <p className="text-premium-text-secondary">Squad: <span className="text-premium-text font-semibold">{item.team || 'N/A'}</span></p>
+            {item.player && <p className="text-premium-text-secondary mt-1">Player: <span className="text-premium-text font-semibold">{item.player}</span></p>}
           </div>
           <div>
-            <p className="text-slate-500">Match: <span className="text-bgmi-red font-bold">{item.match || 'Match #01'}</span></p>
-            <p className="text-slate-500">Date: <span className="text-slate-900 dark:text-white font-bold">{item.date}</span></p>
+            <p className="text-premium-text-secondary">Match: <span className="text-premium-sage font-semibold">{item.match || 'Match #01'}</span></p>
+            <p className="text-premium-text-secondary mt-1">Date: <span className="text-premium-text font-semibold">{item.date}</span></p>
           </div>
-          <Badge variant="gold" size="sm">
-            Referee Verified Proof
+          <Badge variant="green" size="md">
+            Verified
           </Badge>
         </div>
       </div>
     </Modal>
   );
 }
+

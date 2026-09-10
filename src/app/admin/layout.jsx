@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminTopbar from '@/components/admin/AdminTopbar';
-import { Menu } from 'lucide-react';
-import { getStoredAdminToken, getStoredAdminUser, isTokenValid, clearStoredAdminSession, verifyAdminSession } from '@/services/api';
+import { Menu, Loader2 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
@@ -20,48 +19,50 @@ export default function AdminLayout({ children }) {
       return;
     }
 
-    const token = getStoredAdminToken();
+    const token = localStorage.getItem('bgmi_esports_admin_token');
+    const userStr = localStorage.getItem('bgmi_esports_admin_user');
 
-    if (!token || !isTokenValid(token)) {
-      clearStoredAdminSession();
+    if (!token || !userStr) {
+      localStorage.removeItem('bgmi_esports_admin_token');
+      localStorage.removeItem('bgmi_esports_admin_user');
       router.push('/admin/login');
-      return;
-    }
-
-    // Token is valid in storage/cookie - grant immediate access
-    setCheckingAuth(false);
-
-    // Asynchronously verify with backend to ensure account remains active
-    verifyAdminSession().then((res) => {
-      if (!res.valid) {
-        clearStoredAdminSession();
+    } else {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.exp * 1000 < Date.now()) {
+          localStorage.removeItem('bgmi_esports_admin_token');
+          localStorage.removeItem('bgmi_esports_admin_user');
+          router.push('/admin/login');
+        }
+      } catch (e) {
+        localStorage.removeItem('bgmi_esports_admin_token');
+        localStorage.removeItem('bgmi_esports_admin_user');
         router.push('/admin/login');
+      } finally {
+        setCheckingAuth(false);
       }
-    }).catch(() => {
-      // Keep session on minor connection issues
-    });
+    }
   }, [isLoginPage, router]);
 
   if (checkingAuth) {
     return (
-      <div className="min-h-screen bg-[#0a0b0e] flex flex-col items-center justify-center space-y-4">
-        <div className="w-10 h-10 border-4 border-bgmi-red border-t-transparent rounded-full animate-spin" />
-        <p className="font-mono text-xs uppercase tracking-widest text-slate-400">Verifying Admin Access...</p>
+      <div className="min-h-screen bg-premium-background flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="w-8 h-8 text-premium-text-secondary animate-spin" />
+        <p className="text-[10px] font-bold uppercase tracking-widest text-premium-text-secondary">Verifying Access</p>
       </div>
     );
   }
 
   if (isLoginPage) {
     return (
-      <div className="min-h-screen bg-[#0a0b0e] bg-tactical-grid flex items-center justify-center">
+      <div className="min-h-screen bg-premium-background flex items-center justify-center p-6">
         {children}
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-[#FAF8F5] dark:bg-[#0B0E14] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
-
+    <div className="flex min-h-screen bg-premium-background text-premium-text font-sans">
       {/* DESKTOP SIDEBAR */}
       <div className="hidden lg:block flex-shrink-0">
         <AdminSidebar />
@@ -70,30 +71,30 @@ export default function AdminLayout({ children }) {
       {/* MOBILE SIDEBAR OVERLAY */}
       {mobileSidebarOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm lg:hidden transition-all"
           onClick={() => setMobileSidebarOpen(false)}
         >
           <div
-            className="absolute left-0 top-0 h-full animate-in slide-in-from-left duration-200"
+            className="absolute left-0 top-0 h-full w-[280px] bg-[#111215] shadow-2xl animate-in slide-in-from-left duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            <AdminSidebar onClose={() => setMobileSidebarOpen(false)} />
+            <AdminSidebar />
           </div>
         </div>
       )}
 
       {/* MAIN ADMIN CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <div className="flex items-center justify-between bg-white dark:bg-[#12141c] border-b border-slate-200/80 dark:border-white/10 px-4 h-16 lg:hidden sticky top-0 z-30">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between bg-premium-background border-b border-premium-border px-6 h-20 lg:hidden sticky top-0 z-30">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => setMobileSidebarOpen(true)}
-              className="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10"
+              className="p-2.5 text-premium-text-secondary hover:text-black rounded-xl bg-premium-surface border border-premium-border shadow-sm transition-all"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <span className="font-broadcast font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wide">
-              TOURNAMENT <span className="text-bgmi-red">COMMAND</span>
+            <span className="font-bold text-lg text-premium-text tracking-tight">
+              Championship Admin
             </span>
           </div>
         </div>
@@ -102,10 +103,8 @@ export default function AdminLayout({ children }) {
           <AdminTopbar />
         </div>
 
-        <main className="p-4 sm:p-6 lg:p-8 flex-1 max-w-7xl w-full mx-auto">{children}</main>
+        <main className="p-6 lg:p-10 flex-1 max-w-[1400px] w-full mx-auto">{children}</main>
       </div>
     </div>
   );
-
 }
-
