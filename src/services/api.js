@@ -8,6 +8,7 @@ import {
   deleteCanonicalMatchResult,
   clearCanonicalData
 } from '../data/tournamentData';
+import { mockRules } from '../data/rules';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -78,27 +79,37 @@ async function fetchAPI(endpoint, options = {}) {
     ...options.headers,
   };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), options.timeout || 3000) : null;
 
-  const resData = await response.json();
-  if (!response.ok) {
-    throw new Error(resData.message || 'API request failed');
-  }
-
-  if (isGet) {
-    apiCache.set(endpoint, {
-      data: resData,
-      timestamp: Date.now()
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+      ...(controller && { signal: controller.signal }),
     });
-  } else {
-    // Clear cache on write operations (POST, PUT, DELETE) so subsequent reads get fresh data
-    apiCache.clear();
-  }
+    if (timeoutId) clearTimeout(timeoutId);
 
-  return resData;
+    const resData = await response.json();
+    if (!response.ok) {
+      throw new Error(resData.message || 'API request failed');
+    }
+
+    if (isGet) {
+      apiCache.set(endpoint, {
+        data: resData,
+        timestamp: Date.now()
+      });
+    } else {
+      // Clear cache on write operations (POST, PUT, DELETE) so subsequent reads get fresh data
+      apiCache.clear();
+    }
+
+    return resData;
+  } catch (err) {
+    if (timeoutId) clearTimeout(timeoutId);
+    throw err;
+  }
 }
 
 // ==================== TEAMS API ====================
@@ -468,11 +479,11 @@ export async function createAnnouncement(annData) {
 export async function getRules() {
   try {
     const res = await fetchAPI('/rules');
-    return res.data || [];
+    if (res.data && Array.isArray(res.data) && res.data.length > 0) return res.data;
   } catch (err) {
-    console.error('getRules failed:', err);
-    return [];
+    console.warn('getRules API failed, using official fallback:', err);
   }
+  return mockRules;
 }
 
 // ==================== TOURNAMENT API ====================

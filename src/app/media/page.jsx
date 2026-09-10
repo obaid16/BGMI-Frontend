@@ -64,18 +64,18 @@ export default function MediaPage() {
   }, [mediaList, filter, playerSearch, selectedPlayer]);
 
   return (
-    <div className="max-w-[1500px] mx-auto px-6 lg:px-8 py-16 space-y-12">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-8 sm:space-y-12">
       
       {/* HEADER */}
-      <div className="border-b border-premium-border pb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-        <div className="space-y-4">
+      <div className="border-b border-premium-border pb-6 sm:pb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+        <div className="space-y-3 sm:space-y-4">
           <div className="inline-flex items-center gap-2 text-xs font-semibold text-premium-sage uppercase tracking-widest bg-premium-sage-soft px-3.5 py-1.5 rounded-full border border-premium-sage/30">
             <Video className="w-4 h-4" /> Media Gallery
           </div>
-          <h1 className="font-bold text-5xl sm:text-6xl text-premium-text tracking-tight">
+          <h1 className="font-bold text-3xl sm:text-5xl lg:text-6xl text-premium-text tracking-tight">
             Match Highlights
           </h1>
-          <p className="text-base text-premium-text-secondary max-w-2xl font-medium">
+          <p className="text-sm sm:text-base text-premium-text-secondary max-w-2xl font-medium leading-relaxed">
             Player POV recordings, victory screenshots, in-game match captures, and verified referee scorecards.
           </p>
         </div>

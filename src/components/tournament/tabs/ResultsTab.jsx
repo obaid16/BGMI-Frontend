@@ -26,25 +26,25 @@ export default function ResultsTab() {
   const stats = useMemo(() => {
     const completedCount = results.length;
     const totalKills = results.reduce((acc, r) => {
-      const matchK = r.winner?.kills !== undefined ? r.winner.kills : (r.totalKills || 14);
+      const matchK = r.totalKills !== undefined ? r.totalKills : (r.winner?.kills ? r.winner.kills * 2 : 20);
       return acc + matchK;
     }, 0);
 
     // Find top fragger across results
-    let topFraggerName = 'YASH (IGL)';
+    let topFraggerName = 'Obaid Shaikh';
     let topFraggerKills = 0;
 
     results.forEach((r) => {
       if (r.mvp && r.mvp.kills > topFraggerKills) {
         topFraggerKills = r.mvp.kills;
-        topFraggerName = r.mvp.name;
+        topFraggerName = r.mvp.ign || r.mvp.name;
       }
     });
 
     // Fallback if no MVP is set
     if (topFraggerKills === 0 && results.length > 0) {
-      topFraggerName = results[0].mvp?.name || 'YASH (IGL)';
-      topFraggerKills = results[0].mvp?.kills || 8;
+      topFraggerName = results[0].mvp?.ign || results[0].mvp?.name || 'Obaid Shaikh';
+      topFraggerKills = results[0].mvp?.kills || 6;
     }
 
     return {
@@ -62,19 +62,19 @@ export default function ResultsTab() {
     // Highest kill match
     let highestKillMatch = results[0];
     results.forEach((r) => {
-      const kills = r.winner?.kills || r.totalKills || 0;
-      const curMax = highestKillMatch.winner?.kills || highestKillMatch.totalKills || 0;
+      const kills = r.totalKills || r.winner?.kills || 0;
+      const curMax = highestKillMatch.totalKills || highestKillMatch.winner?.kills || 0;
       if (kills > curMax) highestKillMatch = r;
     });
 
     // Most WWCD squad
     const wwcdCounts = {};
     results.forEach((r) => {
-      const team = r.winner?.teamName || r.winner?.name || r.winnerTeam || 'GODLIKE ESPORTS';
+      const team = r.winner?.teamName || r.winner?.name || r.winnerTeam || 'GodLike Esports';
       wwcdCounts[team] = (wwcdCounts[team] || 0) + 1;
     });
 
-    let mostWwcdTeam = Object.keys(wwcdCounts)[0] || 'GODLIKE ESPORTS';
+    let mostWwcdTeam = Object.keys(wwcdCounts)[0] || 'GodLike Esports';
     let maxWwcd = wwcdCounts[mostWwcdTeam] || 1;
     Object.entries(wwcdCounts).forEach(([t, count]) => {
       if (count > maxWwcd) {
@@ -85,25 +85,25 @@ export default function ResultsTab() {
 
     return {
       highestKillMatch,
-      highestKills: highestKillMatch.winner?.kills || highestKillMatch.totalKills || 18,
+      highestKills: highestKillMatch.totalKills || highestKillMatch.winner?.kills || 37,
       mostWwcdTeam,
       maxWwcd
     };
   }, [results]);
 
   return (
-    <div className="max-w-[1500px] mx-auto px-6 lg:px-8 py-16 space-y-16">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-8 sm:space-y-16">
       
       {/* 1. HERO SECTION WITH 3 COMPACT TOURNAMENT STATISTICS */}
-      <div className="border-b border-premium-border pb-10 space-y-8">
-        <div className="space-y-4">
+      <div className="border-b border-premium-border pb-6 sm:pb-10 space-y-6 sm:space-y-8">
+        <div className="space-y-3 sm:space-y-4">
           <div className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3.5 py-1.5 rounded-full border border-emerald-200 uppercase tracking-widest">
             <Trophy className="w-4 h-4" /> Official Results
           </div>
-          <h1 className="font-bold text-5xl sm:text-6xl text-premium-text tracking-tight">
+          <h1 className="font-bold text-3xl sm:text-5xl lg:text-6xl text-premium-text tracking-tight">
             Match Scorecards
           </h1>
-          <p className="text-base text-premium-text-secondary max-w-2xl">
+          <p className="text-sm sm:text-base text-premium-text-secondary max-w-2xl leading-relaxed">
             Verified results, WWCD winners, MVPs and match statistics.
           </p>
         </div>

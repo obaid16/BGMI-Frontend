@@ -28,17 +28,17 @@ export default function StandingsTab() {
   }, []);
 
   return (
-    <div className="max-w-[1500px] mx-auto px-6 lg:px-8 py-16 space-y-16">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-8 sm:space-y-16">
       
       {/* PAGE HEADER */}
-      <div className="border-b border-premium-border pb-8 space-y-4">
+      <div className="border-b border-premium-border pb-6 sm:pb-8 space-y-3 sm:space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-amber-50 border border-amber-200 text-amber-700 font-semibold text-xs rounded-full uppercase tracking-widest">
           <Award className="w-4 h-4" /> Official Leaderboard
         </div>
-        <h1 className="font-bold text-5xl sm:text-6xl text-premium-text tracking-tight flex items-center gap-4">
+        <h1 className="font-bold text-3xl sm:text-5xl lg:text-6xl text-premium-text tracking-tight flex items-center gap-4">
           Tournament Standings
         </h1>
-        <p className="text-base text-premium-text-secondary max-w-2xl">
+        <p className="text-sm sm:text-base text-premium-text-secondary max-w-2xl leading-relaxed">
           Live point standings based on Placement Points + Finish Kills across all completed custom room matches.
         </p>
       </div>

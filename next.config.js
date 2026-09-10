@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  devIndicators: false,
   async redirects() {
     return [
       { source: '/standings', destination: '/matches?tab=standings', permanent: true },

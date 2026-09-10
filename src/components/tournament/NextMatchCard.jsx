@@ -43,7 +43,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
         { teamName: 'TITAN SQUAD', rank: 8, department: 'AI-DS' },
       ];
 
-  const totalSquadsCount = registeredSquadsCount || participatingSquads.length || 24;
+  const totalSquadsCount = Math.max(registeredSquadsCount || 0, participatingSquads.length, 24);
   const totalPlayersCount = totalSquadsCount * 4;
 
   const roomDetails = {
@@ -151,7 +151,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
           <div className="lg:col-span-7 p-5 bg-premium-background rounded-[16px] border border-premium-border space-y-4 flex flex-col justify-between">
             <div className="flex items-center justify-between border-b border-premium-border pb-3">
               <h4 className="font-bold text-sm uppercase text-premium-text flex items-center gap-2">
-                <Swords className="w-4 h-4 text-amber-600" /> Participating Squads ({participatingSquads.length}/{totalSquadsCount})
+                <Swords className="w-4 h-4 text-amber-600" /> Participating Squads ({participatingSquads.length} / {totalSquadsCount} Slots)
               </h4>
             </div>
 
@@ -162,9 +162,9 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
                   key={idx}
                   className="p-2 sm:p-3 bg-white rounded-[10px] sm:rounded-[12px] border border-premium-border flex items-center gap-2 sm:gap-3 transition-colors shadow-sm min-w-0"
                 >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[6px] sm:rounded-[8px] bg-premium-surface-soft border border-premium-border flex items-center justify-center text-xs font-bold text-amber-600 shrink-0">
-                    {sq.logo ? (
-                      <img src={sq.logo} alt={sq.teamName || sq.name} className="w-full h-full object-cover rounded-[6px]" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[6px] sm:rounded-[8px] bg-premium-surface-soft border border-premium-border flex items-center justify-center text-xs font-bold text-amber-600 shrink-0 overflow-hidden">
+                    {sq.logo || sq.logoUrl ? (
+                      <img src={sq.logo || sq.logoUrl} alt={sq.teamName || sq.name} className="w-full h-full object-cover rounded-[6px]" />
                     ) : (
                       <span>{(sq.teamName || sq.name || 'T').charAt(0).toUpperCase()}</span>
                     )}

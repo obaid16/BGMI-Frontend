@@ -2,12 +2,13 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Flame, ChevronRight } from 'lucide-react';
+import { ShieldCheck, Flame, ChevronRight, Trophy } from 'lucide-react';
 
 export default function TeamCard({ team }) {
   if (!team) return null;
 
   const rankStr = String(team.rank || 1).padStart(2, '0');
+  const teamLogo = team.logo || team.logoUrl;
 
   return (
     <Link href={`/teams/${team.shortName || team.registrationId || team.id || team._id}`}>
@@ -26,9 +27,9 @@ export default function TeamCard({ team }) {
         {/* TEAM LOGO & IDENTITY BLOCK */}
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-premium-surface-soft rounded-2xl border border-premium-border p-1 flex items-center justify-center text-premium-text font-bold text-2xl flex-shrink-0 shadow-sm">
-              {team.logo ? (
-                <img src={team.logo} alt={team.teamName || team.name} className="w-full h-full object-cover rounded-xl" />
+            <div className="w-16 h-16 bg-premium-surface-soft rounded-2xl border border-premium-border p-1 flex items-center justify-center text-premium-text font-bold text-2xl flex-shrink-0 shadow-sm overflow-hidden">
+              {teamLogo ? (
+                <img src={teamLogo} alt={team.teamName || team.name} className="w-full h-full object-cover rounded-xl" />
               ) : (
                 <span>{(team.teamName || team.name)?.charAt(0).toUpperCase()}</span>
               )}
@@ -61,9 +62,17 @@ export default function TeamCard({ team }) {
         {/* METRICS & ACTION FOOTER */}
         <div className="pt-5 mt-5 border-t border-premium-border flex items-center justify-between text-xs">
           <div className="flex items-center gap-3">
-            <span className="font-medium text-premium-text-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="inline mr-1 text-amber-500"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> <strong className="text-amber-600 ml-0.5">{team.wwcd || 0}</strong></span>
-            <span className="font-medium text-premium-text-secondary"><Flame className="w-3.5 h-3.5 text-premium-sage inline mb-0.5" /> <strong className="text-premium-sage ml-0.5">{team.kills || team.killPoints || 0}</strong></span>
-            <span className="font-semibold text-premium-text-secondary uppercase tracking-widest text-[10px] ml-1">Pts: <strong className="text-premium-text text-sm ml-0.5">{team.totalPoints !== undefined ? team.totalPoints : team.points || 0}</strong></span>
+            <span className="font-medium text-premium-text-secondary inline-flex items-center">
+              <Trophy className="w-3.5 h-3.5 text-amber-500 mr-1" />
+              <strong className="text-amber-600">{team.wwcd || 0}</strong>
+            </span>
+            <span className="font-medium text-premium-text-secondary inline-flex items-center">
+              <Flame className="w-3.5 h-3.5 text-premium-sage mr-0.5" />
+              <strong className="text-premium-sage">{team.kills || team.killPoints || 0}</strong>
+            </span>
+            <span className="font-semibold text-premium-text-secondary uppercase tracking-widest text-[10px] ml-1">
+              Pts: <strong className="text-premium-text text-sm ml-0.5">{team.totalPoints !== undefined ? team.totalPoints : team.points || 0}</strong>
+            </span>
           </div>
 
           <span className="text-premium-text font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform text-[10px] uppercase tracking-widest">

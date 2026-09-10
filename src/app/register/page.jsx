@@ -82,79 +82,31 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 space-y-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-8 sm:space-y-12">
       
       {/* HEADER */}
-      <div className="border-b border-premium-border pb-10 text-center space-y-4">
+      <div className="border-b border-premium-border pb-6 sm:pb-10 text-center space-y-3 sm:space-y-4">
         <div className="inline-flex items-center gap-2 text-xs font-semibold text-amber-700 uppercase tracking-widest bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200 mx-auto">
           <ShieldCheck className="w-4 h-4" /> Official Squad Registration
         </div>
-        <h1 className="font-bold text-5xl sm:text-6xl text-premium-text tracking-tight">
+        <h1 className="font-bold text-3xl sm:text-5xl lg:text-6xl text-premium-text tracking-tight">
           Join the Championship
         </h1>
-        <p className="text-base text-premium-text-secondary max-w-2xl mx-auto font-medium">
+        <p className="text-sm sm:text-base text-premium-text-secondary max-w-2xl mx-auto font-medium leading-relaxed">
           Register your college BGMI squad for Championship 2026. Complete the steps to receive your official Registration Pass.
         </p>
       </div>
 
       {/* STEP PROGRESS INDICATOR */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <StepIndicator currentStep={currentStep} steps={steps} />
       </div>
 
       {/* 2-COLUMN SPLIT CONTROL PANEL */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-start">
         
-        {/* LEFT COLUMN (4 COLS): LIVE SQUAD PASS PREVIEW CARD */}
-        <div className="lg:col-span-4 bg-premium-surface border border-premium-border rounded-[28px] p-8 shadow-sm space-y-8 sticky top-32">
-          <div className="flex items-center justify-between border-b border-premium-border pb-4">
-            <span className="text-[10px] font-semibold text-premium-text-secondary uppercase tracking-widest flex items-center gap-1.5">
-              <Trophy className="w-4 h-4 text-amber-500" /> Pass Preview
-            </span>
-            <span className="text-[10px] font-semibold text-premium-text-secondary bg-premium-background px-2.5 py-1 rounded-md border border-premium-border uppercase tracking-widest">
-              Step {currentStep}/4
-            </span>
-          </div>
-
-          <div className="space-y-6">
-            <div className="w-24 h-24 bg-premium-background rounded-3xl border border-premium-border p-1.5 mx-auto flex items-center justify-center shadow-sm">
-              {formData.teamLogo ? (
-                <img src={formData.teamLogo} alt="Squad Logo" className="w-full h-full object-cover rounded-[18px]" />
-              ) : (
-                <span className="font-bold text-4xl text-premium-text-secondary">
-                  {formData.teamName ? formData.teamName.charAt(0).toUpperCase() : 'S'}
-                </span>
-              )}
-            </div>
-
-            <div className="text-center space-y-2">
-              <h3 className="font-bold text-2xl text-premium-text tracking-tight">
-                {formData.teamName || 'Your Squad Name'}
-              </h3>
-              <p className="text-sm text-premium-text-secondary font-medium">Captain: {formData.captainName || 'Not Set'}</p>
-            </div>
-
-            <div className="p-5 bg-premium-background rounded-[20px] border border-premium-border text-sm space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-premium-text-secondary font-medium text-xs">Roster Count</span>
-                <span className="font-bold text-premium-text">4 Starters</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-premium-text-secondary font-medium text-xs">Contact</span>
-                <span className="font-semibold text-premium-sage">{formData.captainPhone || 'Pending'}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-premium-border text-center">
-            <span className="text-[9px] font-bold uppercase tracking-widest text-premium-text-secondary flex items-center justify-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Live Synchronized
-            </span>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN (8 COLS): INTERACTIVE WIZARD STEP FORMS */}
-        <div className="lg:col-span-8 bg-premium-surface border border-premium-border rounded-[28px] p-8 sm:p-12 shadow-sm min-h-[600px]">
+        {/* RIGHT COLUMN (8 COLS ON DESKTOP, FIRST ON MOBILE): INTERACTIVE WIZARD STEP FORMS */}
+        <div className="order-1 lg:order-2 lg:col-span-8 bg-premium-surface border border-premium-border rounded-[24px] sm:rounded-[28px] p-5 sm:p-10 shadow-sm min-h-[500px] sm:min-h-[600px]">
           {currentStep === 1 && (
             <Step1TeamDetails
               formData={formData}
@@ -185,6 +137,54 @@ export default function RegisterPage() {
           {currentStep === 4 && (
             <Step5Success registrationId={submittedRegId} onReset={handleReset} />
           )}
+        </div>
+
+        {/* LEFT COLUMN (4 COLS ON DESKTOP, SECOND ON MOBILE): LIVE SQUAD PASS PREVIEW CARD */}
+        <div className="order-2 lg:order-1 lg:col-span-4 bg-premium-surface border border-premium-border rounded-[24px] sm:rounded-[28px] p-6 sm:p-8 shadow-sm space-y-6 sm:space-y-8 lg:sticky lg:top-28">
+          <div className="flex items-center justify-between border-b border-premium-border pb-4">
+            <span className="text-[10px] font-semibold text-premium-text-secondary uppercase tracking-widest flex items-center gap-1.5">
+              <Trophy className="w-4 h-4 text-amber-500" /> Pass Preview
+            </span>
+            <span className="text-[10px] font-semibold text-premium-text-secondary bg-premium-background px-2.5 py-1 rounded-md border border-premium-border uppercase tracking-widest">
+              Step {currentStep}/4
+            </span>
+          </div>
+
+          <div className="space-y-6">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-premium-background rounded-3xl border border-premium-border p-1.5 mx-auto flex items-center justify-center shadow-sm overflow-hidden">
+              {formData.teamLogo ? (
+                <img src={formData.teamLogo} alt="Squad Logo" className="w-full h-full object-cover rounded-[18px]" />
+              ) : (
+                <span className="font-bold text-3xl sm:text-4xl text-premium-text-secondary">
+                  {formData.teamName ? formData.teamName.charAt(0).toUpperCase() : 'S'}
+                </span>
+              )}
+            </div>
+
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h3 className="font-bold text-xl sm:text-2xl text-premium-text tracking-tight truncate">
+                {formData.teamName || 'Your Squad Name'}
+              </h3>
+              <p className="text-xs sm:text-sm text-premium-text-secondary font-medium">Captain: {formData.captainName || 'Not Set'}</p>
+            </div>
+
+            <div className="p-4 sm:p-5 bg-premium-background rounded-[20px] border border-premium-border text-sm space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-premium-text-secondary font-medium text-xs">Roster Count</span>
+                <span className="font-bold text-premium-text">4 Starters</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-premium-text-secondary font-medium text-xs">Contact</span>
+                <span className="font-semibold text-premium-sage truncate max-w-[150px]">{formData.captainPhone || 'Pending'}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-premium-border text-center">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-premium-text-secondary flex items-center justify-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Live Synchronized
+            </span>
+          </div>
         </div>
 
       </div>

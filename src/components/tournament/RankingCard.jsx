@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Trophy } from 'lucide-react';
 
 export default function RankingCard({ standing }) {
   if (!standing) return null;
@@ -38,8 +39,9 @@ export default function RankingCard({ standing }) {
           <p className="font-bold text-xl text-premium-text">
             {standing.totalPoints !== undefined ? standing.totalPoints : standing.points || 0} <span className="text-[10px] text-premium-text-secondary font-semibold uppercase tracking-widest">Pts</span>
           </p>
-          <p className="text-[11px] text-amber-600 font-semibold mt-0.5">
-            {standing.wwcd > 0 ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="inline mr-1 text-amber-500"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> ${standing.wwcd} WWCD` : '0 WWCD'}
+          <p className="text-[11px] text-amber-600 font-semibold mt-0.5 flex items-center justify-end gap-1">
+            <Trophy className="w-3.5 h-3.5 text-amber-500 inline" />
+            <span>{standing.wwcd || 0} WWCD</span>
           </p>
         </div>
       </div>

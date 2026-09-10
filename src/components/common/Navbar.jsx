@@ -29,6 +29,7 @@ export default function Navbar() {
     { name: 'Home', href: '/' },
     { name: 'Matches', href: '/matches' },
     { name: 'Teams', href: '/teams' },
+    { name: 'Media', href: '/media' },
     { name: 'Rules', href: '/rules' },
   ];
 
@@ -40,7 +41,7 @@ export default function Navbar() {
   return (
     <>
     <header className="sticky top-0 z-30 w-full bg-premium-background/80 backdrop-blur-xl border-b border-premium-border transition-all">
-      <div className="max-w-[1500px] mx-auto px-6 lg:px-8 h-20 flex items-center justify-between gap-8">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4 sm:gap-8">
         
         {/* BRAND IDENTITY */}
         <Link href="/" className="flex items-center gap-3 group shrink-0">
@@ -108,7 +109,7 @@ export default function Navbar() {
 
       {/* MOBILE NAVIGATION — rendered outside header to avoid z-index stacking issues */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-20 bg-premium-background z-[999] p-6 flex flex-col justify-between overflow-y-auto">
+        <div className="lg:hidden fixed inset-0 top-16 sm:top-20 bg-premium-background z-[999] p-6 flex flex-col justify-between overflow-y-auto">
           <div className="space-y-6">
             <div className="text-[11px] text-premium-text-secondary uppercase tracking-widest border-b border-premium-border pb-3 font-semibold">
               Menu

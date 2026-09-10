@@ -7,7 +7,7 @@ import Badge from '@/components/common/Badge';
 import EmptyState from '@/components/common/EmptyState';
 import { SkeletonCard } from '@/components/common/Skeleton';
 import { getTeamById } from '@/services/api';
-import { Flame, ShieldCheck, Users, ArrowLeft, Swords } from 'lucide-react';
+import { Flame, ShieldCheck, Users, ArrowLeft, Swords, Trophy } from 'lucide-react';
 import Link from 'next/link';
 
 export default function TeamDetailPage() {
@@ -29,7 +29,7 @@ export default function TeamDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-[1500px] mx-auto px-6 py-20 text-premium-text-secondary text-center">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-20 text-premium-text-secondary text-center">
         <SkeletonCard />
       </div>
     );
@@ -37,14 +37,17 @@ export default function TeamDetailPage() {
 
   if (!team) {
     return (
-      <div className="max-w-[1500px] mx-auto px-6 py-20">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 py-20">
         <EmptyState title="Team Not Found" message="The requested squad profile could not be found." />
       </div>
     );
   }
 
+  const bannerImg = team.banner || team.logoUrl || team.logo || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1600&auto=format&fit=crop&q=80';
+  const logoImg = team.logo || team.logoUrl;
+
   return (
-    <div className="max-w-[1200px] mx-auto px-6 lg:px-8 py-16 space-y-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-8 sm:space-y-12">
       
       {/* BACK BUTTON */}
       <Link href="/teams" className="group inline-flex items-center gap-2 text-sm font-medium text-premium-text-secondary hover:text-black transition-colors">
@@ -52,24 +55,24 @@ export default function TeamDetailPage() {
       </Link>
 
       {/* TEAM BANNER & HERO CARD */}
-      <div className="relative overflow-hidden bg-premium-surface border border-premium-border rounded-[28px] shadow-sm">
-        <div className="h-48 sm:h-56 w-full relative bg-premium-surface-soft">
-          <img src={team.banner || team.logo} alt={team.teamName || team.name} className="w-full h-full object-cover opacity-30" />
+      <div className="relative overflow-hidden bg-premium-surface border border-premium-border rounded-[24px] sm:rounded-[28px] shadow-sm">
+        <div className="h-44 sm:h-56 w-full relative bg-premium-surface-soft overflow-hidden">
+          <img src={bannerImg} alt={team.teamName || team.name} className="w-full h-full object-cover opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-t from-premium-surface via-transparent to-transparent" />
         </div>
 
-        <div className="p-8 sm:p-10 -mt-20 relative z-10 flex flex-col lg:flex-row items-center lg:items-end justify-between gap-8">
-          <div className="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
-            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-white border border-premium-border p-2 shadow-premium-soft flex items-center justify-center flex-shrink-0">
-              {team.logo ? (
-                <img src={team.logo} alt={team.teamName || team.name} className="w-full h-full object-cover rounded-2xl" />
+        <div className="p-6 sm:p-10 -mt-16 sm:-mt-20 relative z-10 flex flex-col lg:flex-row items-center lg:items-end justify-between gap-6 sm:gap-8">
+          <div className="flex flex-col md:flex-row items-center md:items-end gap-5 sm:gap-6 text-center md:text-left">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-white border border-premium-border p-2 shadow-premium-soft flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {logoImg ? (
+                <img src={logoImg} alt={team.teamName || team.name} className="w-full h-full object-cover rounded-2xl" />
               ) : (
-                <span className="font-bold text-4xl text-premium-text">{(team.teamName || team.name)?.charAt(0)}</span>
+                <span className="font-bold text-3xl sm:text-4xl text-premium-text">{(team.teamName || team.name)?.charAt(0)}</span>
               )}
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-center md:justify-start gap-4">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex items-center justify-center md:justify-start gap-3 sm:gap-4">
                 <span className="font-semibold text-xs text-amber-700 bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200 uppercase tracking-widest">
                   Rank #{team.rank || 1}
                 </span>
@@ -79,7 +82,7 @@ export default function TeamDetailPage() {
                   </Badge>
                 )}
               </div>
-              <h1 className="font-bold text-4xl sm:text-5xl text-premium-text tracking-tight">
+              <h1 className="font-bold text-3xl sm:text-5xl text-premium-text tracking-tight">
                 {team.teamName || team.name}
               </h1>
               <p className="text-sm font-medium text-premium-text-secondary">Captain: {team.captainName || team.captain?.name || 'N/A'}</p>
@@ -87,28 +90,30 @@ export default function TeamDetailPage() {
           </div>
 
           {/* TEAM QUICK STATS */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 bg-premium-background rounded-[20px] border border-premium-border text-center w-full lg:w-auto shadow-sm">
-            <div className="px-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-5 bg-premium-background rounded-[20px] border border-premium-border text-center w-full lg:w-auto shadow-sm">
+            <div className="px-2 sm:px-3">
               <p className="text-[10px] text-premium-text-secondary font-semibold uppercase tracking-widest mb-1">Matches</p>
-              <p className="font-bold text-2xl text-premium-text flex items-center justify-center gap-1.5">
-                <Swords className="w-5 h-5 text-premium-text-secondary" /> {team.matchesPlayed || team.matches || 4}
+              <p className="font-bold text-xl sm:text-2xl text-premium-text flex items-center justify-center gap-1.5">
+                <Swords className="w-5 h-5 text-premium-text-secondary" /> {team.matchesPlayed || team.matches || 2}
               </p>
             </div>
-            <div className="border-l border-premium-border px-3">
+            <div className="border-l border-premium-border px-2 sm:px-3">
               <p className="text-[10px] text-premium-text-secondary font-semibold uppercase tracking-widest mb-1">WWCD</p>
-              <p className="font-bold text-2xl text-amber-600 flex items-center justify-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="inline mr-1 text-amber-500"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> {team.wwcd || 0}
+              <p className="font-bold text-xl sm:text-2xl text-amber-600 flex items-center justify-center gap-1.5">
+                <Trophy className="w-5 h-5 text-amber-500" /> {team.wwcd || 0}
               </p>
             </div>
-            <div className="border-l border-premium-border px-3">
+            <div className="border-l border-premium-border px-2 sm:px-3">
               <p className="text-[10px] text-premium-text-secondary font-semibold uppercase tracking-widest mb-1">Kills</p>
-              <p className="font-bold text-2xl text-premium-sage flex items-center justify-center gap-1.5">
+              <p className="font-bold text-xl sm:text-2xl text-premium-sage flex items-center justify-center gap-1.5">
                 <Flame className="w-5 h-5 text-premium-sage" /> {team.kills || team.killPoints || 0}
               </p>
             </div>
-            <div className="border-l border-premium-border px-3">
+            <div className="border-l border-premium-border px-2 sm:px-3">
               <p className="text-[10px] text-premium-text-secondary font-semibold uppercase tracking-widest mb-1">Total Pts</p>
-              <p className="font-bold text-2xl text-premium-text">{team.totalPoints !== undefined ? team.totalPoints : team.points || 0}</p>
+              <p className="font-bold text-xl sm:text-2xl text-premium-text">
+                {team.totalPoints !== undefined ? team.totalPoints : team.points || 0}
+              </p>
             </div>
           </div>
         </div>

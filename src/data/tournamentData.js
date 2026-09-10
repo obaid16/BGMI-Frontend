@@ -450,5 +450,42 @@ export function clearCanonicalData() {
   return true;
 }
 
+/**
+ * Ensures CANONICAL_TEAMS has accurate standings, kills, wwcd, points, and logos
+ */
+export function syncCanonicalTeamStats() {
+  const currentStandings = getStandingsData();
+  currentStandings.forEach((st) => {
+    const t = CANONICAL_TEAMS.find(
+      (team) => team.id === st.teamId || team.teamName === st.teamName || team.shortName === st.shortName
+    );
+    if (t) {
+      t.rank = st.rank;
+      t.points = st.totalPoints || st.points;
+      t.totalPoints = st.totalPoints || st.points;
+      t.kills = st.kills;
+      t.killPoints = st.killPoints || st.kills;
+      t.placementPoints = st.placementPoints || 0;
+      t.wwcd = st.wwcd;
+      t.matchesPlayed = st.matchesPlayed || st.played || 2;
+      t.logo = t.logo || t.logoUrl;
+      t.banner = t.banner || t.logoUrl || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1600&auto=format&fit=crop&q=80';
+    }
+  });
+
+  // Ensure any team not in standings still has valid defaults
+  CANONICAL_TEAMS.forEach((t) => {
+    t.logo = t.logo || t.logoUrl;
+    t.banner = t.banner || t.logoUrl || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1600&auto=format&fit=crop&q=80';
+    if (t.wwcd === undefined) t.wwcd = 0;
+    if (t.kills === undefined) t.kills = 0;
+    if (t.matchesPlayed === undefined) t.matchesPlayed = 2;
+  });
+}
+
+// Immediately synchronize upon module load
+syncCanonicalTeamStats();
+
+
 
 

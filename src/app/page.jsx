@@ -74,8 +74,8 @@ export default function HomePage() {
               <Trophy className="w-3.5 h-3.5" /> Official BGMI Tournament Platform
             </div>
             <h1 className="font-bold text-3xl sm:text-5xl lg:text-7xl xl:text-[80px] text-premium-text tracking-tight leading-[1.1] sm:leading-[1.05]">
-              MORE THAN A GAME.<br />
-              <span className="text-premium-sage">A STRONGER COMMUNITY.</span>
+              MORE THAN A GAME.{' '}
+              <span className="text-premium-sage block sm:inline">A STRONGER COMMUNITY.</span>
             </h1>
             <p className="text-base sm:text-xl text-premium-text-secondary max-w-2xl mx-auto lg:mx-0 font-medium">
               Join the ultimate college esports experience. Register your squad, track live matches, and dominate the leaderboards.
@@ -109,7 +109,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. LIVE MATCH SPOTLIGHT */}
-      <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+      <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-[11px] font-bold text-premium-text-secondary uppercase tracking-widest flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> MATCH SPOTLIGHT
@@ -177,9 +177,9 @@ export default function HomePage() {
 
       {/* 6. MEDIA HIGHLIGHT */}
       {mediaItems.length > 0 && (
-        <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+        <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between border-b border-premium-border pb-4 mb-8">
-            <h2 className="font-bold text-3xl text-premium-text tracking-tight">Media Highlights</h2>
+            <h2 className="font-bold text-2xl sm:text-3xl text-premium-text tracking-tight">Media Highlights</h2>
             <Link href="/media" className="text-sm font-bold text-premium-text hover:text-premium-sage uppercase tracking-widest transition-colors flex items-center gap-1">
               View Gallery <ArrowRight className="w-4 h-4" />
             </Link>
@@ -194,16 +194,16 @@ export default function HomePage() {
 
       {/* 7. LATEST ANNOUNCEMENTS */}
       {announcements.length > 0 && (
-        <section className="max-w-[1500px] mx-auto px-6 lg:px-8">
+        <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between border-b border-premium-border pb-4 mb-8">
-            <h2 className="font-bold text-3xl text-premium-text tracking-tight">Latest Announcements</h2>
+            <h2 className="font-bold text-2xl sm:text-3xl text-premium-text tracking-tight">Latest Announcements</h2>
             <Link href="/announcements" className="text-sm font-bold text-premium-text hover:text-premium-sage uppercase tracking-widest transition-colors flex items-center gap-1">
               All News <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {announcements.map((ann, idx) => (
-              <div key={idx} className="bg-premium-surface border border-premium-border rounded-[24px] p-8 shadow-sm flex flex-col justify-between">
+              <div key={idx} className="bg-premium-surface border border-premium-border rounded-[24px] p-6 sm:p-8 shadow-sm flex flex-col justify-between">
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-bold text-premium-sage uppercase tracking-widest bg-premium-sage-soft px-2.5 py-1 rounded-md">
@@ -226,11 +226,11 @@ export default function HomePage() {
       )}
 
       {/* 8. COMMUNITY / FINAL CTA */}
-      <section className="max-w-[1500px] mx-auto px-6 lg:px-8 pt-12">
-        <div className="bg-premium-text text-white rounded-[24px] sm:rounded-[32px] p-8 sm:p-12 lg:p-24 text-center relative overflow-hidden shadow-2xl">
+      <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12">
+        <div className="bg-premium-text text-white rounded-[24px] sm:rounded-[32px] p-6 sm:p-12 lg:p-24 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 space-y-8">
-            <h2 className="font-bold text-3xl sm:text-5xl lg:text-[80px] tracking-tight leading-none">
-              Play. Compete.<br />Connect.
+            <h2 className="font-bold text-3xl sm:text-5xl lg:text-[80px] tracking-tight leading-tight sm:leading-none">
+              Play. Compete. Connect.
             </h2>
             <p className="text-lg text-white/70 max-w-xl mx-auto font-medium">
               The battlefield awaits. Register your squad and become part of the most prestigious college tournament of the year.

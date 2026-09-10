@@ -46,18 +46,18 @@ export default function MVPLeaderboardPage() {
   const topMvp = filteredPlayers[0] || null;
 
   return (
-    <div className="max-w-[1500px] mx-auto px-6 lg:px-8 py-16 space-y-12">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-8 sm:space-y-12">
       
       {/* HEADER */}
-      <div className="border-b border-premium-border pb-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div className="space-y-4 text-center sm:text-left">
+      <div className="border-b border-premium-border pb-6 sm:pb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="space-y-3 sm:space-y-4 text-left">
           <div className="inline-flex items-center gap-2 text-xs font-semibold text-amber-700 bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200 uppercase tracking-widest">
             <Flame className="w-4 h-4" /> Top Fragger Leaderboard
           </div>
-          <h1 className="font-bold text-5xl sm:text-6xl text-premium-text tracking-tight">
+          <h1 className="font-bold text-3xl sm:text-5xl lg:text-6xl text-premium-text tracking-tight">
             MVP Standings
           </h1>
-          <p className="text-base text-premium-text-secondary max-w-2xl">
+          <p className="text-sm sm:text-base text-premium-text-secondary max-w-2xl leading-relaxed">
             Player fragger rankings, kill tallies, squad WWCD Chicken Dinners, and tournament MVP standings.
           </p>
         </div>
@@ -104,8 +104,8 @@ export default function MVPLeaderboardPage() {
                     <p className="font-semibold text-premium-text-secondary text-sm tracking-widest uppercase flex flex-wrap items-center justify-center lg:justify-start gap-3 mt-2">
                       <span>Squad: {topMvp.teamName || 'Campus Contender'}</span>
                       {topMvp.wwcd > 0 && (
-                        <span className="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-[10px]">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="inline mr-1 text-amber-500"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> {topMvp.wwcd} WWCD
+                        <span className="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-[10px] inline-flex items-center gap-1">
+                          <Trophy className="w-3.5 h-3.5 text-amber-500" /> {topMvp.wwcd} WWCD
                         </span>
                       )}
                     </p>
@@ -120,8 +120,8 @@ export default function MVPLeaderboardPage() {
                     </div>
                     <div className="border-l border-premium-border">
                       <span className="text-[10px] text-premium-text-secondary uppercase font-semibold tracking-widest block mb-1">Chicken Dinners</span>
-                      <span className="font-bold text-3xl text-amber-600">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="inline mr-1 text-amber-500"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> {topMvp.wwcd || 0}
+                      <span className="font-bold text-3xl text-amber-600 flex items-center justify-center gap-1.5">
+                        <Trophy className="w-5 h-5 text-amber-500" /> {topMvp.wwcd || 0}
                       </span>
                     </div>
                     <div className="border-l border-premium-border">
@@ -209,7 +209,14 @@ export default function MVPLeaderboardPage() {
                           {pKills}
                         </td>
                         <td className="py-4 px-6 text-center font-semibold text-amber-600">
-                          {pWwcd > 0 ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="inline mr-1 text-amber-500"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> ${pWwcd}` : '0'}
+                          {pWwcd > 0 ? (
+                            <span className="inline-flex items-center gap-1 justify-center">
+                              <Trophy className="w-3.5 h-3.5 text-amber-500" />
+                              <span>{pWwcd}</span>
+                            </span>
+                          ) : (
+                            '0'
+                          )}
                         </td>
                         <td className="py-4 px-6 text-center font-medium text-premium-text-secondary">{pMatches}</td>
                         <td className="py-4 px-6 text-center font-bold text-premium-text">{pKd}</td>

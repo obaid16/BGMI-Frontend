@@ -32,17 +32,17 @@ export default function ScheduleTab() {
   }, [filter]);
 
   return (
-    <div className="max-w-[1500px] mx-auto px-6 lg:px-8 py-16 space-y-12">
+    <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-8 sm:space-y-12">
       
       {/* PAGE HEADER */}
-      <div className="border-b border-premium-border pb-8 space-y-4">
-        <div className="inline-flex items-center gap-2 text-xs font-semibold text-premium-sage uppercase tracking-widest bg-premium-sage-soft px-3 py-1.5 rounded-full border border-premium-sage/30">
+      <div className="border-b border-premium-border pb-6 sm:pb-8 space-y-3 sm:space-y-4">
+        <div className="inline-flex items-center gap-2 text-xs font-semibold text-premium-sage uppercase tracking-widest bg-premium-sage-soft px-3.5 py-1.5 rounded-full border border-premium-sage/30">
           <Swords className="w-4 h-4" /> Match Schedule
         </div>
-        <h1 className="font-bold text-5xl sm:text-6xl text-premium-text tracking-tight">
+        <h1 className="font-bold text-3xl sm:text-5xl lg:text-6xl text-premium-text tracking-tight">
           Tournament Matches
         </h1>
-        <p className="text-base text-premium-text-secondary max-w-2xl">
+        <p className="text-sm sm:text-base text-premium-text-secondary max-w-2xl leading-relaxed">
           Tournament map rotations, live scoreboards, custom room launches, and referee credentials.
         </p>
       </div>
