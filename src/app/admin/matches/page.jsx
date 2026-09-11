@@ -73,9 +73,18 @@ export default function AdminMatchesPage() {
 
   const handleStatusToggle = async (matchId, currentStatus) => {
     const nextStatus = currentStatus === 'Upcoming' ? 'Live' : currentStatus === 'Live' ? 'Completed' : 'Upcoming';
-    await updateMatchStatus(matchId, nextStatus);
-    setMatches((prev) => prev.map((m) => (m.id === matchId ? { ...m, status: nextStatus } : m)));
+    setMatches((prev) => prev.map((m) => ((m.id || m._id) === matchId ? { ...m, status: nextStatus } : m)));
     showToast(`Match status updated to ${nextStatus}`, 'info');
+
+    try {
+      await updateMatchStatus(matchId, nextStatus);
+      const refreshed = await getMatches('All', true);
+      if (Array.isArray(refreshed)) {
+        setMatches(refreshed);
+      }
+    } catch (err) {
+      console.error('Failed to update match status:', err);
+    }
   };
 
   return (

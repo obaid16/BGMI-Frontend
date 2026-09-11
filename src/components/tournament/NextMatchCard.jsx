@@ -6,45 +6,117 @@ import { Radio, Clock, Swords, Shield, Copy, Check, X, Users, MapPin } from 'luc
 import Badge from '../common/Badge';
 import Button from '../common/Button';
 
+// Robust helper to parse scheduled match date & time into Date object
+function parseMatchDateTime(dateStr, timeStr) {
+  if (!dateStr) return null;
+  if (dateStr.includes('T')) {
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  const cleanTime = (timeStr || '10:00 AM').trim();
+  const match = cleanTime.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+  if (match) {
+    let hours = parseInt(match[1], 10);
+    const minutes = parseInt(match[2], 10);
+    const meridian = match[3]?.toUpperCase();
+    if (meridian === 'PM' && hours < 12) hours += 12;
+    if (meridian === 'AM' && hours === 12) hours = 0;
+    
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) {
+      d.setHours(hours, minutes, 0, 0);
+      return d;
+    }
+  }
+
+  const fallback = new Date(`${dateStr} ${cleanTime}`);
+  return isNaN(fallback.getTime()) ? null : fallback;
+}
+
 export default function NextMatchCard({ match, topTeams = [], registeredSquadsCount }) {
-  const [timeLeft, setTimeLeft] = useState({ hours: 2, minutes: 45, seconds: 30 });
+  const [countdown, setCountdown] = useState({ hours: 0, minutes: 0, seconds: 0, isPast: false });
+  const [liveTime, setLiveTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [showModal, setShowModal] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
   const [copiedPass, setCopiedPass] = useState(false);
 
+  const isLive = match?.status === 'Live';
+
+  // Live countdown / elapsed timer (ticking every second dynamically)
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return prev;
-      });
-    }, 1000);
+    if (!match) return;
 
-    return () => clearInterval(timer);
-  }, []);
+    function updateTimer() {
+      const now = Date.now();
+      if (isLive) {
+        // Calculate elapsed live time from match.updatedAt or start of live event
+        const liveStart = match.updatedAt ? new Date(match.updatedAt).getTime() : now;
+        const elapsed = Math.max(0, Math.floor((now - liveStart) / 1000));
+        setLiveTime({
+          hours: Math.floor(elapsed / 3600),
+          minutes: Math.floor((elapsed % 3600) / 60),
+          seconds: elapsed % 60,
+        });
+      } else {
+        const target = parseMatchDateTime(match.date, match.time);
+        if (target) {
+          const diff = target.getTime() - now;
+          if (diff <= 0) {
+            setCountdown({ hours: 0, minutes: 0, seconds: 0, isPast: true });
+          } else {
+            const totalSec = Math.floor(diff / 1000);
+            setCountdown({
+              hours: Math.floor(totalSec / 3600),
+              minutes: Math.floor((totalSec % 3600) / 60),
+              seconds: totalSec % 60,
+              isPast: false,
+            });
+          }
+        }
+      }
+    }
 
-  if (!match) return null;
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [match?.id, match?.status, match?.date, match?.time, match?.updatedAt, isLive]);
 
-  const isLive = match.status === 'Live';
+  // When no match is active or scheduled by admin, show an informative live standby banner
+  if (!match) {
+    return (
+      <div className="relative overflow-hidden bg-white border border-premium-border rounded-[20px] sm:rounded-[24px] p-8 sm:p-12 shadow-sm text-center space-y-5">
+        <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 mx-auto shadow-sm">
+          <Radio className="w-7 h-7 text-amber-600 animate-pulse" />
+        </div>
+        <div className="space-y-2">
+          <h3 className="font-bold text-2xl text-premium-text tracking-tight">No Live Match Currently Running</h3>
+          <p className="text-sm text-premium-text-secondary max-w-md mx-auto leading-relaxed">
+            When tournament administrators schedule or turn on a match live, it will appear here in real time with squad logos, live clocks, and room credentials.
+          </p>
+        </div>
+        <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase tracking-widest">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Custom Lobby Standby
+          </span>
+          <Link href="/matches">
+            <Button variant="outline" size="sm">
+              View Schedule
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-  // Extract participating teams or fallback to top contender list
-  const participatingSquads = topTeams.length > 0
-    ? topTeams
-    : [
-        { teamName: 'GODLIKE ESPORTS', rank: 1, department: 'CSE' },
-        { teamName: 'TEAM APEX GAMING', rank: 2, department: 'ECE' },
-        { teamName: 'SOUL WARRIORS', rank: 3, department: 'MECH' },
-        { teamName: 'CYBER KNIGHTS', rank: 4, department: 'IT' },
-        { teamName: 'VENOM ESPORTS', rank: 5, department: 'CIVIL' },
-        { teamName: 'BLACK MAMBAS', rank: 6, department: 'EE' },
-        { teamName: 'VALOR REAPERS', rank: 7, department: 'CSE' },
-        { teamName: 'TITAN SQUAD', rank: 8, department: 'AI-DS' },
-      ];
+  // Extract participating teams dynamically: priority is match.participatingTeams, then real approved teams
+  const participatingSquads = (match.participatingTeams && match.participatingTeams.length > 0)
+    ? match.participatingTeams
+    : (topTeams && topTeams.length > 0)
+      ? topTeams
+      : [];
 
   const totalSquadsCount = Math.max(registeredSquadsCount || 0, participatingSquads.length, 24);
-  const totalPlayersCount = totalSquadsCount * 4;
 
   const roomDetails = {
     roomId: match.roomId || '8492041',
@@ -54,9 +126,9 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
     server: 'Asia (18ms Ping)',
     slots: participatingSquads.map((t, idx) => ({
       slot: idx + 1,
-      team: t.teamName || t.name,
-      seed: idx === 0 ? 'Top Seed' : idx === 1 ? 'Challenger' : `Rank #${idx + 1}`
-    }))
+      team: t.name || t.teamName || `Squad #${idx + 1}`,
+      seed: idx === 0 ? 'Top Seed' : idx === 1 ? 'Challenger' : `Rank #${idx + 1}`,
+    })),
   };
 
   const copyToClipboard = (text, type) => {
@@ -80,7 +152,7 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
             {isLive ? (
               <Badge variant="live" size="md">
                 <span className="flex items-center gap-1.5 font-bold uppercase tracking-widest">
-                  <Radio className="w-3.5 h-3.5 animate-pulse text-red-500" /> LIVE
+                  <Radio className="w-3.5 h-3.5 animate-pulse text-red-500" /> LIVE MATCH
                 </span>
               </Badge>
             ) : (
@@ -112,7 +184,6 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
           
           {/* MAP DISPLAY BOX (5 COLS) */}
           <div className="lg:col-span-5 p-5 bg-premium-background rounded-[16px] border border-premium-border flex flex-col justify-between space-y-6">
-            
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-premium-border pb-3">
                 <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest flex items-center gap-1.5">
@@ -135,7 +206,9 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
                 </div>
                 <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
                   <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">Status</span>
-                  <span className="font-bold text-amber-600">Lobby Ready</span>
+                  <span className={`font-bold ${isLive ? 'text-red-600' : 'text-amber-600'}`}>
+                    {isLive ? 'Live In Battle' : 'Lobby Ready'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -155,30 +228,54 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
               </h4>
             </div>
 
-            {/* SQUAD CHIPS GRID */}
+            {/* SQUAD CHIPS GRID WITH REAL LOGOS & NAMES */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3 max-h-56 overflow-y-auto custom-scrollbar pr-1 sm:pr-2">
-              {participatingSquads.map((sq, idx) => (
-                <div
-                  key={idx}
-                  className="p-2 sm:p-3 bg-white rounded-[10px] sm:rounded-[12px] border border-premium-border flex items-center gap-2 sm:gap-3 transition-colors shadow-sm min-w-0"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[6px] sm:rounded-[8px] bg-premium-surface-soft border border-premium-border flex items-center justify-center text-xs font-bold text-amber-600 shrink-0 overflow-hidden">
-                    {sq.logo || sq.logoUrl ? (
-                      <img src={sq.logo || sq.logoUrl} alt={sq.teamName || sq.name} className="w-full h-full object-cover rounded-[6px]" />
-                    ) : (
-                      <span>{(sq.teamName || sq.name || 'T').charAt(0).toUpperCase()}</span>
-                    )}
+              {participatingSquads.map((sq, idx) => {
+                const teamName = sq.name || sq.teamName || `Squad #${idx + 1}`;
+                const teamLogo = sq.logo || sq.logoUrl || '';
+
+                return (
+                  <div
+                    key={sq.id || sq._id || idx}
+                    className="p-2 sm:p-3 bg-white rounded-[10px] sm:rounded-[12px] border border-premium-border flex items-center gap-2 sm:gap-3 transition-colors shadow-sm min-w-0"
+                  >
+                    <div className="w-8 h-8 rounded-[8px] bg-premium-surface-soft border border-premium-border flex items-center justify-center text-xs font-bold text-amber-600 shrink-0 overflow-hidden relative">
+                      {teamLogo ? (
+                        <img
+                          src={teamLogo}
+                          alt={teamName}
+                          className="w-full h-full object-cover rounded-[6px]"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            if (e.currentTarget.nextElementSibling) {
+                              e.currentTarget.nextElementSibling.style.display = 'flex';
+                            }
+                          }}
+                        />
+                      ) : null}
+                      <span className={teamLogo ? 'hidden' : 'flex'}>
+                        {teamName.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="truncate text-left flex-1 min-w-0">
+                      <p className="font-bold text-xs sm:text-sm text-premium-text truncate" title={teamName}>
+                        {teamName}
+                      </p>
+                      <p className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
+                        Slot #{String(idx + 1).padStart(2, '0')}
+                      </p>
+                    </div>
                   </div>
-                  <div className="truncate text-left">
-                    <p className="font-bold text-xs sm:text-sm text-premium-text truncate">
-                      {sq.teamName || sq.name}
-                    </p>
-                    <p className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
-                      Slot #{String(idx + 1).padStart(2, '0')}
-                    </p>
-                  </div>
+                );
+              })}
+
+              {participatingSquads.length === 0 && (
+                <div className="col-span-2 py-8 text-center bg-white rounded-[12px] border border-premium-border p-4">
+                  <p className="text-xs font-bold text-premium-text-secondary">
+                    No approved squads assigned yet. Tournament squads will populate upon registration approval.
+                  </p>
                 </div>
-              ))}
+              )}
             </div>
 
             <div className="pt-4 border-t border-premium-border flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-premium-text-secondary">
@@ -192,23 +289,53 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
         {/* 3. FOOTER COUNTDOWN & ACTION STRIP */}
         <div className="relative z-10 pt-6 border-t border-premium-border flex flex-col sm:flex-row items-center justify-between gap-6">
           
-          {/* Ticking Timer */}
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">Launch In:</span>
-            <div className="flex items-center gap-1.5 font-bold text-lg text-amber-600">
-              <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
-                {String(timeLeft.hours).padStart(2, '0')}h
+          {/* Dynamic Live Ticking Timer */}
+          {isLive ? (
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" /> Live Clock:
               </span>
-              <span className="text-amber-300">:</span>
-              <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
-                {String(timeLeft.minutes).padStart(2, '0')}m
+              <div className="flex items-center gap-1.5 font-bold text-lg text-red-600">
+                <span className="bg-red-50 px-3 py-1.5 rounded-[10px] border border-red-200">
+                  {String(liveTime.hours).padStart(2, '0')}h
+                </span>
+                <span className="text-red-300">:</span>
+                <span className="bg-red-50 px-3 py-1.5 rounded-[10px] border border-red-200">
+                  {String(liveTime.minutes).padStart(2, '0')}m
+                </span>
+                <span className="text-red-300">:</span>
+                <span className="bg-red-50 px-3 py-1.5 rounded-[10px] border border-red-200">
+                  {String(liveTime.seconds).padStart(2, '0')}s
+                </span>
+              </div>
+            </div>
+          ) : countdown.isPast ? (
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Status:
               </span>
-              <span className="text-amber-300">:</span>
-              <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
-                {String(timeLeft.seconds).padStart(2, '0')}s
+              <span className="bg-emerald-50 text-emerald-700 font-bold px-3 py-1.5 rounded-[10px] border border-emerald-200 text-sm uppercase tracking-widest">
+                Lobby Open / Drop Imminent
               </span>
             </div>
-          </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">Launch In:</span>
+              <div className="flex items-center gap-1.5 font-bold text-lg text-amber-600">
+                <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
+                  {String(countdown.hours).padStart(2, '0')}h
+                </span>
+                <span className="text-amber-300">:</span>
+                <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
+                  {String(countdown.minutes).padStart(2, '0')}m
+                </span>
+                <span className="text-amber-300">:</span>
+                <span className="bg-amber-50 px-3 py-1.5 rounded-[10px] border border-amber-200">
+                  {String(countdown.seconds).padStart(2, '0')}s
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Action Button */}
           <Button

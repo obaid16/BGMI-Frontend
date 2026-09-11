@@ -241,24 +241,21 @@ export async function updateTeamStatus(teamId, status) {
 }
 
 // ==================== MATCHES API ====================
-export async function getMatches(filter = 'All') {
+export async function getMatches(filter = 'All', bypassCache = false) {
   try {
     let url = '/matches';
     if (filter !== 'All') {
       url += `?status=${filter}`;
     }
-    const res = await fetchAPI(url);
-    const data = res.data && res.data.length > 0 ? res.data : CANONICAL_MATCHES;
+    const res = await fetchAPI(url, { bypassCache });
+    const data = Array.isArray(res?.data) ? res.data : [];
     if (filter !== 'All') {
       return data.filter((m) => m.status === filter);
     }
     return data;
   } catch (err) {
     console.error('getMatches failed:', err);
-    if (filter !== 'All') {
-      return CANONICAL_MATCHES.filter((m) => m.status === filter);
-    }
-    return CANONICAL_MATCHES;
+    return [];
   }
 }
 
@@ -506,17 +503,40 @@ export async function getTournament() {
     const res = await fetchAPI('/tournament');
     if (res.data) return res.data;
   } catch (err) {
-    console.warn('getTournament failed, using fallback:', err);
+    // ignore
   }
+
+  try {
+    const [teams, matches] = await Promise.all([
+      getTeams('All', '', true).catch(() => []),
+      getMatches('All', true).catch(() => []),
+    ]);
+
+    const liveOrNext = matches.find((m) => m.status === 'Live' || m.status === 'Upcoming');
+
+    return {
+      tournamentName: 'NIT BGMI Esports Championship 2026',
+      status: 'Active',
+      registeredSquads: teams.length,
+      verifiedPlayers: teams.reduce((acc, t) => acc + (t.players?.length || 0), 0),
+      totalMatches: matches.length,
+      matchesPlayed: matches.filter((m) => m.status === 'Completed').length,
+      currentRound: liveOrNext?.round || 'Grand Finals',
+      nextMatch: liveOrNext || null,
+    };
+  } catch (e) {
+    console.warn('getTournament failed:', e);
+  }
+
   return {
     tournamentName: 'NIT BGMI Esports Championship 2026',
     status: 'Active',
-    registeredSquads: CANONICAL_TEAMS.length || 24,
-    verifiedPlayers: getPlayerData().length || 96,
-    totalMatches: CANONICAL_MATCHES.length || 12,
-    matchesPlayed: getResultsData().length || 2,
-    currentRound: 3,
-    nextMatch: CANONICAL_MATCHES.find(m => m.status === 'Live' || m.status === 'Upcoming') || CANONICAL_MATCHES[0]
+    registeredSquads: 0,
+    verifiedPlayers: 0,
+    totalMatches: 0,
+    matchesPlayed: 0,
+    currentRound: 'Standby',
+    nextMatch: null,
   };
 }
 

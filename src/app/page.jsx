@@ -18,49 +18,60 @@ export default function HomePage() {
   const [announcements, setAnnouncements] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [teamsCount, setTeamsCount] = useState(24);
+  const [approvedTeams, setApprovedTeams] = useState([]);
+
+  const loadHomeData = async (isInitial = false) => {
+    try {
+      if (isInitial) setLoading(true);
+      const [matchesRes, mediaRes, annsRes, teamsRes] = await Promise.all([
+        getMatches('All', true).catch(() => []),
+        getMedia('All', 'Published').catch(() => []),
+        getAnnouncements().catch(() => []),
+        getTeams('All', '', true).catch(() => [])
+      ]);
+
+      const matches = Array.isArray(matchesRes) ? matchesRes : [];
+      const media = Array.isArray(mediaRes) ? mediaRes : [];
+      const anns = Array.isArray(annsRes) ? annsRes : [];
+      const teams = Array.isArray(teamsRes) ? teamsRes : [];
+
+      const approved = teams.filter((t) => t.status === 'Approved' || t.verified);
+      setApprovedTeams(approved.length > 0 ? approved : teams);
+      setTeamsCount(approved.length > 0 ? approved.length : teams.length > 0 ? teams.length : 24);
+
+      // Find match spotlight: Priority 1 is Live match, Priority 2 is Upcoming match
+      const liveMatch = matches.find((m) => m && m.status === 'Live');
+      const upcomingMatch = matches.find((m) => m && m.status === 'Upcoming');
+      const liveOrNext = liveMatch || upcomingMatch || null;
+      setNextMatch(liveOrNext);
+
+      // Upcoming matches excluding the spotlight one
+      const upMatches = matches
+        .filter((m) => m && m.status === 'Upcoming' && (m.id || m._id) !== (liveOrNext?.id || liveOrNext?._id))
+        .slice(0, 4);
+      setUpcomingMatches(upMatches.length > 0 ? upMatches : matches.filter(m => (m.id || m._id) !== (liveOrNext?.id || liveOrNext?._id)).slice(0, 3));
+
+      const publishedMediaOnly = media.filter((item) => item && (item.status === 'Published' || item.verified === true));
+      setMediaItems(publishedMediaOnly.slice(0, 4));
+
+      // Published announcements
+      const publishedAnns = anns.filter((a) => a.status === 'Published');
+      setAnnouncements(publishedAnns.slice(0, 3));
+    } catch (err) {
+      console.error('Failed to load homepage data', err);
+    } finally {
+      if (isInitial) setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function loadHomeData() {
-      try {
-        setLoading(true);
-        const [matchesRes, mediaRes, annsRes, teamsRes] = await Promise.all([
-          getMatches().catch(() => []),
-          getMedia('All', 'Published').catch(() => []),
-          getAnnouncements().catch(() => []),
-          getTeams().catch(() => [])
-        ]);
+    loadHomeData(true);
 
-        const matches = Array.isArray(matchesRes) ? matchesRes : [];
-        const media = Array.isArray(mediaRes) ? mediaRes : [];
-        const anns = Array.isArray(annsRes) ? annsRes : [];
-        const teams = Array.isArray(teamsRes) ? teamsRes : [];
-
-        setTeamsCount(teams.length > 0 ? teams.length : 24);
-
-        // Find live or next match
-        const liveOrNext = matches.find((m) => m && (m.status === 'Live' || m.status === 'Upcoming'));
-        setNextMatch(liveOrNext || matches[0] || null);
-
-        // Upcoming matches excluding the spotlight one
-        const upMatches = matches
-          .filter(m => m && m.status === 'Upcoming' && m.id !== liveOrNext?.id)
-          .slice(0, 4);
-        setUpcomingMatches(upMatches.length > 0 ? upMatches : matches.slice(1, 4));
-
-        const publishedMediaOnly = media.filter((item) => item && (item.status === 'Published' || item.verified === true));
-        setMediaItems(publishedMediaOnly.slice(0, 4));
-
-        // Published announcements
-        const publishedAnns = anns.filter(a => a.status === 'Published');
-        setAnnouncements(publishedAnns.slice(0, 3));
-
-      } catch (err) {
-        console.error('Failed to load homepage data', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadHomeData();
+    // Live polling every 6 seconds to capture live match activations instantly
+    const interval = setInterval(() => {
+      loadHomeData(false);
+    }, 6000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -118,7 +129,7 @@ export default function HomePage() {
         {loading ? (
           <SkeletonGrid count={1} />
         ) : (
-          <NextMatchCard match={nextMatch} registeredSquadsCount={teamsCount} />
+          <NextMatchCard match={nextMatch} topTeams={approvedTeams} registeredSquadsCount={teamsCount} />
         )}
       </section>
 
