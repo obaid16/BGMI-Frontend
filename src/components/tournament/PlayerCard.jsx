@@ -18,21 +18,8 @@ export default function PlayerCard({ player }) {
 
   return (
     <div className="bg-premium-surface border border-premium-border rounded-[20px] p-6 relative group hover:border-premium-text hover:shadow-premium-float transition-all duration-300">
-      <div className="flex items-start gap-5">
-        
-        {/* Avatar */}
-        <div className="relative w-16 h-16 rounded-2xl bg-premium-background border border-premium-border overflow-hidden flex-shrink-0 shadow-sm">
-          {player.avatar ? (
-            <img src={player.avatar} alt={player.ign} className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-premium-text-secondary">
-              <User className="w-7 h-7" />
-            </div>
-          )}
-        </div>
-
-        {/* Player Details */}
-        <div className="flex-1 space-y-1.5">
+      {/* Player Details */}
+      <div className="space-y-1.5">
           <div className="flex items-center justify-between gap-2">
             <h4 className="font-bold text-lg text-premium-text group-hover:text-black transition-colors leading-tight">
               {player.ign}
@@ -67,8 +54,6 @@ export default function PlayerCard({ player }) {
             </span>
           </div>
         </div>
-
-      </div>
 
       {/* Player Stats Footer */}
       {(player.kills !== undefined || player.kdRatio !== undefined) && (
