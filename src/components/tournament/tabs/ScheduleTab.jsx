@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import MatchCard from '@/components/tournament/MatchCard';
 import EmptyState from '@/components/common/EmptyState';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import { SkeletonGrid } from '@/components/common/Skeleton';
 import { getMatches, getTeams, deleteMatch } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Swords, ShieldCheck, ExternalLink } from 'lucide-react';
+import { Swords } from 'lucide-react';
 
 export default function ScheduleTab() {
   const { showToast } = useToast();
@@ -95,22 +94,6 @@ export default function ScheduleTab() {
         </p>
       </div>
 
-      {/* ADMIN CONTROL BANNER (Only visible to authenticated administrators) */}
-      {isAdmin && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-amber-50 border border-amber-200/80 rounded-2xl text-xs font-semibold text-amber-950 shadow-sm">
-          <div className="flex items-center gap-2.5">
-            <ShieldCheck className="w-5 h-5 text-amber-600 shrink-0" />
-            <span>Administrator Privileges Active: You can delete match schedules or manage room lobbies directly.</span>
-          </div>
-          <Link
-            href="/admin/matches"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors shrink-0 shadow-sm"
-          >
-            <span>Admin Match Manager</span>
-            <ExternalLink className="w-3 h-3" />
-          </Link>
-        </div>
-      )}
 
       {/* FILTER TABS */}
       <div className="flex items-center gap-3 overflow-x-auto pb-4 hide-scrollbar">
