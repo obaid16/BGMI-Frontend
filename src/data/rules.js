@@ -1,78 +1,177 @@
 export const mockRules = [
   {
     id: 'rule-1',
-    category: 'Tournament Format',
-    title: '1. Tournament Structure & Maps',
-    content: `The BGMI College Championship 2026 consists of 4 custom room matches:
-    - Total Matches: 4 custom room matches in total.
-    - Battle Maps: Played exclusively on Erangel and Livik.
-    - Format: Point-based leaderboard based on placement and kill points.`
+    category: 'Device & Equipment',
+    title: '01. Device & Equipment Rules',
+    content: `1. Only mobile phones are allowed for participation in the tournament.
+2. Tablets, iPads, emulators, laptops, PCs, or any other devices are strictly prohibited.
+3. Every player must use their registered BGMI account throughout the tournament.
+4. Players are not allowed to switch accounts or play using another player's account.
+5. Players are responsible for ensuring that their device has sufficient battery, storage, internet connection, and the required BGMI version before every match.
+6. Players must keep their devices ready before the scheduled match time.`
   },
   {
     id: 'rule-2',
-    category: 'Team Requirements',
-    title: '2. Roster Eligibility & College Proof',
-    content: `Each team must represent a single recognized College, University, or Institute in India.
-    - Roster Composition: 4 Main Players + 1 Optional Substitute.
-    - All players must be currently enrolled full-time students with valid College ID Cards.
-    - Cross-college teams are strictly forbidden unless explicit inter-collegiate exemption is granted by administrators.`
+    category: 'Fair Play & Anti-Cheat',
+    title: '02. Hacking, Cheating & Unfair Play — Zero Tolerance',
+    content: `1. The use of hacks, cheats, scripts, injectors, game-file modifications, config modifications, unauthorized applications, or any third-party tools that provide an unfair advantage is strictly prohibited.
+2. Any attempt to gain an unfair advantage will be treated as a serious violation.
+3. The tournament will use Advanced Room Cards, and the organizers reserve the right to remove or ban a player immediately if cheating, hacking, or suspicious activity is detected.
+4. A player found using cheats or hacks may be immediately disqualified from the tournament.
+5. A banned player will not be allowed to participate in any remaining matches of the tournament.
+6. Depending on the severity of the violation, the entire team may also be disqualified.
+7. Claiming that the hack/cheat was accidental, borrowed, or caused by another person will not automatically excuse the violation.
+
+NO HACKS • NO CHEATS • NO THIRD-PARTY TOOLS • PLAY FAIR`
   },
   {
     id: 'rule-3',
-    category: 'Player Requirements',
-    title: '3. In-Game Account & Device Guidelines',
-    content: `- Account Level: Minimum BGMI In-Game Level 35 required for all players.
-    - Rank Requirement: Minimum Platinum V rank in the current or previous season.
-    - Devices: Mobile phones ONLY (Android or iOS). Emulators, iPad/Tablets, triggers, and modified APKs are strictly banned and result in immediate ban.`
+    category: 'Slot & Bootcamp',
+    title: '03. Slot & Bootcamp Allocation',
+    content: `1. The organizers will assign every team a specific Slot/Bootcamp Number.
+2. Once your respective slot number is announced, your team must stay in its assigned slot.
+3. Players are not allowed to move to, sit in, or occupy another team's slot/Bootcamp.
+4. Players must not switch slots during a match without permission from the tournament organizers.
+5. Players from different teams must not intentionally gather in another team's assigned Bootcamp.
+6. If a player needs to leave their assigned slot for any genuine reason, they must first inform the organizer and receive permission.
+7. Repeatedly ignoring slot instructions may result in a warning, penalty, or disqualification.
+
+YOUR SLOT IS YOUR TEAM'S DESIGNATED AREA — DO NOT MOVE TO ANOTHER TEAM'S SLOT`
   },
   {
     id: 'rule-4',
-    category: 'Match Rules',
-    title: '4. Lobby Protocols & Timing',
-    content: `- Room IDs and Passwords will be shared in the official Team Captain Discord channel 15 minutes before the match start time.
-    - Teams must sit in their designated slot numbers in the lobby.
-    - A minimum 3-minute lobby grace period will be provided. Games will launch strictly on schedule.`
+    category: 'Match & Room',
+    title: '04. Match & Room Rules',
+    content: `1. Players must join their respective room before the scheduled match start time.
+2. Players must join the correct room assigned by the organizers.
+3. Room ID and password will be provided by the organizers.
+4. Room ID and password must not be shared with non-participating players.
+5. Players must follow all instructions given by the room administrators and tournament organizers.
+6. Once the match has started, late entry may not be guaranteed.
+7. Players must not intentionally disrupt the room or delay the start of a match.
+8. Players must remain in their assigned physical slot/Bootcamp during the match unless permission is given by the organizer.`
   },
   {
     id: 'rule-5',
-    category: 'Scoring System',
-    title: '5. Point System Breakdown',
-    content: `Points are awarded per match as follows:
-    - 1st Place (WWCD): 10 Points
-    - 2nd Place: 8 Points
-    - 3rd Place: 5 Points
-    - 4th Place and below (4th - 16th): 0 Points
-    - Finish / Kill Points: 1 Point per kill.`
+    category: 'Elimination Protocol',
+    title: '05. After Elimination Protocols',
+    content: `1. Once a player or team is eliminated from a match, they must remain in their respective assigned Bootcamp/slot.
+2. Eliminated players are not allowed to move to another team's Bootcamp or slot.
+3. Eliminated players must wait until the entire match has officially ended.
+4. Eliminated players must not provide any information to teams that are still playing.
+5. No coaching, enemy-location information, callouts, or strategic information may be given to active players after elimination.
+6. Players must not intentionally communicate with active players for the purpose of influencing the ongoing match.
+7. Players may leave their assigned Bootcamp only after the match has completely ended and the organizer permits them to do so.
+
+ELIMINATED? STAY IN YOUR BOOTCAMP UNTIL THE MATCH ENDS`
   },
   {
     id: 'rule-6',
-    category: 'POV Requirements',
-    title: '6. Screen Recording & Anti-Cheat Proof',
-    content: `- At least 2 players from each squad (including the IGL) MUST record full gameplay video and internal audio for every match.
-    - Upon match completion, referees reserve the right to request screen recordings within 30 minutes. Failure to provide recording leads to point forfeiture.`
+    category: 'Team & Roster',
+    title: '06. Team & Player Rules',
+    content: `1. Only registered players are allowed to participate.
+2. No unregistered player may play in place of a registered player.
+3. Players cannot change teams after the tournament has started.
+4. Players must use their registered in-game identity/details.
+5. Players must not intentionally help another team.
+6. Teaming or collusion between teams is strictly prohibited.
+7. Any attempt to manipulate the result of a match may result in immediate disqualification.`
   },
   {
     id: 'rule-7',
-    category: 'Disqualification',
-    title: '7. Zero Tolerance Anti-Cheat & Hacking',
-    content: `Using third-party wallhacks, auto-aim, ESP, recoil mods, VPNs, or account sharing results in immediate lifetime ban from all collegiate esports leagues and reporting to BGMI anti-cheat security.`
+    category: 'Sportsmanship',
+    title: '07. Fair Play & Sportsmanship',
+    content: `All players are expected to maintain proper sportsmanship throughout the tournament. The following behaviour is prohibited:
+• Abusive or offensive language toward organizers or players
+• Threatening behaviour
+• Fighting or physical confrontation
+• Deliberately disturbing another team
+• Intentionally distracting players during a match
+• Harassment of other participants
+• Disrespectful behaviour toward tournament staff
+• Deliberate damage to tournament property or equipment
+
+SERIOUS MISCONDUCT MAY RESULT IN IMMEDIATE REMOVAL FROM THE TOURNAMENT`
   },
   {
     id: 'rule-8',
-    category: 'Fair Play',
-    title: '8. Teaming & Unsportsmanlike Conduct',
-    content: `Teaming up with opponent squads, deliberate feeding of kills, abusive in-game voice/text chat, or toxic behavior toward referees will incur immediate disqualification and a 10-point deduction penalty.`
+    category: 'Exploits',
+    title: '08. Bugs, Glitches & Exploits',
+    content: `1. Players are not allowed to intentionally exploit any game bug or glitch to gain an unfair advantage.
+2. If a player discovers a serious game-breaking issue, they must report it to the tournament organizers.
+3. Deliberately abusing an unintended game mechanic may result in a penalty or disqualification.
+4. The organizers will decide how to handle major technical or gameplay issues.`
   },
   {
     id: 'rule-9',
-    category: 'Technical Issues',
-    title: '9. Server Crashes & Disconnections',
-    content: `If more than 5 teams fail to enter the lobby due to BGMI game server crash before the plane launches, the match will be restarted. Individual player disconnections during match gameplay will NOT trigger a remake.`
+    category: 'Technical',
+    title: '09. Technical & Connectivity Issues',
+    content: `1. Every player is responsible for their own mobile phone, battery, internet connection, BGMI installation, and device performance.
+2. Players should ensure their devices are fully charged before every match.
+3. Players should have a stable internet connection before entering the room.
+4. Individual device, battery, network, or connectivity problems will generally not result in a match restart.
+5. If a major server or game-related issue affects multiple teams, the organizers will decide whether the match should be restarted, continued, or otherwise handled.
+6. The organizer's decision regarding technical issues will be final.`
   },
   {
     id: 'rule-10',
-    category: 'Dispute Resolution',
-    title: '10. Appeals & Admin Authority',
-    content: `Any dispute regarding match scores, kill counts, or team violations must be submitted via the Official Support Portal within 1 hour of match conclusion. Tournament Director decisions are final.`
+    category: 'Administration',
+    title: '10. Room Card & Tournament Administration',
+    content: `1. The tournament will use Advanced Room Cards for the matches.
+2. Tournament organizers and room administrators will have the authority to manage the room and participating players.
+3. If a player violates tournament rules, the organizers may remove the player from the room.
+4. A player removed or banned for a serious violation may not be permitted to participate in any remaining matches.
+5. Players must cooperate with organizers and room administrators at all times.`
+  },
+  {
+    id: 'rule-11',
+    category: 'Scoring',
+    title: '11. Match Results & Scoring',
+    content: `1. Match results will be recorded by the tournament organizers.
+2. Players must not interfere with the score-recording process.
+3. Any scoring dispute must be reported to the organizer immediately after the match.
+4. Once the results have been verified and finalized, changes may not be permitted unless an official error is identified.
+5. The final tournament ranking will be determined according to the official scoring system announced by the organizers.`
+  },
+  {
+    id: 'rule-12',
+    category: 'Communication',
+    title: '12. Prohibited Communication',
+    content: `1. Players must not communicate with active players from another team during an ongoing match.
+2. Eliminated players must not provide information about: enemy locations, rotations, player health, loot, vehicles, zone information, or opponent strategies.
+3. Spectators, eliminated players, and other participants must not interfere with active teams.
+4. Any attempt to provide outside information to an active player may be treated as unfair play.`
+  },
+  {
+    id: 'rule-13',
+    category: 'Disqualification',
+    title: '13. Disqualification & Ban Policy',
+    content: `A player or team may be immediately disqualified for:
+• Hacking or cheating
+• Using prohibited devices (tablets, iPads, emulators, laptops)
+• Unauthorized third-party software (scripts, injectors, or modified files)
+• Exploiting serious bugs/glitches
+• Teaming or collusion
+• Using an unregistered player
+• Information sharing after elimination
+• Entering another team's slot/bootcamp
+• Deliberately disrupting a team
+• Match manipulation
+• Serious misconduct / abuse
+• Refusing organizer instructions
+
+THE TOURNAMENT ORGANIZERS RESERVE THE RIGHT TO REMOVE, DISQUALIFY, OR BAN ANY PLAYER OR TEAM THAT VIOLATES THE TOURNAMENT RULES OR GAINS AN UNFAIR ADVANTAGE. A BANNED PLAYER WILL NOT BE ALLOWED TO PARTICIPATE IN ANY REMAINING MATCHES.`
+  },
+  {
+    id: 'rule-14',
+    category: 'Governance',
+    title: "14. Organizer's Final Authority",
+    content: `1. All participants must follow the instructions of the Tournament Organizers, Referees, Room Administrators, and authorized staff.
+2. The organizers have the authority to take action against rule violations.
+3. In situations not specifically covered by these rules, the organizers will decide the appropriate action.
+4. The decision of the Tournament Organizers regarding rule violations, disputes, technical issues, penalties, disqualifications, and match administration will be final.
+
+PLAY FAIR. PLAY CLEAN. RESPECT THE GAME.
+Mobile Only • No Tabs / iPads • No Emulators • No Hacks • No Cheats • No Third-Party Tools • No Teaming • No Slot Intrusion • No Info Sharing After Elimination`
   }
 ];

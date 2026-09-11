@@ -53,7 +53,7 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep, subm
       <div className="bg-premium-surface border border-premium-border rounded-[24px] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex items-center justify-between border-b border-premium-border pb-4">
           <h4 className="font-bold text-base text-premium-text flex items-center gap-2">
-            <Users className="w-5 h-5 text-emerald-600" /> Roster Members <span className="text-premium-text-secondary font-medium text-sm ml-1">({formData.players.filter(p => p.name || p.ign).length} Registered)</span>
+            <Users className="w-5 h-5 text-emerald-600" /> 4 Starting Roster Members
           </h4>
           <button
             onClick={() => goToStep(2)}
@@ -65,37 +65,28 @@ export default function Step4Review({ formData, onSubmit, onPrev, goToStep, subm
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-          {(formData.players || []).map((p, idx) => {
-            if (!p.name && !p.ign && !p.bgmiId && idx >= 4) return null;
-            const isSub = idx === 4;
-            return (
-              <div
-                key={idx}
-                className={`p-4 rounded-[16px] border space-y-2 ${
-                  isSub
-                    ? 'border-premium-border bg-premium-surface-soft shadow-sm'
-                    : 'border-premium-border bg-premium-background shadow-sm'
-                }`}
-              >
-                <div className="flex items-center justify-between border-b border-premium-border pb-2 mb-2">
-                  <span className={`text-[10px] font-bold uppercase tracking-widest ${isSub ? 'text-premium-text-secondary' : 'text-amber-700'}`}>
-                    {isSub ? 'Substitute Player' : `Player 0${idx + 1} • ${p.role || 'Starter'}`}
+          {(formData.players || []).slice(0, 4).map((p, idx) => (
+            <div
+              key={idx}
+              className="p-4 rounded-[16px] border border-premium-border bg-premium-background shadow-sm space-y-2"
+            >
+              <div className="flex items-center justify-between border-b border-premium-border pb-2 mb-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-700">
+                  Player 0{idx + 1} • {p.role || (idx === 0 ? 'IGL' : 'Core')}
+                </span>
+                {p.bgmiId && (
+                  <span className="text-[10px] font-bold text-premium-text-secondary bg-white px-2 py-0.5 rounded border border-premium-border uppercase tracking-widest">
+                    ID: {p.bgmiId}
                   </span>
-                  {p.bgmiId && (
-                    <span className="text-[10px] font-bold text-premium-text-secondary bg-white px-2 py-0.5 rounded border border-premium-border uppercase tracking-widest">ID: {p.bgmiId}</span>
-                  )}
-                </div>
-                <p className="font-bold text-premium-text text-base">{p.name || 'Unnamed Player'}</p>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm font-medium">
-                  <span className="text-premium-text-secondary">IGN: <strong className="text-premium-text">{p.ign || p.name || 'N/A'}</strong></span>
-                  <span className="text-premium-text-secondary">ID: <strong className="text-premium-text">{p.bgmiId || 'N/A'}</strong></span>
-                  {p.substituteId && (
-                    <span className="text-premium-text-secondary w-full sm:w-auto">Sub ID: <strong className="text-premium-text">{p.substituteId}</strong></span>
-                  )}
-                </div>
+                )}
               </div>
-            );
-          })}
+              <p className="font-bold text-premium-text text-base">{p.name || 'Unnamed Player'}</p>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm font-medium">
+                <span className="text-premium-text-secondary">IGN: <strong className="text-premium-text">{p.ign || p.name || 'N/A'}</strong></span>
+                <span className="text-premium-text-secondary">Character ID: <strong className="text-premium-text">{p.bgmiId || 'N/A'}</strong></span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

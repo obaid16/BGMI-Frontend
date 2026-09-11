@@ -38,7 +38,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-[280px] bg-[#111215] border-r border-[#1f2127] min-h-screen flex flex-col justify-between p-5 flex-shrink-0">
+    <aside className="w-[280px] h-full bg-[#111215] border-r border-[#1f2127] flex flex-col justify-between p-5 flex-shrink-0 overflow-y-auto">
       <div className="space-y-8">
         {/* BRANDING LOGO */}
         <div className="flex items-center gap-4 px-2">

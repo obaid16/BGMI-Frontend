@@ -1,18 +1,29 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
-import { getTeams, verifyPlayerStatus, deletePlayer, updatePlayer } from '@/services/api';
+import ConfirmModal from '@/components/common/ConfirmModal';
+import { getTeams, verifyPlayerStatus, deletePlayer, bulkDeletePlayers, updatePlayer } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { UserCheck, Search, Trash2, Edit3, Flame, Award, Check, X } from 'lucide-react';
+import { UserCheck, Search, Trash2, Edit3, Flame, Award, Check, X, CheckSquare, Square } from 'lucide-react';
 
 export default function AdminPlayersPage() {
   const { showToast } = useToast();
   const [allPlayers, setAllPlayers] = useState([]);
   const [squadFilter, setSquadFilter] = useState('');
-  const [deletingId, setDeletingId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  // Confirm Modal state (custom alert instead of window.confirm)
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    description: '',
+    confirmText: 'Delete',
+    onConfirm: null,
+    loading: false,
+  });
 
   // Edit Player Modal state
   const [editingPlayer, setEditingPlayer] = useState(null);
@@ -28,13 +39,14 @@ export default function AdminPlayersPage() {
   ).toFixed(2);
 
   async function loadData() {
-    const teams = await getTeams();
+    const teams = await getTeams('All', '', true);
     const playersList = [];
-    teams.forEach((t) => {
+    (teams || []).forEach((t) => {
       t.players?.forEach((p) => {
         playersList.push({
           ...p,
-          teamName: t.name,
+          id: p.id || p._id,
+          teamName: t.name || t.teamName,
           college: t.college,
           matchesPlayed: p.matchesPlayed || t.matchesPlayed || 1,
         });
@@ -46,6 +58,35 @@ export default function AdminPlayersPage() {
   useEffect(() => {
     loadData();
   }, []);
+
+  const filteredPlayers = useMemo(() => {
+    const q = squadFilter.trim().toLowerCase();
+    if (!q) return allPlayers;
+    return allPlayers.filter((player) =>
+      player.teamName?.toLowerCase().includes(q) ||
+      player.ign?.toLowerCase().includes(q) ||
+      player.name?.toLowerCase().includes(q)
+    );
+  }, [allPlayers, squadFilter]);
+
+  // Selection handlers
+  const handleToggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const isAllSelected = filteredPlayers.length > 0 && filteredPlayers.every((p) => selectedIds.includes(p.id || p._id));
+
+  const handleToggleSelectAll = () => {
+    if (isAllSelected) {
+      const currentFilteredIds = filteredPlayers.map((p) => p.id || p._id);
+      setSelectedIds((prev) => prev.filter((id) => !currentFilteredIds.includes(id)));
+    } else {
+      const newIds = new Set([...selectedIds, ...filteredPlayers.map((p) => p.id || p._id)]);
+      setSelectedIds(Array.from(newIds));
+    }
+  };
 
   const handleOpenEdit = (player) => {
     setEditingPlayer(player);
@@ -79,7 +120,7 @@ export default function AdminPlayersPage() {
       setAllPlayers((prev) =>
         prev.map((p) => ((p.id || p._id) === pId ? { ...p, ...res, ...updatedData } : p))
       );
-      showToast(`Updated stats for ${editIgn}: ${killsVal} Kills in ${matchesVal} Matches (K/D: ${kdVal})`, 'success');
+      showToast(`Updated stats for ${editIgn}: ${killsVal} Kills (K/D: ${kdVal})`, 'success');
       setEditingPlayer(null);
     } else {
       showToast('Failed to update player stats', 'error');
@@ -102,39 +143,106 @@ export default function AdminPlayersPage() {
     }
   };
 
-  const handleDeletePlayer = async (playerId) => {
-    if (deletingId) return;
-    if (window.confirm('Are you sure you want to delete this player from the roster?')) {
-      try {
-        setDeletingId(playerId);
-        const res = await deletePlayer(playerId);
-        if (res) {
-          setAllPlayers((prev) => prev.filter((p) => (p.id || p._id) !== playerId));
-          showToast('Player removed from roster successfully', 'success');
-        } else {
-          showToast('Failed to remove player', 'error');
+  // Custom Alert Trigger: Single Player Deletion
+  const handleDeletePlayerPrompt = (player) => {
+    const pId = player.id || player._id;
+    const pName = player.ign || player.name || 'this player';
+
+    setConfirmModal({
+      isOpen: true,
+      title: `Delete Player "${pName}"?`,
+      description: `Are you sure you want to remove ${pName} from ${player.teamName || 'their team'}? This action cannot be undone.`,
+      confirmText: 'Delete Player',
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, loading: true }));
+        try {
+          const res = await deletePlayer(pId);
+          if (res) {
+            setAllPlayers((prev) => prev.filter((p) => (p.id || p._id) !== pId));
+            setSelectedIds((prev) => prev.filter((id) => id !== pId));
+            showToast(`Player "${pName}" removed from roster`, 'success');
+          } else {
+            showToast('Failed to remove player', 'error');
+          }
+        } catch (err) {
+          showToast('An error occurred while removing player', 'error');
+        } finally {
+          setConfirmModal((prev) => ({ ...prev, isOpen: false, loading: false }));
         }
-      } catch (err) {
-        showToast('An error occurred while removing the player', 'error');
-      } finally {
-        setDeletingId(null);
-      }
-    }
+      },
+    });
+  };
+
+  // Custom Alert Trigger: Bulk Player Deletion
+  const handleBulkDeletePrompt = () => {
+    if (selectedIds.length === 0) return;
+    const count = selectedIds.length;
+
+    setConfirmModal({
+      isOpen: true,
+      title: `Delete ${count} Selected Players?`,
+      description: `Are you sure you want to permanently delete these ${count} selected players from their rosters? This action cannot be undone.`,
+      confirmText: `Delete ${count} Players`,
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, loading: true }));
+        try {
+          const success = await bulkDeletePlayers(selectedIds);
+          if (success) {
+            setAllPlayers((prev) => prev.filter((p) => !selectedIds.includes(p.id || p._id)));
+            setSelectedIds([]);
+            showToast(`Successfully removed ${count} players from rosters`, 'success');
+          } else {
+            showToast('Failed to perform bulk deletion', 'error');
+          }
+        } catch (err) {
+          showToast('An error occurred during bulk deletion', 'error');
+        } finally {
+          setConfirmModal((prev) => ({ ...prev, isOpen: false, loading: false }));
+        }
+      },
+    });
   };
 
   return (
     <div className="space-y-8 max-w-full overflow-hidden">
       
       {/* HEADER */}
-      <div className="border-b border-premium-border pb-6">
-        <h1 className="font-bold text-3xl text-premium-text tracking-tight flex items-center gap-3">
-          <UserCheck className="w-8 h-8 text-amber-600" /> Player Rosters & MVP Stats
-        </h1>
-        <p className="text-sm text-premium-text-secondary font-medium mt-2">Update player kills, matches played, and auto-calculate K/D ratio.</p>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-premium-border pb-6">
+        <div>
+          <h1 className="font-bold text-3xl text-premium-text tracking-tight flex items-center gap-3">
+            <UserCheck className="w-8 h-8 text-amber-600" /> Player Rosters & MVP Stats
+          </h1>
+          <p className="text-sm text-premium-text-secondary font-medium mt-2">Manage players, update tournament stats, and bulk manage rosters.</p>
+        </div>
+
+        {/* BULK DELETE ACTION BUTTON WHEN PLAYERS SELECTED */}
+        {selectedIds.length > 0 && (
+          <div className="flex items-center gap-3 animate-in fade-in slide-in-from-top duration-200">
+            <span className="text-xs font-bold text-premium-text-secondary uppercase tracking-widest bg-premium-surface px-3 py-1.5 rounded-lg border border-premium-border">
+              {selectedIds.length} Selected
+            </span>
+            <Button
+              variant="danger"
+              size="md"
+              icon={Trash2}
+              onClick={handleBulkDeletePrompt}
+            >
+              Bulk Delete ({selectedIds.length})
+            </Button>
+            <button
+              onClick={() => setSelectedIds([])}
+              className="text-xs font-bold text-premium-text-secondary hover:text-black uppercase tracking-widest px-2"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* FILTER CONTROLS */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-premium-surface border border-premium-border rounded-[24px] p-5 shadow-sm">
+      {/* FILTER & SEARCH CONTROLS */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-premium-surface border border-premium-border rounded-[24px] p-5 shadow-sm">
         <div className="relative w-full sm:w-80">
           <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
             <Search className="h-4 w-4 text-premium-text-secondary" />
@@ -147,22 +255,39 @@ export default function AdminPlayersPage() {
             className="w-full pl-11 pr-4 py-2.5 bg-white border border-premium-border rounded-[12px] text-premium-text text-sm font-bold focus:outline-none focus:border-premium-text shadow-sm transition-all"
           />
         </div>
-        {squadFilter && (
-          <button
-            onClick={() => setSquadFilter('')}
-            className="text-xs font-bold text-premium-text-secondary hover:text-black uppercase tracking-widest transition-colors"
-          >
-            Clear Filter
-          </button>
-        )}
+
+        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+          {squadFilter && (
+            <button
+              onClick={() => setSquadFilter('')}
+              className="text-xs font-bold text-premium-text-secondary hover:text-black uppercase tracking-widest transition-colors"
+            >
+              Clear Filter
+            </button>
+          )}
+
+          <div className="text-xs font-bold text-premium-text-secondary uppercase tracking-widest">
+            Total: <strong className="text-premium-text">{filteredPlayers.length}</strong> Players
+          </div>
+        </div>
       </div>
 
       {/* PLAYERS TABLE WITH HORIZONTAL SCROLL */}
       <div className="bg-premium-surface border border-premium-border rounded-[24px] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm whitespace-nowrap min-w-[950px]">
+          <table className="w-full text-left text-sm whitespace-nowrap min-w-[1000px]">
             <thead className="bg-premium-background text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest border-b border-premium-border">
               <tr>
+                {/* SELECT ALL CHECKBOX */}
+                <th className="px-6 py-4 w-12 text-center">
+                  <input
+                    type="checkbox"
+                    checked={isAllSelected}
+                    onChange={handleToggleSelectAll}
+                    className="w-4 h-4 rounded border-premium-border text-black focus:ring-0 cursor-pointer accent-black"
+                    title="Select All Players"
+                  />
+                </th>
                 <th className="px-6 py-4">Player & IGN</th>
                 <th className="px-6 py-4">Squad</th>
                 <th className="px-6 py-4">Role</th>
@@ -174,107 +299,109 @@ export default function AdminPlayersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-premium-border bg-white">
-              {allPlayers
-                .filter((player) =>
-                  player.teamName?.toLowerCase().includes(squadFilter.toLowerCase()) ||
-                  player.ign?.toLowerCase().includes(squadFilter.toLowerCase()) ||
-                  player.name?.toLowerCase().includes(squadFilter.toLowerCase())
-                )
-                .map((player) => {
-                  const pId = player.id || player._id;
-                  const isVerified = player.verificationStatus === 'Verified' || player.verified;
-                  const isRejected = player.verificationStatus === 'Rejected';
-                  const statusLabel = player.verificationStatus || (player.verified ? 'Verified' : 'Pending');
-                  const pKills = player.kills || 0;
-                  const pMatches = player.matchesPlayed || 1;
-                  const pKd = player.kdRatio || (pKills / Math.max(1, pMatches));
-                  
-                  return (
-                    <tr key={pId} className="hover:bg-premium-surface-soft transition-colors">
-                      <td className="px-6 py-5">
-                        <p className="font-bold text-base text-premium-text tracking-tight">{player.ign}</p>
-                        <p className="text-xs text-premium-text-secondary font-medium mt-0.5">{player.name}</p>
-                      </td>
-                      <td className="px-6 py-5">
-                        <p className="font-semibold text-premium-text">{player.teamName}</p>
-                      </td>
-                      <td className="px-6 py-5"><Badge variant="default" size="sm">{player.role || 'Player'}</Badge></td>
-                      
-                      {/* MATCHES PLAYED COLUMN */}
-                      <td className="px-6 py-5 text-center font-semibold text-premium-text-secondary">
-                        {pMatches} M
-                      </td>
+              {filteredPlayers.map((player) => {
+                const pId = player.id || player._id;
+                const isSelected = selectedIds.includes(pId);
+                const isVerified = player.verificationStatus === 'Verified' || player.verified;
+                const isRejected = player.verificationStatus === 'Rejected';
+                const statusLabel = player.verificationStatus || (player.verified ? 'Verified' : 'Pending');
+                const pKills = player.kills || 0;
+                const pMatches = player.matchesPlayed || 1;
+                const pKd = player.kdRatio || (pKills / Math.max(1, pMatches));
+                
+                return (
+                  <tr key={pId} className={`transition-colors ${isSelected ? 'bg-amber-50/40' : 'hover:bg-premium-surface-soft'}`}>
+                    {/* ROW SELECTION CHECKBOX */}
+                    <td className="px-6 py-5 text-center">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => handleToggleSelect(pId)}
+                        className="w-4 h-4 rounded border-premium-border text-black focus:ring-0 cursor-pointer accent-black"
+                      />
+                    </td>
 
-                      {/* KILLS COLUMN */}
-                      <td className="px-6 py-5 text-center">
-                        <span className="font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full text-sm inline-flex items-center gap-1.5 border border-amber-200">
-                          <Flame className="w-3.5 h-3.5 text-amber-600" /> {pKills}
-                        </span>
-                      </td>
+                    <td className="px-6 py-5">
+                      <p className="font-bold text-base text-premium-text tracking-tight">{player.ign}</p>
+                      <p className="text-xs text-premium-text-secondary font-medium mt-0.5">{player.name}</p>
+                    </td>
+                    <td className="px-6 py-5">
+                      <p className="font-semibold text-premium-text">{player.teamName || 'Squad'}</p>
+                    </td>
+                    <td className="px-6 py-5"><Badge variant="default" size="sm">{player.role || 'Player'}</Badge></td>
+                    
+                    {/* MATCHES PLAYED COLUMN */}
+                    <td className="px-6 py-5 text-center font-semibold text-premium-text-secondary">
+                      {pMatches} M
+                    </td>
 
-                      {/* AUTO-CALCULATED K/D RATIO COLUMN */}
-                      <td className="px-6 py-5 text-center font-bold text-sky-700">
-                        {pKd.toFixed(2)}
-                      </td>
+                    {/* KILLS COLUMN */}
+                    <td className="px-6 py-5 text-center">
+                      <span className="font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full text-sm inline-flex items-center gap-1.5 border border-amber-200">
+                        <Flame className="w-3.5 h-3.5 text-amber-600" /> {pKills}
+                      </span>
+                    </td>
 
-                      <td className="px-6 py-5">
-                        <Badge variant={isVerified ? 'green' : isRejected ? 'rejected' : 'pending'} size="sm">
-                          {statusLabel}
-                        </Badge>
-                      </td>
+                    {/* AUTO-CALCULATED K/D RATIO COLUMN */}
+                    <td className="px-6 py-5 text-center font-bold text-sky-700">
+                      {pKd.toFixed(2)}
+                    </td>
 
-                      <td className="px-6 py-5 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                    <td className="px-6 py-5">
+                      <Badge variant={isVerified ? 'green' : isRejected ? 'rejected' : 'pending'} size="sm">
+                        {statusLabel}
+                      </Badge>
+                    </td>
+
+                    <td className="px-6 py-5 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          icon={Edit3}
+                          onClick={() => handleOpenEdit(player)}
+                        >
+                          Edit
+                        </Button>
+                        {!isVerified && (
                           <Button
-                            variant="secondary"
+                            variant="primary"
                             size="sm"
-                            icon={Edit3}
-                            onClick={() => handleOpenEdit(player)}
+                            icon={Check}
+                            onClick={() => handleUpdateStatus(pId, 'Verified')}
                           >
-                            Edit
+                            Verify
                           </Button>
-                          {!isVerified && (
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              icon={Check}
-                              onClick={() => handleUpdateStatus(pId, 'Verified')}
-                            >
-                              Verify
-                            </Button>
-                          )}
-                          {!isRejected && (
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              icon={X}
-                              onClick={() => handleUpdateStatus(pId, 'Rejected')}
-                            >
-                              Reject
-                            </Button>
-                          )}
-                          <button
-                            onClick={() => handleDeletePlayer(pId)}
-                            disabled={deletingId === pId}
-                            className={`w-9 h-9 flex items-center justify-center rounded-[10px] text-rose-500 bg-white border border-premium-border hover:border-rose-300 hover:bg-rose-50 transition-colors shadow-sm ${
-                              deletingId === pId ? 'opacity-50 cursor-not-allowed' : ''
-                            }`}
-                            title="Delete Player"
+                        )}
+                        {!isRejected && (
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            icon={X}
+                            onClick={() => handleUpdateStatus(pId, 'Rejected')}
                           >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-                {allPlayers.length === 0 && (
-                  <tr>
-                    <td colSpan="8" className="px-6 py-12 text-center text-sm font-medium text-premium-text-secondary bg-white">
-                      No players found.
+                            Reject
+                          </Button>
+                        )}
+                        <button
+                          onClick={() => handleDeletePlayerPrompt(player)}
+                          className="w-9 h-9 flex items-center justify-center rounded-[10px] text-rose-500 bg-white border border-premium-border hover:border-rose-300 hover:bg-rose-50 transition-colors shadow-sm"
+                          title="Delete Player"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                )}
+                );
+              })}
+              {filteredPlayers.length === 0 && (
+                <tr>
+                  <td colSpan="9" className="px-6 py-12 text-center text-sm font-medium text-premium-text-secondary bg-white">
+                    No players found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -384,6 +511,17 @@ export default function AdminPlayersPage() {
           </form>
         </Modal>
       )}
+
+      {/* CUSTOM CONFIRMATION MODAL (REPLACES BROWSER WINDOW.CONFIRM) */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+        onConfirm={confirmModal.onConfirm}
+        title={confirmModal.title}
+        description={confirmModal.description}
+        confirmText={confirmModal.confirmText}
+        loading={confirmModal.loading}
+      />
 
     </div>
   );

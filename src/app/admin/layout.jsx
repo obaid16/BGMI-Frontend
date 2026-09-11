@@ -62,9 +62,9 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-premium-background text-premium-text font-sans">
-      {/* DESKTOP SIDEBAR */}
-      <div className="hidden lg:block flex-shrink-0">
+    <div className="flex h-screen overflow-hidden bg-premium-background text-premium-text font-sans">
+      {/* DESKTOP SIDEBAR - FIXED & STICKY */}
+      <div className="hidden lg:block h-full flex-shrink-0">
         <AdminSidebar />
       </div>
 
@@ -83,8 +83,8 @@ export default function AdminLayout({ children }) {
         </div>
       )}
 
-      {/* MAIN ADMIN CONTENT AREA */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      {/* MAIN ADMIN CONTENT AREA - ONLY THIS SCROLLS */}
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto">
         <div className="flex items-center justify-between bg-premium-background border-b border-premium-border px-6 h-20 lg:hidden sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button
@@ -99,7 +99,7 @@ export default function AdminLayout({ children }) {
           </div>
         </div>
 
-        <div className="hidden lg:block">
+        <div className="hidden lg:block sticky top-0 z-20 bg-premium-background border-b border-premium-border">
           <AdminTopbar />
         </div>
 

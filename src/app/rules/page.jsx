@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getRules } from '@/services/api';
-import { BookOpen, Printer, Download } from 'lucide-react';
+import { BookOpen, Printer, Download, FileText, ShieldCheck } from 'lucide-react';
 
 export default function RulesPage() {
   const [rules, setRules] = useState([]);
@@ -67,18 +67,51 @@ export default function RulesPage() {
           </p>
         </div>
         
-        <div className="flex items-center gap-3 shrink-0">
-          <span className="text-xs font-bold text-premium-text-secondary uppercase tracking-widest mr-2">
-            Last Updated: SEP 2026
-          </span>
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <a
+            href="/NIT_BGMI_Official_Rules.pdf"
+            download="NIT_BGMI_Official_Rules.pdf"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
+          >
+            <Download className="w-4 h-4" /> Download PDF
+          </a>
+
           <button 
             onClick={handlePrint}
             className="p-2.5 bg-premium-surface border border-premium-border rounded-xl text-premium-text hover:bg-premium-background transition-colors shadow-sm tooltip-trigger"
             aria-label="Print or Save PDF"
+            title="Print Rulebook"
           >
             <Printer className="w-5 h-5" />
           </button>
         </div>
+      </div>
+
+      {/* DOWNLOAD HANDBOOK CALLOUT BANNER */}
+      <div className="bg-gradient-to-r from-amber-50/70 via-white to-amber-50/30 border border-amber-200 rounded-[20px] p-5 sm:p-6 mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+        <div className="flex items-start sm:items-center gap-3.5">
+          <div className="w-11 h-11 bg-amber-100 border border-amber-200 rounded-[14px] flex items-center justify-center text-amber-700 shrink-0">
+            <FileText className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-base text-premium-text">NIT BGMI Official Rules & Regulations</h3>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded border border-amber-200">
+                PDF
+              </span>
+            </div>
+            <p className="text-xs text-premium-text-secondary mt-0.5 font-medium">
+              Official 14-section tournament handbook (58 KB). Download and share with your team captains.
+            </p>
+          </div>
+        </div>
+        <a
+          href="/NIT_BGMI_Official_Rules.pdf"
+          download="NIT_BGMI_Official_Rules.pdf"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-premium-text hover:bg-black text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-colors shadow-sm shrink-0"
+        >
+          <Download className="w-4 h-4" /> Download Rulebook
+        </a>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-12 items-start relative">

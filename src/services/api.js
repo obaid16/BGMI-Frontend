@@ -52,8 +52,8 @@ export function getMediaImageUrl(item) {
 async function fetchAPI(endpoint, options = {}) {
   const isGet = !options.method || options.method.toUpperCase() === 'GET';
 
-  // Never use cache for /media endpoints or non-GET mutations
-  if (isGet && !endpoint.startsWith('/media')) {
+  // Never use cache for /media endpoints, non-GET mutations, or explicit bypass
+  if (isGet && !endpoint.startsWith('/media') && !options.bypassCache && !endpoint.startsWith('/admin')) {
     const cached = apiCache.get(endpoint);
     if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
       return cached.data;
@@ -80,7 +80,7 @@ async function fetchAPI(endpoint, options = {}) {
   };
 
   const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  const timeoutId = controller ? setTimeout(() => controller.abort(), options.timeout || 3000) : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), options.timeout || 12000) : null;
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -88,32 +88,28 @@ async function fetchAPI(endpoint, options = {}) {
       headers,
       ...(controller && { signal: controller.signal }),
     });
+
     if (timeoutId) clearTimeout(timeoutId);
 
-    const resData = await response.json();
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(resData.message || 'API request failed');
+      throw new Error(data.message || `API Error: ${response.status} ${response.statusText}`);
     }
 
-    if (isGet) {
-      apiCache.set(endpoint, {
-        data: resData,
-        timestamp: Date.now()
-      });
-    } else {
-      // Clear cache on write operations (POST, PUT, DELETE) so subsequent reads get fresh data
-      apiCache.clear();
+    if (isGet && !options.bypassCache && !endpoint.startsWith('/admin')) {
+      apiCache.set(endpoint, { data, timestamp: Date.now() });
     }
 
-    return resData;
-  } catch (err) {
+    return data;
+  } catch (error) {
     if (timeoutId) clearTimeout(timeoutId);
-    throw err;
+    throw error;
   }
 }
 
 // ==================== TEAMS API ====================
-export async function getTeams(filter = 'All', searchQuery = '') {
+export async function getTeams(filter = 'All', searchQuery = '', bypassCache = false) {
   try {
     let url = `/teams?search=${encodeURIComponent(searchQuery)}`;
     
@@ -128,14 +124,29 @@ export async function getTeams(filter = 'All', searchQuery = '') {
       url += '&status=Rejected';
     }
 
-    const res = await fetchAPI(url);
-    let teams = res.data && res.data.length > 0 ? res.data : CANONICAL_TEAMS;
+    const res = await fetchAPI(url, bypassCache ? { bypassCache: true } : {});
+    let teams = Array.isArray(res?.data) ? res.data : (res?.data || CANONICAL_TEAMS);
+
+    // Normalize team properties so both name and teamName exist
+    teams = teams.map((t) => ({
+      ...t,
+      name: t.name || t.teamName,
+      teamName: t.teamName || t.name,
+      shortName: t.shortName || (t.name || t.teamName || '').substring(0, 5).toUpperCase(),
+      captain: typeof t.captain === 'object' ? t.captain : {
+        name: t.captainName || (typeof t.captain === 'string' ? t.captain : 'Team Captain'),
+        phone: t.contactNumber || t.captainPhone || '',
+        email: t.email || t.captainEmail || ''
+      }
+    }));
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       teams = teams.filter((t) =>
+        t.name?.toLowerCase().includes(q) ||
         t.teamName?.toLowerCase().includes(q) ||
         t.shortName?.toLowerCase().includes(q) ||
+        t.captain?.name?.toLowerCase().includes(q) ||
         t.captainName?.toLowerCase().includes(q)
       );
     }
@@ -163,17 +174,20 @@ export async function getTeamById(id) {
 }
 
 export async function registerTeam(registrationData) {
+  apiCache.clear();
   try {
     const res = await fetchAPI('/teams/register', {
       method: 'POST',
       body: JSON.stringify(registrationData),
     });
+    apiCache.clear();
     return {
       success: res.success,
       registrationId: res.data?.registrationId,
       team: res.data?.team
     };
   } catch (err) {
+    apiCache.clear();
     return {
       success: false,
       message: err.message || 'Registration failed'
@@ -564,14 +578,35 @@ export async function verifyPlayerStatus(playerId, verificationStatus) {
 }
 
 export async function deletePlayer(playerId) {
+  apiCache.clear();
   try {
     const res = await fetchAPI(`/players/${playerId}`, {
       method: 'DELETE',
     });
+    apiCache.clear();
     return res;
   } catch (err) {
     console.warn('deletePlayer failed:', err);
     return null;
+  }
+}
+
+export async function bulkDeletePlayers(playerIds) {
+  apiCache.clear();
+  if (!Array.isArray(playerIds) || playerIds.length === 0) return true;
+
+  try {
+    const res = await fetchAPI('/players/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ ids: playerIds }),
+    });
+    apiCache.clear();
+    return res?.success !== false;
+  } catch (err) {
+    console.warn('bulkDeletePlayers API failed, fallback to sequential deletes:', err);
+    await Promise.all(playerIds.map((id) => deletePlayer(id)));
+    apiCache.clear();
+    return true;
   }
 }
 

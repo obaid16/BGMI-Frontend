@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
+import ConfirmModal from '@/components/common/ConfirmModal';
 import { getTeams, updateTeamStatus, deleteTeam } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
 import { Users, Plus, ShieldCheck, Trash2, Edit3, Search } from 'lucide-react';
@@ -14,6 +15,13 @@ export default function AdminTeamsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    description: '',
+    onConfirm: null,
+    loading: false,
+  });
 
   // Form states
   const [newTeamName, setNewTeamName] = useState('');
@@ -58,24 +66,31 @@ export default function AdminTeamsPage() {
     setNewTeamLogo('');
   };
 
-  const handleDeleteTeam = async (id) => {
-    if (deletingId) return;
-    if (window.confirm('Are you sure you want to delete this squad profile entirely? This will also remove the players.')) {
-      try {
-        setDeletingId(id);
-        const res = await deleteTeam(id);
-        if (res) {
-          setTeams((prev) => prev.filter((t) => t.id !== id));
-          showToast('Team Roster Removed successfully', 'success');
-        } else {
-          showToast('Failed to remove team', 'error');
+  const handleDeleteTeam = (team) => {
+    const id = team.id || team._id;
+    const name = team.name || 'this squad';
+    setConfirmModal({
+      isOpen: true,
+      title: `Delete Squad "${name}"?`,
+      description: `Are you sure you want to delete ${name} entirely? This will also permanently remove all players on this squad roster.`,
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, loading: true }));
+        try {
+          const res = await deleteTeam(id);
+          if (res) {
+            setTeams((prev) => prev.filter((t) => (t.id || t._id) !== id));
+            showToast('Team Roster Removed successfully', 'success');
+          } else {
+            showToast('Failed to remove team', 'error');
+          }
+        } catch (err) {
+          showToast('An error occurred while deleting team', 'error');
+        } finally {
+          setConfirmModal((prev) => ({ ...prev, isOpen: false, loading: false }));
         }
-      } catch (err) {
-        showToast('An error occurred while deleting team', 'error');
-      } finally {
-        setDeletingId(null);
-      }
-    }
+      },
+    });
   };
 
   const filteredTeams = teams.filter((team) => 
@@ -136,11 +151,8 @@ export default function AdminTeamsPage() {
             <div className="pt-4 border-t border-premium-border flex items-center justify-between">
               <span className="text-sm font-bold text-premium-text-secondary">{team.players?.length || 4} Squad Members</span>
               <button
-                onClick={() => handleDeleteTeam(team.id)}
-                disabled={deletingId === team.id}
-                className={`w-9 h-9 flex items-center justify-center rounded-[10px] text-rose-500 bg-rose-50 hover:bg-rose-100 transition-colors ${
-                  deletingId === team.id ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+                onClick={() => handleDeleteTeam(team)}
+                className="w-9 h-9 flex items-center justify-center rounded-[10px] text-rose-500 bg-rose-50 hover:bg-rose-100 transition-colors"
                 title="Delete Squad"
               >
                 <Trash2 className="w-4 h-4" />
@@ -201,6 +213,17 @@ export default function AdminTeamsPage() {
           </div>
         </form>
       </Modal>
+
+      {/* CUSTOM CONFIRMATION MODAL */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
+        onConfirm={confirmModal.onConfirm}
+        title={confirmModal.title}
+        description={confirmModal.description}
+        confirmText="Delete Squad"
+        loading={confirmModal.loading}
+      />
 
     </div>
   );

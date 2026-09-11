@@ -65,7 +65,6 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
                 <tr>
                   <th className="px-5 py-3.5">Player IGN / Name</th>
                   <th className="px-5 py-3.5">Character ID</th>
-                  <th className="px-5 py-3.5">Sub ID</th>
                   <th className="px-5 py-3.5">Role</th>
                   <th className="px-5 py-3.5 text-right">Status</th>
                 </tr>
@@ -79,9 +78,6 @@ export default function RegistrationModal({ team, isOpen, onClose, onApprove, on
                     </td>
                     <td className="px-5 py-4 font-semibold text-premium-text">
                       {p.bgmiId || 'N/A'}
-                    </td>
-                    <td className="px-5 py-4 font-semibold text-premium-text-secondary">
-                      {p.substituteId || p.subId || 'N/A'}
                     </td>
                     <td className="px-5 py-4"><Badge variant="default" size="sm">{p.role}</Badge></td>
                     <td className="px-5 py-4 text-right">
