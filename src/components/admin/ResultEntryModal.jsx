@@ -24,11 +24,8 @@ export default function ResultEntryModal({
   const getPlacementPoints = (rank) => {
     const r = parseInt(rank, 10);
     if (r === 1) return 10;
-    if (r === 2) return 8;
-    if (r === 3) return 5;
-    if (r === 4) return 3;
-    if (r === 5) return 1;
-    return 0;
+    if (r === 2) return 7;
+    return 0; // 3rd, 4th, and all others don't have any points
   };
 
   // Synchronize state when modal opens, editingResult changes, or selectedMatchId changes

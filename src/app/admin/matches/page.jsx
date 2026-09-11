@@ -382,6 +382,7 @@ export default function AdminMatchesPage() {
                 <option value="Sanhok">Sanhok</option>
                 <option value="Vikendi">Vikendi</option>
                 <option value="Livik">Livik</option>
+                <option value="Rondo">Rondo</option>
               </select>
             </div>
           </div>

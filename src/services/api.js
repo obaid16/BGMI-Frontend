@@ -343,10 +343,9 @@ export async function getScoringRules() {
   return {
     placementPoints: [
       { rank: 1, points: 10 },
-      { rank: 2, points: 8 },
-      { rank: 3, points: 5 },
-      { rank: 4, points: 3 },
-      { rank: 5, points: 1 }
+      { rank: 2, points: 7 },
+      { rank: 3, points: 0 },
+      { rank: 4, points: 0 }
     ]
   };
 }

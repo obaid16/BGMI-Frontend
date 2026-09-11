@@ -21,7 +21,7 @@ export const CANONICAL_TEAMS = [
     status: 'Approved',
     verified: true,
     rank: 1,
-    points: 46,
+    points: 39,
     players: [
       { id: 'p-01', name: 'Obaid Shaikh', ign: 'OBAID (IGL)', role: 'IGL / Assaulter', kills: 10, matchesPlayed: 2, bgmiId: '512938401' },
       { id: 'p-02', name: 'Jonathan Amaral', ign: 'GODL-Jonathan', role: 'Entry Fragger', kills: 8, matchesPlayed: 2, bgmiId: '512938402' },
@@ -44,7 +44,7 @@ export const CANONICAL_TEAMS = [
     status: 'Approved',
     verified: true,
     rank: 2,
-    points: 28,
+    points: 29,
     players: [
       { id: 'p-05', name: 'Kratos', ign: 'AXN-Kratos', role: 'IGL', kills: 7, matchesPlayed: 2, bgmiId: '512938405' },
       { id: 'p-06', name: 'Shadow', ign: 'AXN-Shadow', role: 'Assaulter', kills: 5, matchesPlayed: 2, bgmiId: '512938406' },
@@ -67,7 +67,7 @@ export const CANONICAL_TEAMS = [
     status: 'Approved',
     verified: true,
     rank: 3,
-    points: 25,
+    points: 21,
     players: [
       { id: 'p-09', name: 'Naman Mathur', ign: 'ELT-Mortal', role: 'IGL / Support', kills: 6, matchesPlayed: 2, bgmiId: '512938409' },
       { id: 'p-10', name: 'Tanmay Singh', ign: 'ELT-Scout', role: 'Entry Fragger', kills: 4, matchesPlayed: 2, bgmiId: '512938410' },
@@ -90,7 +90,7 @@ export const CANONICAL_TEAMS = [
     status: 'Approved',
     verified: true,
     rank: 4,
-    points: 18,
+    points: 10,
     players: [
       { id: 'p-13', name: 'CyberDev', ign: '401-Cyber', role: 'IGL', kills: 4, matchesPlayed: 2, bgmiId: '512938413' },
       { id: 'p-14', name: 'Kernel', ign: '401-Kernel', role: 'Assaulter', kills: 3, matchesPlayed: 2, bgmiId: '512938414' },
@@ -113,7 +113,7 @@ export const CANONICAL_TEAMS = [
     status: 'Approved',
     verified: true,
     rank: 5,
-    points: 7,
+    points: 5,
     players: [
       { id: 'p-17', name: 'Farzan', ign: 'FRZ-Farzan', role: 'IGL', kills: 2, matchesPlayed: 2, bgmiId: '512938417' },
       { id: 'p-18', name: 'Apex', ign: 'FRZ-Apex', role: 'Assaulter', kills: 1, matchesPlayed: 2, bgmiId: '512938418' },
@@ -150,10 +150,10 @@ export const CANONICAL_MATCHES = [
     totalKills: 37,
     leaderboard: [
       { rank: 1, team: 'GodLike Esports', kills: 14, placementPoints: 10, killPoints: 14, totalPoints: 24 },
-      { rank: 2, team: 'Elite Warriors', kills: 9, placementPoints: 8, killPoints: 9, totalPoints: 17 },
-      { rank: 3, team: 'Axions', kills: 7, placementPoints: 5, killPoints: 7, totalPoints: 12 },
-      { rank: 4, team: '401 Unauthorized', kills: 4, placementPoints: 3, killPoints: 4, totalPoints: 7 },
-      { rank: 5, team: 'FARZ Esports', kills: 3, placementPoints: 1, killPoints: 3, totalPoints: 4 }
+      { rank: 2, team: 'Elite Warriors', kills: 9, placementPoints: 7, killPoints: 9, totalPoints: 16 },
+      { rank: 3, team: 'Axions', kills: 7, placementPoints: 0, killPoints: 7, totalPoints: 7 },
+      { rank: 4, team: '401 Unauthorized', kills: 4, placementPoints: 0, killPoints: 4, totalPoints: 4 },
+      { rank: 5, team: 'FARZ Esports', kills: 3, placementPoints: 0, killPoints: 3, totalPoints: 3 }
     ],
     proofs: {
       screenshots: [
@@ -187,10 +187,10 @@ export const CANONICAL_MATCHES = [
     totalKills: 33,
     leaderboard: [
       { rank: 1, team: 'Axions', kills: 12, placementPoints: 10, killPoints: 12, totalPoints: 22 },
-      { rank: 2, team: 'GodLike Esports', kills: 8, placementPoints: 8, killPoints: 8, totalPoints: 16 },
-      { rank: 3, team: '401 Unauthorized', kills: 6, placementPoints: 5, killPoints: 6, totalPoints: 11 },
-      { rank: 4, team: 'Elite Warriors', kills: 5, placementPoints: 3, killPoints: 5, totalPoints: 8 },
-      { rank: 5, team: 'FARZ Esports', kills: 2, placementPoints: 1, killPoints: 2, totalPoints: 3 }
+      { rank: 2, team: 'GodLike Esports', kills: 8, placementPoints: 7, killPoints: 8, totalPoints: 15 },
+      { rank: 3, team: '401 Unauthorized', kills: 6, placementPoints: 0, killPoints: 6, totalPoints: 6 },
+      { rank: 4, team: 'Elite Warriors', kills: 5, placementPoints: 0, killPoints: 5, totalPoints: 5 },
+      { rank: 5, team: 'FARZ Esports', kills: 2, placementPoints: 0, killPoints: 2, totalPoints: 2 }
     ],
     proofs: {
       screenshots: [
@@ -221,6 +221,17 @@ export const CANONICAL_MATCHES = [
     map: 'Erangel',
     date: '2026-09-02',
     time: '06:00 PM',
+    status: 'Upcoming',
+    teamsCount: 24
+  },
+  {
+    id: 'match-05',
+    matchNumber: 5,
+    title: 'Match #5 / Rondo',
+    round: 'Match 5',
+    map: 'Rondo',
+    date: '2026-09-02',
+    time: '08:30 PM',
     status: 'Upcoming',
     teamsCount: 24
   }

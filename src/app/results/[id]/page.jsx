@@ -101,10 +101,10 @@ export default function ResultDetailPage() {
             <tbody className="divide-y divide-[#E7E3DA] dark:divide-[#1E2638]">
               {(result.leaderboard && result.leaderboard.length > 0 ? result.leaderboard : [
                 { rank: 1, team: result.winner?.teamName || 'Winner Squad', placementPts: 10, kills: result.winner?.kills || 10, killPts: result.winner?.kills || 10, total: (result.winner?.kills || 10) + 10 },
-                { rank: 2, team: 'Axions', placementPts: 8, kills: 7, killPts: 7, total: 15 },
-                { rank: 3, team: 'Elite Warriors', placementPts: 5, kills: 6, killPts: 6, total: 11 },
-                { rank: 4, team: '401 Unauthorized', placementPts: 3, kills: 4, killPts: 4, total: 7 },
-                { rank: 5, team: 'Team Soul', placementPts: 1, kills: 3, killPts: 3, total: 4 },
+                { rank: 2, team: 'Axions', placementPts: 7, kills: 7, killPts: 7, total: 14 },
+                { rank: 3, team: 'Elite Warriors', placementPts: 0, kills: 6, killPts: 6, total: 6 },
+                { rank: 4, team: '401 Unauthorized', placementPts: 0, kills: 4, killPts: 4, total: 4 },
+                { rank: 5, team: 'Team Soul', placementPts: 0, kills: 3, killPts: 3, total: 3 },
                 { rank: 6, team: 'FARZ Esports', placementPts: 0, kills: 2, killPts: 2, total: 2 }
               ]).map((row, idx) => {
                 const rank = row.rank || idx + 1;

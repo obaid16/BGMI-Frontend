@@ -124,10 +124,10 @@ export default function MatchDetailPage() {
               <tbody className="divide-y divide-premium-border bg-premium-background">
                 {result.leaderboard.map((row, idx) => {
                   const rank = parseInt(row.rank, 10);
-                  const placementPts = rank === 1 ? 10 : rank === 2 ? 8 : rank === 3 ? 5 : 0;
+                  const placementPts = row.placementPoints !== undefined ? row.placementPoints : (row.placementPts !== undefined ? row.placementPts : (rank === 1 ? 10 : rank === 2 ? 7 : 0));
                   const kills = parseInt(row.kills || 0, 10);
-                  const killPts = kills;
-                  const totalPts = placementPts + killPts;
+                  const killPts = row.killPoints !== undefined ? row.killPoints : (row.killPts !== undefined ? row.killPts : kills);
+                  const totalPts = row.totalPoints !== undefined ? row.totalPoints : (row.total !== undefined ? row.total : (placementPts + killPts));
                   const isTop1 = rank === 1;
 
                   return (

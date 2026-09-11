@@ -221,8 +221,8 @@ export default function SubmitMediaModal({ isOpen, onClose, onSuccess }) {
                     <option value="Match #02">Match #02 / Livik</option>
                     <option value="Match #03">Match #03 / Livik</option>
                     <option value="Match #04">Match #04 / Erangel</option>
-                    <option value="Match #05">Match #05 / Miramar</option>
-                    <option value="Match #06">Match #06 / Erangel</option>
+                    <option value="Match #05">Match #05 / Rondo</option>
+                    <option value="Match #06">Match #06 / Miramar</option>
                     <option value="Media Day">Media Day / General</option>
                   </select>
                 </div>
