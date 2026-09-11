@@ -293,6 +293,35 @@ export async function updateMatch(matchId, matchData) {
   return res.data;
 }
 
+export async function deleteMatch(matchId) {
+  apiCache.clear();
+  try {
+    const res = await fetchAPI(`/matches/${matchId}`, {
+      method: 'DELETE',
+    });
+    apiCache.clear();
+    return res;
+  } catch (err) {
+    console.error('deleteMatch failed:', err);
+    throw err;
+  }
+}
+
+export async function bulkDeleteMatches(ids) {
+  apiCache.clear();
+  try {
+    const res = await fetchAPI('/matches/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ ids }),
+    });
+    apiCache.clear();
+    return res;
+  } catch (err) {
+    console.error('bulkDeleteMatches failed:', err);
+    throw err;
+  }
+}
+
 // ==================== STANDINGS API ====================
 export async function getStandings() {
   try {
@@ -691,6 +720,21 @@ export async function deleteRule(id) {
     method: 'DELETE',
   });
   return res.success;
+}
+
+export async function createTeam(teamData) {
+  apiCache.clear();
+  try {
+    const res = await fetchAPI('/teams', {
+      method: 'POST',
+      body: JSON.stringify(teamData),
+    });
+    apiCache.clear();
+    return res.data || res.team || res;
+  } catch (err) {
+    console.error('createTeam failed:', err);
+    throw err;
+  }
 }
 
 export async function deleteTeam(id) {

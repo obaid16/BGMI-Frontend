@@ -5,14 +5,15 @@ import Badge from '@/components/common/Badge';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { getTeams, updateTeamStatus, deleteTeam } from '@/services/api';
+import { getTeams, updateTeamStatus, deleteTeam, createTeam } from '@/services/api';
 import { useToast } from '@/context/ToastContext';
-import { Users, Plus, ShieldCheck, Trash2, Edit3, Search } from 'lucide-react';
+import { Users, Plus, ShieldCheck, Trash2, Edit3, Search, Loader2 } from 'lucide-react';
 
 export default function AdminTeamsPage() {
   const { showToast } = useToast();
   const [teams, setTeams] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmModal, setConfirmModal] = useState({
@@ -28,42 +29,52 @@ export default function AdminTeamsPage() {
   const [newCollege, setNewCollege] = useState('NIT');
   const [newTeamLogo, setNewTeamLogo] = useState('');
 
-  useEffect(() => {
-    async function loadData() {
-      const data = await getTeams();
+  const loadData = async () => {
+    const data = await getTeams('All', '', true);
+    if (Array.isArray(data)) {
       setTeams(data);
     }
+  };
+
+  useEffect(() => {
     loadData();
   }, []);
 
-  const handleCreateTeam = (e) => {
+  const handleCreateTeam = async (e) => {
     e.preventDefault();
-    const logoUrl = newTeamLogo.trim() || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&auto=format&fit=crop&q=80';
-    const newTeam = {
-      id: `team-${Date.now()}`,
-      name: newTeamName,
-      shortName: newTeamName.substring(0, 5).toUpperCase(),
-      college: newCollege,
-      logo: logoUrl,
-      rank: teams.length + 1,
-      points: 0,
-      wwcd: 0,
-      kills: 0,
-      verified: true,
-      status: 'Approved',
-      registrationId: `BGMI-2026-MANUAL-${teams.length + 1}`,
-      players: [
-        { name: 'Player 1', ign: 'P1_IGL', bgmiId: '5123987410', role: 'IGL', verified: true },
-        { name: 'Player 2', ign: 'P2_FRAGGER', bgmiId: '5123987411', role: 'Assaulter', verified: true },
-      ],
-    };
+    if (!newTeamName.trim()) {
+      showToast('Please enter a team/squad name', 'error');
+      return;
+    }
 
-    setTeams([newTeam, ...teams]);
-    showToast('New Team Created Successfully!', 'success');
-    setIsAddModalOpen(false);
-    setNewTeamName('');
-    setNewCollege('');
-    setNewTeamLogo('');
+    setSubmitting(true);
+    const logoUrl = newTeamLogo.trim() || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&auto=format&fit=crop&q=80';
+
+    try {
+      const created = await createTeam({
+        name: newTeamName.trim(),
+        shortName: newTeamName.trim().substring(0, 5).toUpperCase(),
+        college: newCollege.trim() || 'NIT',
+        logo: logoUrl,
+        status: 'Approved',
+      });
+
+      if (created) {
+        showToast(`Squad "${newTeamName.trim()}" created successfully!`, 'success');
+        setIsAddModalOpen(false);
+        setNewTeamName('');
+        setNewCollege('NIT');
+        setNewTeamLogo('');
+        await loadData();
+      } else {
+        showToast('Failed to create team', 'error');
+      }
+    } catch (err) {
+      console.error('Create squad error:', err);
+      showToast(err.message || 'Error creating squad', 'error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleDeleteTeam = (team) => {
@@ -183,12 +194,13 @@ export default function AdminTeamsPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">College</label>
+            <label className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest block">College / Department</label>
             <input
               type="text"
-              readOnly
+              placeholder="e.g. NIT Computer Science"
               value={newCollege}
-              className="w-full p-3 bg-premium-surface-soft border border-premium-border/50 rounded-[12px] text-premium-text-secondary font-bold text-sm select-none cursor-not-allowed"
+              onChange={(e) => setNewCollege(e.target.value)}
+              className="w-full p-3 bg-white border border-premium-border rounded-[12px] text-premium-text font-bold text-sm focus:outline-none focus:border-premium-text shadow-sm"
             />
           </div>
 
@@ -204,11 +216,11 @@ export default function AdminTeamsPage() {
           </div>
 
           <div className="pt-6 border-t border-premium-border flex justify-end gap-3">
-            <Button variant="outline" size="md" onClick={() => setIsAddModalOpen(false)}>
+            <Button variant="outline" size="md" onClick={() => setIsAddModalOpen(false)} disabled={submitting}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="md">
-              Create Team
+            <Button type="submit" variant="primary" size="md" disabled={submitting}>
+              {submitting ? 'Creating Squad...' : 'Create Team'}
             </Button>
           </div>
         </form>

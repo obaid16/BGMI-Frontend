@@ -82,6 +82,18 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
     return () => clearInterval(interval);
   }, [match?.id, match?.status, match?.date, match?.time, match?.updatedAt, isLive]);
 
+  // Lock background scroll on mobile when modal is active
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showModal]);
+
   // When no match is active or scheduled by admin, show an informative live standby banner
   if (!match) {
     return (
@@ -351,137 +363,163 @@ export default function NextMatchCard({ match, topTeams = [], registeredSquadsCo
 
       </div>
 
-      {/* LOBBY DETAILS & ROOM CREDENTIALS MODAL */}
+      {/* LOBBY DETAILS & ROOM CREDENTIALS MODAL - 100% RESPONSIVE PHONE VIEW */}
       {showModal && (
         <div
-          className="fixed inset-0 z-50 bg-premium-background/80 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4 overflow-hidden"
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white border border-premium-border rounded-[20px] sm:rounded-[24px] max-w-2xl w-full p-4 sm:p-6 md:p-8 shadow-2xl space-y-6 sm:space-y-8 relative max-h-[90vh] overflow-y-auto"
+            className="bg-white border border-premium-border rounded-[20px] sm:rounded-[24px] max-w-2xl w-full max-h-[92dvh] sm:max-h-[88vh] shadow-2xl flex flex-col relative overflow-hidden animate-in fade-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* CLOSE BUTTON */}
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full text-premium-text-secondary hover:bg-premium-surface-soft hover:text-black transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* MODAL HEADER */}
-            <div className="space-y-2 border-b border-premium-border pb-6">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-[8px] text-[10px] font-bold uppercase tracking-widest">
-                  Official Lobby
-                </span>
-                <span className="text-xs font-bold text-premium-text-secondary uppercase tracking-widest">{match.round || 'GRAND FINALS'}</span>
+            {/* 1. STICKY MODAL HEADER */}
+            <div className="p-4 sm:p-6 border-b border-premium-border flex-shrink-0 flex items-start justify-between gap-3 bg-white">
+              <div className="space-y-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-[6px] text-[10px] font-bold uppercase tracking-widest">
+                    Official Lobby
+                  </span>
+                  <span className="text-[10px] sm:text-xs font-bold text-premium-text-secondary uppercase tracking-widest truncate">
+                    {match.round || 'GRAND FINALS'}
+                  </span>
+                </div>
+                <h3 className="font-bold text-lg sm:text-2xl text-premium-text tracking-tight truncate">
+                  Match #{match.matchNumber || 1} / <span className="text-amber-600">{roomDetails.map}</span>
+                </h3>
               </div>
-              <h3 className="font-bold text-2xl text-premium-text tracking-tight">
-                Match #{match.matchNumber || 1} / <span className="text-amber-600">{roomDetails.map}</span>
-              </h3>
+
+              {/* CLOSE BUTTON */}
+              <button
+                onClick={() => setShowModal(false)}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-premium-text-secondary hover:bg-premium-surface-soft hover:text-black transition-colors shrink-0 -mr-1 -mt-1"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
-            {/* ROOM CREDENTIALS CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* ROOM ID CARD */}
-              <div className="p-5 bg-premium-surface rounded-[16px] border border-premium-border space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
-                    ROOM STATUS
-                  </span>
-                  <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1.5 uppercase tracking-widest">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> READY
-                  </span>
-                </div>
-
-                <div className="space-y-1">
-                  <span className="text-[10px] text-premium-text-secondary uppercase tracking-widest block font-bold">ROOM ID</span>
-                  <span className="font-bold text-3xl tracking-tight text-amber-600 block">
-                    {roomDetails.roomId}
-                  </span>
-                </div>
-
-                <button
-                  onClick={() => copyToClipboard(roomDetails.roomId, 'id')}
-                  className="w-full py-2.5 bg-white hover:bg-premium-background border border-premium-border text-premium-text rounded-[10px] text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-sm"
-                >
-                  {copiedId ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                  <span>{copiedId ? 'COPIED' : 'COPY ID'}</span>
-                </button>
-              </div>
-
-              {/* ROOM PASSWORD CARD */}
-              <div className="p-5 bg-premium-surface rounded-[16px] border border-premium-border space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
-                    SECURITY ACCESS
-                  </span>
-                  <span className="text-[10px] text-sky-600 font-bold flex items-center gap-1.5 uppercase tracking-widest">
-                    <Shield className="w-3.5 h-3.5" /> VERIFIED
-                  </span>
-                </div>
-
-                <div className="space-y-1">
-                  <span className="text-[10px] text-premium-text-secondary uppercase tracking-widest block font-bold">PASSWORD</span>
-                  <span className="font-bold text-3xl tracking-tight text-sky-600 block">
-                    {roomDetails.password}
-                  </span>
-                </div>
-
-                <button
-                  onClick={() => copyToClipboard(roomDetails.password, 'pass')}
-                  className="w-full py-2.5 bg-white hover:bg-premium-background border border-premium-border text-premium-text rounded-[10px] text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-sm"
-                >
-                  {copiedPass ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                  <span>{copiedPass ? 'COPIED' : 'COPY PASSWORD'}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* LOBBY SPECIFICATIONS GRID */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3 text-center text-xs sm:text-sm">
-              <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
-                <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">MAP</span>
-                <span className="font-bold text-premium-text">{roomDetails.map}</span>
-              </div>
-              <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
-                <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">MODE</span>
-                <span className="font-bold text-amber-600">{roomDetails.mode}</span>
-              </div>
-              <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
-                <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">SERVER</span>
-                <span className="font-bold text-sky-700">{roomDetails.server}</span>
-              </div>
-              <div className="p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
-                <span className="text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-1">ANTI-CHEAT</span>
-                <span className="font-bold text-emerald-600">ACTIVE</span>
-              </div>
-            </div>
-
-            {/* ALL PARTICIPATING SQUAD SLOTS TABLE */}
-            <div className="space-y-3">
-              <h4 className="font-bold text-sm uppercase text-premium-text flex items-center gap-2">
-                <Users className="w-4 h-4 text-amber-600" /> LOBBY SQUAD SLOT MATRIX ({roomDetails.slots.length}/24)
-              </h4>
-              <div className="max-h-48 overflow-y-auto border border-premium-border rounded-[16px] bg-premium-surface p-3 space-y-2 custom-scrollbar">
-                {roomDetails.slots.map((s) => (
-                  <div key={s.slot} className="flex items-center justify-between px-4 py-2.5 bg-white rounded-[10px] border border-premium-border shadow-sm">
-                    <span className="text-premium-text-secondary font-bold text-xs uppercase tracking-widest">SLOT #{String(s.slot).padStart(2, '0')}</span>
-                    <span className="text-premium-text font-bold text-sm">{s.team}</span>
-                    <span className="text-[10px] text-amber-600 font-bold uppercase tracking-widest">{s.seed}</span>
+            {/* 2. SCROLLABLE MODAL BODY */}
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto flex-1 custom-scrollbar overscroll-contain">
+              
+              {/* ROOM CREDENTIALS CARDS */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {/* ROOM ID CARD */}
+                <div className="p-3.5 sm:p-5 bg-premium-surface rounded-[14px] sm:rounded-[16px] border border-premium-border space-y-2.5 sm:space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] sm:text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
+                      ROOM STATUS
+                    </span>
+                    <span className="text-[9px] sm:text-[10px] text-emerald-600 font-bold flex items-center gap-1.5 uppercase tracking-widest">
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse" /> READY
+                    </span>
                   </div>
-                ))}
+
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] sm:text-[10px] text-premium-text-secondary uppercase tracking-widest block font-bold">ROOM ID</span>
+                    <span className="font-bold text-2xl sm:text-3xl tracking-tight text-amber-600 block truncate">
+                      {roomDetails.roomId}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => copyToClipboard(roomDetails.roomId, 'id')}
+                    className="w-full py-2 sm:py-2.5 bg-white hover:bg-premium-background border border-premium-border text-premium-text rounded-[10px] text-[11px] sm:text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-sm active:scale-95"
+                  >
+                    {copiedId ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedId ? 'COPIED' : 'COPY ID'}</span>
+                  </button>
+                </div>
+
+                {/* ROOM PASSWORD CARD */}
+                <div className="p-3.5 sm:p-5 bg-premium-surface rounded-[14px] sm:rounded-[16px] border border-premium-border space-y-2.5 sm:space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] sm:text-[10px] font-bold text-premium-text-secondary uppercase tracking-widest">
+                      SECURITY ACCESS
+                    </span>
+                    <span className="text-[9px] sm:text-[10px] text-sky-600 font-bold flex items-center gap-1.5 uppercase tracking-widest">
+                      <Shield className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> VERIFIED
+                    </span>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] sm:text-[10px] text-premium-text-secondary uppercase tracking-widest block font-bold">PASSWORD</span>
+                    <span className="font-bold text-2xl sm:text-3xl tracking-tight text-sky-600 block truncate">
+                      {roomDetails.password}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => copyToClipboard(roomDetails.password, 'pass')}
+                    className="w-full py-2 sm:py-2.5 bg-white hover:bg-premium-background border border-premium-border text-premium-text rounded-[10px] text-[11px] sm:text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-sm active:scale-95"
+                  >
+                    {copiedPass ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedPass ? 'COPIED' : 'COPY PASSWORD'}</span>
+                  </button>
+                </div>
               </div>
+
+              {/* LOBBY SPECIFICATIONS GRID */}
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 text-center text-xs sm:text-sm">
+                <div className="p-2.5 sm:p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                  <span className="text-[9px] sm:text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-0.5 sm:mb-1">MAP</span>
+                  <span className="font-bold text-xs sm:text-sm text-premium-text truncate block">{roomDetails.map}</span>
+                </div>
+                <div className="p-2.5 sm:p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                  <span className="text-[9px] sm:text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-0.5 sm:mb-1">MODE</span>
+                  <span className="font-bold text-xs sm:text-sm text-amber-600 truncate block">{roomDetails.mode}</span>
+                </div>
+                <div className="p-2.5 sm:p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                  <span className="text-[9px] sm:text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-0.5 sm:mb-1">SERVER</span>
+                  <span className="font-bold text-xs sm:text-sm text-sky-700 truncate block">{roomDetails.server}</span>
+                </div>
+                <div className="p-2.5 sm:p-3 bg-white rounded-[12px] border border-premium-border shadow-sm">
+                  <span className="text-[9px] sm:text-[10px] text-premium-text-secondary block uppercase tracking-widest font-bold mb-0.5 sm:mb-1">ANTI-CHEAT</span>
+                  <span className="font-bold text-xs sm:text-sm text-emerald-600 truncate block">ACTIVE</span>
+                </div>
+              </div>
+
+              {/* ALL PARTICIPATING SQUAD SLOTS TABLE */}
+              <div className="space-y-2.5 sm:space-y-3">
+                <h4 className="font-bold text-xs sm:text-sm uppercase text-premium-text flex items-center gap-2">
+                  <Users className="w-4 h-4 text-amber-600 shrink-0" /> LOBBY SQUAD SLOT MATRIX ({roomDetails.slots.length}/24)
+                </h4>
+
+                {roomDetails.slots.length > 0 ? (
+                  <div className="max-h-40 sm:max-h-48 overflow-y-auto border border-premium-border rounded-[14px] bg-premium-surface p-2 sm:p-3 space-y-1.5 sm:space-y-2 custom-scrollbar">
+                    {roomDetails.slots.map((s) => (
+                      <div key={s.slot} className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 bg-white rounded-[10px] border border-premium-border shadow-sm text-xs sm:text-sm gap-2">
+                        <span className="text-premium-text-secondary font-bold text-[10px] sm:text-xs uppercase tracking-widest shrink-0">
+                          SLOT #{String(s.slot).padStart(2, '0')}
+                        </span>
+                        <span className="text-premium-text font-bold truncate flex-1 text-center sm:text-left">
+                          {s.team}
+                        </span>
+                        <span className="text-[9px] sm:text-[10px] text-amber-600 font-bold uppercase tracking-widest shrink-0">
+                          {s.seed}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 sm:p-5 bg-premium-surface rounded-[14px] border border-premium-border text-center space-y-1">
+                    <p className="text-xs font-bold text-premium-text">No squads assigned to lobby yet</p>
+                    <p className="text-[10px] sm:text-[11px] text-premium-text-secondary font-medium">
+                      Squads will be assigned to slot matrices once teams are registered and verified.
+                    </p>
+                  </div>
+                )}
+              </div>
+
             </div>
 
-            {/* MODAL FOOTER */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-premium-border">
-              <span className="text-[10px] font-medium text-premium-text-secondary">
+            {/* 3. STICKY MODAL FOOTER */}
+            <div className="p-3 sm:p-4 border-t border-premium-border flex-shrink-0 bg-white flex flex-col-reverse sm:flex-row items-center justify-between gap-2.5 sm:gap-4">
+              <span className="text-[10px] font-medium text-premium-text-secondary text-center sm:text-left">
                 * All 24 squads enter custom room 10 minutes prior to launch.
               </span>
-              <Link href={`/matches/${match.matchNumber || match.id}`} onClick={() => setShowModal(false)}>
-                <Button variant="secondary" size="md" className="w-full sm:w-auto">
+              <Link href={`/matches/${match.matchNumber || match.id}`} onClick={() => setShowModal(false)} className="w-full sm:w-auto">
+                <Button variant="secondary" size="md" className="w-full sm:w-auto justify-center text-xs sm:text-sm">
                   Go to Match Page
                 </Button>
               </Link>

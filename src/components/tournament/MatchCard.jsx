@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Clock, MapPin, ChevronRight, Trophy, Users } from 'lucide-react';
+import { Clock, MapPin, ChevronRight, Trophy, Users, Trash2 } from 'lucide-react';
 import Badge from '../common/Badge';
 
-export default function MatchCard({ match }) {
+export default function MatchCard({ match, onDelete }) {
   if (!match) return null;
 
   const isLive = match.status === 'Live';
@@ -118,13 +118,30 @@ export default function MatchCard({ match }) {
           <p className="text-xs text-premium-text-secondary font-medium mt-0.5">{match.date || '2026-09-02'}</p>
         </div>
 
-        <Link
-          href={`/matches/${match.matchNumber || match.id}`}
-          className="px-4 py-2.5 bg-premium-surface-soft text-premium-text hover:bg-premium-text hover:text-white font-medium text-xs uppercase tracking-wide rounded-full transition-colors flex items-center gap-1 shrink-0 shadow-sm"
-        >
-          <span>{isUpcoming ? 'Details' : isLive ? 'Score' : 'Results'}</span>
-          <ChevronRight className="w-4 h-4" />
-        </Link>
+        <div className="flex items-center gap-2">
+          {onDelete && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete(match);
+              }}
+              className="px-3.5 py-2 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 hover:border-rose-600 font-semibold text-xs rounded-full transition-all flex items-center gap-1.5 shadow-sm"
+              title="Delete Match Schedule"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete</span>
+            </button>
+          )}
+          <Link
+            href={`/matches/${match.matchNumber || match.id}`}
+            className="px-4 py-2.5 bg-premium-surface-soft text-premium-text hover:bg-premium-text hover:text-white font-medium text-xs uppercase tracking-wide rounded-full transition-colors flex items-center gap-1 shrink-0 shadow-sm"
+          >
+            <span>{isUpcoming ? 'Details' : isLive ? 'Score' : 'Results'}</span>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
 
     </div>
